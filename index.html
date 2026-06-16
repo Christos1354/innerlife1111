@@ -3613,6 +3613,8 @@ function epGoTo(dest){
   } else if(dest==='mystery'){
     openDoor(BG_MYSTERY, '● Κάτι Άλλο...', null, MYSTERY_CONTENT, false,
       'linear-gradient(160deg,#5a0818,#200008)', '#ffd0d8');
+ } else if(dest==='kati'){
+    openKatiAllo();
   } else {
     alert('Σύντομα διαθέσιμο! 🌟');
   }
@@ -4026,15 +4028,18 @@ function doSearch(query){
   });
   resultsEl.innerHTML=h; resultsEl.style.display='block';
 }
-
 function searchOpen(dest, itemIdx){
   document.getElementById('search-results').style.display='none';
   document.getElementById('search-input').value='';
   epGoTo(dest);
   if(itemIdx>=0){
     setTimeout(function(){
-      var btns=document.querySelectorAll('.toc-btn');
-      if(btns[itemIdx]) btns[itemIdx].click();
+      if(dest==='kati'){
+        kaShowItem(itemIdx);
+      } else {
+        var btns=document.querySelectorAll('.toc-btn');
+        if(btns[itemIdx]) btns[itemIdx].click();
+      }
     },600);
   }
 }

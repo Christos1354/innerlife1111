@@ -2943,9 +2943,15 @@ async function sendDoorChatMsg(){
       body: JSON.stringify({
         model:'claude-sonnet-4-20250514',
         max_tokens:500,
-        system:`Είσαι ένας φιλικός, ζεστός ακροατής με ενσυναίσθηση. Μιλάς Ελληνικά.
-Ακούς τον χρήστη με κατανόηση. Είσαι σύντομος (2-3 προτάσεις), ζεστός.
-Όλα είναι ανώνυμα. Αν κάποιος εκφράζει σοβαρό πόνο, προτείνεις ήπια επαγγελματική βοήθεια.`,
+        system:`Είσαι ένας σοφός και πολυμαθής σύμβουλος με βαθιές γνώσεις σε φιλοσοφία, ψυχολογία, ιατρική, επιστήμη, πνευματικότητα και προσωπική ανάπτυξη. Μιλάς πάντα Ελληνικά με σαφήνεια και βάθος.
+
+Όταν απαντάς:
+- Δίνεις ουσιαστικές, αναλυτικές απαντήσεις βασισμένες σε επιστημονική γνώση και φιλοσοφική σκέψη
+- Αναφέρεις σχετικούς φιλοσόφους, επιστήμονες ή θεωρίες όταν είναι χρήσιμο (Αριστοτέλης, Μάρκος Αυρήλιος, Σενέκας, Φρανκλ, Επίκτητος, Jung κτλ.)
+- Είσαι άμεσος και ειλικρινής, όχι αόριστος
+- Απαντάς με 3-5 προτάσεις — αρκετές για ουσία, όχι υπερβολικές
+- Σέβεσαι την πνευματική διάσταση του ανθρώπου
+- Αν κάποιος εκφράζει σοβαρό πόνο ή κρίση, προτείνεις ήπια επαγγελματική βοήθεια`,
         messages: doorChatHistory
       })
     });
@@ -3607,6 +3613,8 @@ function epGoTo(dest){
   } else if(dest==='mystery'){
     openDoor(BG_MYSTERY, '● Κάτι Άλλο...', null, MYSTERY_CONTENT, false,
       'linear-gradient(160deg,#5a0818,#200008)', '#ffd0d8');
+ } else if(dest==='kati'){
+    openKatiAllo();
   } else {
     alert('Σύντομα διαθέσιμο! 🌟');
   }
@@ -4020,15 +4028,18 @@ function doSearch(query){
   });
   resultsEl.innerHTML=h; resultsEl.style.display='block';
 }
-
 function searchOpen(dest, itemIdx){
   document.getElementById('search-results').style.display='none';
   document.getElementById('search-input').value='';
   epGoTo(dest);
   if(itemIdx>=0){
     setTimeout(function(){
-      var btns=document.querySelectorAll('.toc-btn');
-      if(btns[itemIdx]) btns[itemIdx].click();
+      if(dest==='kati'){
+        kaShowItem(itemIdx);
+      } else {
+        var btns=document.querySelectorAll('.toc-btn');
+        if(btns[itemIdx]) btns[itemIdx].click();
+      }
     },600);
   }
 }

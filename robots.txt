@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://innerlife1111.pages.dev/sitemap.xml
