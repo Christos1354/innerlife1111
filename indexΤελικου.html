@@ -3903,7 +3903,7 @@ function kaShowItem(idx){
   const el = document.getElementById('ka-c-'+idx);
   if(el) el.style.display='block';
   if(bs[idx]){ bs[idx].style.background='rgba(255,255,200,0.2)'; bs[idx].style.borderColor='#ffe060'; bs[idx].style.fontWeight='700'; }
-  setTimeout(()=>{ if(bs[idx]) bs[idx].scrollIntoView({behavior:'smooth',block:'nearest'}); },50);
+  setTimeout(()=>{ if(bs[idx]) bs[idx].scrollIntoView({behavior:'smooth',block:'start'}); },50);
 }
 
 function openKatiAllo(){
