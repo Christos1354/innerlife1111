@@ -13,15 +13,10 @@ body{
   margin:0;
   font-family:Arial;
   background-image:url('COSMOS.jpg');
-  /* ⬇️ ΑΛΛΑΓΗ: από contain σε cover για να γεμίζει όλη την οθόνη */
-  background-size:cover;
+  background-size:contain;
   background-position:center;
   background-attachment:fixed;
-  /* ⬇️ ΠΡΟΣΘΗΚΗ: να μην επαναλαμβάνεται */
-  background-repeat:no-repeat;
   color:#FFD700;
-  /* ⬇️ ΠΡΟΣΘΗΚΗ: ελάχιστο ύψος για να καλύπτει όλη την οθόνη */
-  min-height:100vh;
 }
 
 /* overlay */
@@ -69,60 +64,13 @@ body::before{
 }
 
 .highlight{
-  background:yellow !important;
-  color:black !important;
+  background:yellow;
+  color:black;
   padding:2px 4px;
   border-radius:4px;
-  font-weight:bold;
 }
 
-/* ====== TRANSLATE WRAPPER ====== */
-.translate-wrapper {
-  width: 90%;
-  max-width: 400px;
-  margin: 0 auto 20px auto;
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  background: rgba(0, 0, 0, 0.5);
-  border-radius: 12px;
-  padding: 10px 0;
-  border: 1px solid rgba(255, 215, 0, 0.3);
-}
-
-.translate-wrapper select {
-  background: rgba(255, 255, 255, 0.15);
-  color: #FFD700;
-  border: 1px solid rgba(255, 215, 0, 0.4);
-  border-radius: 8px;
-  padding: 8px 12px;
-  font-size: 13px;
-  cursor: pointer;
-  max-width: 200px;
-}
-
-.translate-wrapper select option {
-  background: #1a1a2e;
-  color: #FFD700;
-}
-
-.translate-wrapper button {
-  background: rgba(255, 215, 0, 0.2);
-  color: #FFD700;
-  border: 1px solid rgba(255, 215, 0, 0.4);
-  border-radius: 8px;
-  padding: 8px 16px;
-  font-size: 13px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.translate-wrapper button:hover {
-  background: rgba(255, 215, 0, 0.4);
-}
-
-/* ====== ΚΟΥΜΠΙ ΕΠΙΣΤΡΟΦΗΣ ====== */
+/* ΚΟΥΜΠΙ ΕΠΙΣΤΡΟΦΗΣ */
 .back-btn{
   position:fixed;
   top:15px;
@@ -137,31 +85,13 @@ body::before{
   z-index:1000;
 }
 
-/* ====== BOX ΚΕΙΜΕΝΟΥ ====== */
+/* BOX ΚΕΙΜΕΝΟΥ */
 .box{
   max-width:700px;
   margin:16px auto;
   padding:14px 16px;
   border-radius:15px;
   background:rgba(0,0,0,0.5);
-  transition: all 0.3s ease;
-}
-
-.box.search-match {
-  border: 3px solid #FFD700 !important;
-  box-shadow: 0 0 40px rgba(255, 215, 0, 0.4) !important;
-  background: rgba(0, 0, 0, 0.85) !important;
-}
-
-.no-results {
-  text-align: center;
-  padding: 40px 20px;
-  font-size: 20px;
-  color: #FFD700;
-  background: rgba(0,0,0,0.5);
-  border-radius: 15px;
-  max-width: 700px;
-  margin: 20px auto;
 }
 
 .box h3{
@@ -227,26 +157,6 @@ body::before{
   100%{transform:scale(1)}
 }
 
-#meditation button {
-  background: rgba(255, 215, 0, 0.2);
-  color: #FFD700;
-  border: 2px solid #FFD700;
-  border-radius: 12px;
-  padding: 12px 30px;
-  font-size: 18px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-#meditation button:hover {
-  background: rgba(255, 215, 0, 0.4);
-}
-
-.translate-me {
-  transition: all 0.3s ease;
-}
-
-/* ====== ΕΞΤΡΑ ΓΙΑ ΚΙΝΗΤΑ ====== */
 @media(max-width:600px){
 
   .box h3{
@@ -255,22 +165,6 @@ body::before{
 
   .box p{
     font-size:16px;
-  }
-
-  .translate-wrapper select {
-    font-size: 12px;
-    max-width: 140px;
-  }
-
-  .translate-wrapper button {
-    font-size: 12px;
-    padding: 6px 12px;
-  }
-  
-  /* ⬇️ ΠΡΟΣΘΗΚΗ: καλύτερη εμφάνιση φόντου σε κινητά */
-  body {
-    background-size:cover;
-    background-attachment:scroll;
   }
 
 }
@@ -286,72 +180,7 @@ body::before{
   <span id="clearSearch">✕</span>
 </div>
 
-<!-- ====== TRANSLATE ====== -->
-<div class="translate-wrapper">
-  <select id="translateLang">
-    <option value="el">🇬🇷 Ελληνικά</option>
-    <option value="en">🇬🇧 English</option>
-    <option value="fr">🇫🇷 Français</option>
-    <option value="de">🇩🇪 Deutsch</option>
-    <option value="es">🇪🇸 Español</option>
-    <option value="it">🇮🇹 Italiano</option>
-    <option value="pt">🇵🇹 Português</option>
-    <option value="ru">🇷🇺 Русский</option>
-    <option value="ar">🇸🇦 العربية</option>
-    <option value="zh-CN">🇨🇳 中文</option>
-    <option value="ja">🇯🇵 日本語</option>
-    <option value="ko">🇰🇷 한국어</option>
-    <option value="hi">🇮🇳 हिन्दी</option>
-    <option value="tr">🇹🇷 Türkçe</option>
-    <option value="nl">🇳🇱 Nederlands</option>
-    <option value="sv">🇸🇪 Svenska</option>
-    <option value="pl">🇵🇱 Polski</option>
-    <option value="uk">🇺🇦 Українська</option>
-    <option value="ro">🇷🇴 Română</option>
-    <option value="hu">🇭🇺 Magyar</option>
-    <option value="cs">🇨🇿 Čeština</option>
-    <option value="th">🇹🇭 ไทย</option>
-    <option value="vi">🇻🇳 Tiếng Việt</option>
-    <option value="id">🇮🇩 Bahasa Indonesia</option>
-    <option value="ms">🇲🇾 Bahasa Melayu</option>
-    <option value="fil">🇵🇭 Filipino</option>
-    <option value="no">🇳🇴 Norsk</option>
-    <option value="da">🇩🇰 Dansk</option>
-    <option value="fi">🇫🇮 Suomi</option>
-    <option value="he">🇮🇱 עברית</option>
-    <option value="fa">🇮🇷 فارسی</option>
-    <option value="ur">🇵🇰 اردو</option>
-    <option value="bn">🇧🇩 বাংলা</option>
-    <option value="ta">🇮🇳 தமிழ்</option>
-    <option value="te">🇮🇳 తెలుగు</option>
-    <option value="ml">🇮🇳 മലയാളം</option>
-    <option value="sw">🇹🇿 Kiswahili</option>
-    <option value="am">🇪🇹 አማርኛ</option>
-    <option value="ne">🇳🇵 नेपाली</option>
-    <option value="si">🇱🇰 සිංහල</option>
-    <option value="my">🇲🇲 မြန်မာ</option>
-    <option value="km">🇰🇭 ខ្មែរ</option>
-    <option value="lo">🇱🇦 ລາວ</option>
-    <option value="mn">🇲🇳 Монгол</option>
-    <option value="ka">🇬🇪 ქართული</option>
-    <option value="hy">🇦🇲 Հայերեն</option>
-    <option value="az">🇦🇿 Azərbaycan</option>
-    <option value="sq">🇦🇱 Shqip</option>
-    <option value="mk">🇲🇰 Македонски</option>
-    <option value="sr">🇷🇸 Српски</option>
-    <option value="hr">🇭🇷 Hrvatski</option>
-    <option value="sl">🇸🇮 Slovenščina</option>
-    <option value="et">🇪🇪 Eesti</option>
-    <option value="lv">🇱🇻 Latviešu</option>
-    <option value="lt">🇱🇹 Lietuvių</option>
-    <option value="is">🇮🇸 Íslenska</option>
-    <option value="af">🇿🇦 Afrikaans</option>
-  </select>
-  <button onclick="translatePage()">🌐 Μετάφραση</button>
-  <button onclick="resetTranslation()">↩️ Επαναφορά</button>
-</div>
-
-<button class="back-btn translate-me" onclick="location.href='index.html'">
+<button class="back-btn" onclick="location.href='index.html'">
 ⬅ Πίσω στις Πύλες
 </button>
 
@@ -360,7 +189,7 @@ body::before{
 <!-- ====== MEDITATION ====== -->
 <div id="meditation">
   <div style="text-align:center;color:white;">
-    <h2 class="translate-me">
+    <h2>
       Πάρε 3 βαθιές αναπνοές...<br>
       Μείνε ακίνητος...<br>
       Άφησε τα όλα να ηρεμήσουν.<br>
@@ -369,7 +198,7 @@ body::before{
 
     <div class="circle"></div>
 
-    <button onclick="closeMeditation()" class="translate-me">
+    <button onclick="closeMeditation()">
       Έξοδος
     </button>
   </div>
@@ -379,357 +208,9 @@ body::before{
 <script>
 
 /* ==================================================
-   TRANSLATE FUNCTIONS
+   ΕΡΩΤΗΜΑΤΑ
 ================================================== */
 
-let originalHTML = '';
-let isTranslated = false;
-
-function translatePage() {
-  const lang = document.getElementById('translateLang').value;
-  
-  if (lang === 'el') {
-    resetTranslation();
-    return;
-  }
-  
-  if (!originalHTML) {
-    const container = document.getElementById('content');
-    originalHTML = container.innerHTML;
-  }
-  
-  const elementsToTranslate = [];
-  
-  document.querySelectorAll('.box h3, .box .answer, .box p, .box li, .box ul, #content h2').forEach(el => {
-    elementsToTranslate.push(el);
-  });
-  
-  const backBtn = document.querySelector('.back-btn');
-  if (backBtn) elementsToTranslate.push(backBtn);
-  
-  document.querySelectorAll('#meditation .translate-me').forEach(el => {
-    elementsToTranslate.push(el);
-  });
-  
-  let translatedCount = 0;
-  const totalElements = elementsToTranslate.length;
-  
-  elementsToTranslate.forEach((el, index) => {
-    const text = el.innerText;
-    if (text && text.trim().length > 0 && !el.querySelector('ul, li, p, strong, em')) {
-      translateText(text, lang, function(translated) {
-        if (translated) {
-          el.innerHTML = translated;
-        }
-        translatedCount++;
-        if (translatedCount === totalElements) {
-          isTranslated = true;
-          const searchInput = document.getElementById('search');
-          if (searchInput && searchInput.value.trim() !== '') {
-            performExactSearch(searchInput.value.trim());
-          }
-        }
-      });
-    } else if (el.querySelector('ul, li, p, strong, em')) {
-      translateComplexElement(el, lang, function() {
-        translatedCount++;
-        if (translatedCount === totalElements) {
-          isTranslated = true;
-          const searchInput = document.getElementById('search');
-          if (searchInput && searchInput.value.trim() !== '') {
-            performExactSearch(searchInput.value.trim());
-          }
-        }
-      });
-    } else {
-      translatedCount++;
-      if (translatedCount === totalElements) {
-        isTranslated = true;
-      }
-    }
-  });
-}
-
-function translateComplexElement(element, targetLang, callback) {
-  const walker = document.createTreeWalker(
-    element,
-    NodeFilter.SHOW_TEXT,
-    {
-      acceptNode: function(node) {
-        if (node.textContent.trim() === '') return NodeFilter.FILTER_REJECT;
-        return NodeFilter.FILTER_ACCEPT;
-      }
-    }
-  );
-  
-  const textNodes = [];
-  let node = walker.nextNode();
-  while (node) {
-    textNodes.push(node);
-    node = walker.nextNode();
-  }
-  
-  if (textNodes.length === 0) {
-    callback();
-    return;
-  }
-  
-  let completed = 0;
-  
-  textNodes.forEach((textNode, index) => {
-    const text = textNode.textContent;
-    if (text && text.trim().length > 0) {
-      translateText(text, targetLang, function(translated) {
-        if (translated) {
-          textNode.textContent = translated;
-        }
-        completed++;
-        if (completed === textNodes.length) {
-          callback();
-        }
-      });
-    } else {
-      completed++;
-      if (completed === textNodes.length) {
-        callback();
-      }
-    }
-  });
-}
-
-function translateText(text, targetLang, callback) {
-  const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=el&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`;
-  
-  fetch(url)
-    .then(response => response.json())
-    .then(data => {
-      if (data && data[0]) {
-        let translated = '';
-        data[0].forEach(item => {
-          translated += item[0];
-        });
-        callback(translated);
-      } else {
-        callback(null);
-      }
-    })
-    .catch(error => {
-      console.error('Translation error:', error);
-      callback(null);
-    });
-}
-function resetTranslation() {
-  if (originalHTML) {
-    document.getElementById('content').innerHTML = originalHTML;
-    document.querySelector('.back-btn').innerHTML = '⬅ Πίσω στις Πύλες';
-    document.querySelector('#meditation h2').innerHTML = 
-      'Πάρε 3 βαθιές αναπνοές...<br>Μείνε ακίνητος...<br>Άφησε τα όλα να ηρεμήσουν.<br>«Η πιο βαθιά ηρεμία κρύβεται σε μια βαθιά ανάσα.»';
-    document.querySelector('#meditation button').innerHTML = 'Έξοδος';
-    isTranslated = false;
-    
-    // ⬇️ ΠΡΟΣΘΗΚΗ: Επαναφορά της γλώσσας στα Ελληνικά
-    document.getElementById('translateLang').value = 'el';
-    
-    const searchInput = document.getElementById('search');
-    if (searchInput && searchInput.value.trim() !== '') {
-      performExactSearch(searchInput.value.trim());
-    }
-  }
-}
-
-/* ==================================================
-   SEARCH - ΤΕΛΙΚΗ ΕΚΔΟΣΗ (με υποστήριξη αναζήτησης χωρίς τόνους)
-================================================== */
-
-function setupSearch() {
-  const searchInput = document.getElementById('search');
-  const clearBtn = document.getElementById('clearSearch');
-  let searchTimeout = null;
-  
-  searchInput.addEventListener('input', function() {
-    clearTimeout(searchTimeout);
-    const value = this.value.trim();
-    
-    searchTimeout = setTimeout(() => {
-      if (value === '') {
-        resetSearchResults();
-      } else {
-        performExactSearch(value);
-      }
-    }, 300);
-  });
-  
-  clearBtn.addEventListener('click', function() {
-    searchInput.value = '';
-    resetSearchResults();
-  });
-}
-
-function performExactSearch(searchTerm) {
-  const boxes = document.querySelectorAll('.box');
-  // Αφαιρούμε τόνους από την αναζήτηση
-  const term = searchTerm.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-  
-  if (term === '' || term.length < 2) {
-    resetSearchResults();
-    return;
-  }
-  
-  // Αφαιρώ παλιά μηνύματα
-  const oldNoResults = document.querySelector('.no-results');
-  if (oldNoResults) oldNoResults.remove();
-  
-  // Αφαιρώ παλιά highlights και search-match
-  boxes.forEach(box => {
-    box.classList.remove('search-match');
-    box.style.border = 'none';
-    box.style.boxShadow = 'none';
-    box.querySelectorAll('.highlight').forEach(el => {
-      const parent = el.parentNode;
-      parent.replaceChild(document.createTextNode(el.textContent), el);
-      parent.normalize();
-    });
-  });
-  
-  const matches = [];
-  const nonMatches = [];
-  
-  boxes.forEach(box => {
-    // Παίρνω ΟΛΟ το κείμενο του box και αφαιρώ τόνους
-    const fullText = box.innerText.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-    
-    if (fullText.includes(term)) {
-      matches.push(box);
-    } else {
-      nonMatches.push(box);
-    }
-  });
-  
-  if (matches.length === 0) {
-    const container = document.getElementById('content');
-    const msg = document.createElement('div');
-    msg.className = 'no-results';
-    msg.innerHTML = `🔍 <strong>Δεν βρέθηκε η λέξη: "${searchTerm}"</strong><br><br>Δοκίμασε με άλλη λέξη-κλειδί.`;
-    container.appendChild(msg);
-    
-    boxes.forEach(box => {
-      box.style.display = 'none';
-    });
-    return;
-  }
-  
-  const container = document.getElementById('content');
-  
-  const noResults = container.querySelector('.no-results');
-  if (noResults) noResults.remove();
-  
-  // ΠΡΩΤΑ κάνουμε highlight
-  matches.forEach(box => {
-    highlightAllText(box, searchTerm.trim());
-  });
-  
-  // Εμφάνισε τα αποτελέσματα (αντίστροφα - το τελευταίο να γίνει πρώτο)
-  for (let i = matches.length - 1; i >= 0; i--) {
-    const box = matches[i];
-    box.style.display = 'block';
-    box.classList.add('search-match');
-    box.style.border = '3px solid #FFD700';
-    box.style.boxShadow = '0 0 40px rgba(255, 215, 0, 0.4)';
-    container.prepend(box);
-  }
-  
-  nonMatches.forEach(box => {
-    box.style.display = 'none';
-    box.classList.remove('search-match');
-    box.style.border = 'none';
-    box.style.boxShadow = 'none';
-  });
-  
-  // ⬇️ ΑΛΛΑΓΗ: scroll στην ΚΟΡΥΦΗ του στοιχείου (block: 'start')
-  setTimeout(() => {
-    if (matches.length > 0) {
-      matches[0].scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'start' 
-      });
-    }
-  }, 200);
-}
-
-function highlightAllText(element, word) {
-  // Αποθήκευση του αρχικού HTML
-  let html = element.innerHTML;
-  
-  // Δημιουργία regex για να βρει τη λέξη (με ή χωρίς τόνους)
-  const wordLower = word.toLowerCase();
-  
-  // Χάρτης για Ελληνικούς χαρακτήρες με τόνους
-  const chars = wordLower.split('');
-  let regexPattern = '';
-  
-  for (let char of chars) {
-    const tonosMap = {
-      'α': '[αάἀἁἂἃἄἅἆἇὰάᾀᾁᾂᾃᾄᾅᾆᾇ]',
-      'ε': '[εέἐἑἒἓἔἕὲέ]',
-      'η': '[ηήἠἡἢἣἤἥἦἧὴήᾐᾑᾒᾓᾔᾕᾖᾗ]',
-      'ι': '[ιίἰἱἲἳἴἵἶἷὶίϊΐ]',
-      'ο': '[οόὀὁὂὃὄὅὸό]',
-      'υ': '[υύὐὑὒὓὔὕὖὗὺύϋΰ]',
-      'ω': '[ωώὠὡὢὣὤὥὦὧὼώᾠᾡᾢᾣᾤᾥᾦᾧ]'
-    };
-    
-    if (tonosMap[char]) {
-      regexPattern += tonosMap[char];
-    } else {
-      regexPattern += char;
-    }
-  }
-  
-  const regex = new RegExp(`(${regexPattern})`, 'gi');
-  
-  // Αντικαθιστούμε το κείμενο με highlighted version
-  html = html.replace(regex, function(match) {
-    return `<span class="highlight">${match}</span>`;
-  });
-  
-  element.innerHTML = html;
-}
-
-function resetSearchResults() {
-  const boxes = document.querySelectorAll('.box');
-  const container = document.getElementById('content');
-  
-  const noResults = container.querySelector('.no-results');
-  if (noResults) noResults.remove();
-  
-  // Επαναφορά όλων των boxes στην αρχική σειρά
-  const sortedBoxes = Array.from(boxes).sort((a, b) => {
-    return parseInt(a.dataset.index || 0) - parseInt(b.dataset.index || 0);
-  });
-  
-  if (!boxes[0]?.dataset.index) {
-    boxes.forEach((box, i) => {
-      box.dataset.index = i;
-    });
-  }
-  
-  sortedBoxes.forEach(box => {
-    box.style.display = 'block';
-    box.classList.remove('search-match');
-    box.style.border = 'none';
-    box.style.boxShadow = 'none';
-    box.querySelectorAll('.highlight').forEach(el => {
-      const parent = el.parentNode;
-      parent.replaceChild(document.createTextNode(el.textContent), el);
-      parent.normalize();
-    });
-    container.appendChild(box);
-  });
-}
-
-/* ==================================================
-   ΕΡΩΤΗΜΑΤΑ (data - πλήρης)
-================================================== */
 
 const data = [
 
@@ -920,11 +401,10 @@ function render(){
 
   });
 
-  let boxIndex = 0;
   for(let cat in categories){
 
     container.innerHTML += `
-      <h2 style="text-align:center;" class="translate-me">
+      <h2 style="text-align:center;">
         ${cat}
       </h2>
     `;
@@ -932,26 +412,96 @@ function render(){
     categories[cat].forEach(item=>{
 
       container.innerHTML += `
-        <div class="box" data-index="${boxIndex}">
-          <h3 class="translate-me">${item.q}</h3>
-          <div class="answer translate-me">
+        <div class="box">
+
+          <h3>${item.q}</h3>
+
+          <div class="answer">
             ${item.a}
           </div>
+
           <button class="meditate-btn">
             🧘 Διαλογισμός
           </button>
+
         </div>
       `;
-      boxIndex++;
 
     });
 
   }
 
-  const containerEl = document.getElementById('content');
-  if (!originalHTML) {
-    originalHTML = containerEl.innerHTML;
-  }
+}
+
+
+/* ==================================================
+   SEARCH + HIGHLIGHT
+================================================== */
+
+function setupSearch(){
+
+  const searchInput = document.getElementById("search");
+  const clearBtn = document.getElementById("clearSearch");
+  const boxes = document.querySelectorAll(".box");
+
+  boxes.forEach(box=>{
+    box.dataset.original = box.innerHTML;
+  });
+
+  searchInput.addEventListener("input", function(){
+
+    const value = this.value.toLowerCase().trim();
+
+    boxes.forEach(box=>{
+
+      box.innerHTML = box.dataset.original;
+
+      const text = box.innerText.toLowerCase();
+
+      if(text.includes(value)){
+
+        box.style.display = "block";
+
+        if(value !== ""){
+          highlightText(box, value);
+        }
+
+      }else{
+
+        box.style.display = "none";
+
+      }
+
+    });
+
+  });
+
+  clearBtn.addEventListener("click", function(){
+
+    searchInput.value = "";
+
+    boxes.forEach(box=>{
+
+      box.style.display = "block";
+      box.innerHTML = box.dataset.original;
+
+    });
+
+  });
+
+}
+
+
+/* highlight */
+
+function highlightText(element, search){
+
+  const regex = new RegExp(`(${search})`, "gi");
+
+  element.innerHTML = element.innerHTML.replace(
+    regex,
+    `<span class="highlight">$1</span>`
+  );
 
 }
 
