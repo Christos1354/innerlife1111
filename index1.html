@@ -31,7 +31,10 @@
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&display=swap"></noscript>
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateInit" async defer></script>
-<!-- Το API key ΔΕΝ ζει πλέον εδώ. Ζει κρυφό στο Cloudflare (functions/api/chat.js) -->
+<script>
+/* 🔑 AI */
+window._ak='c2stYW50LWFwaTAzLWhTRlZqOTZSZ0JBNGJvOHFBSFR2eFN2SWNBbnVyVFExV25xT0FnSi1UcS1jenJ6UzBfazZvS05zQUZzVFJPVTVQcG9VZktOdmhsd3ZCVDdGOHZpNTN3LV9LRXNvd0FB';
+</script>
 <style>
 *, body, select, button, h1, p { font-family:'Cinzel',Georgia,serif !important; }
 :root { --zoom-level:87%; }
@@ -2926,11 +2929,19 @@ async function sendDoorChatMsg(){
   box?.appendChild(ld);
   if(box) box.scrollTop = box.scrollHeight;
 
+  const _k = atob(window._ak||'');
+  if(!_k){ ld.remove(); addDoorChatBubble('ai','⚙️ Η υπηρεσία δεν είναι διαθέσιμη αυτή τη στιγμή 🙏'); return; }
   try{
-    const resp = await fetch('/api/chat',{
+    const resp = await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
-      headers:{ 'Content-Type':'application/json' },
+      headers:{
+        'Content-Type':'application/json',
+        'x-api-key': _k,
+        'anthropic-version':'2023-06-01',
+        'anthropic-dangerous-direct-browser-access':'true'
+      },
       body: JSON.stringify({
+        model:'claude-sonnet-4-20250514',
         max_tokens:500,
         system:`Είσαι ένας σοφός και πολυμαθής σύμβουλος με βαθιές γνώσεις σε φιλοσοφία, ψυχολογία, ιατρική, επιστήμη, πνευματικότητα και προσωπική ανάπτυξη. Μιλάς πάντα Ελληνικά με σαφήνεια και βάθος.
 
@@ -3062,11 +3073,19 @@ async function sendChatMsg(){
     box.appendChild(ld); box.scrollTop=box.scrollHeight;
   }
 
+  const _k2 = atob(window._ak||'');
+  if(!_k2){ document.getElementById(loadId)?.remove(); addChatBubble('ai','⚙️ Η υπηρεσία δεν είναι διαθέσιμη αυτή τη στιγμή 🙏'); return; }
   try{
-    const resp = await fetch('/api/chat',{
+    const resp = await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
-      headers:{ 'Content-Type':'application/json' },
+      headers:{
+        'Content-Type':'application/json',
+        'x-api-key': _k2,
+        'anthropic-version':'2023-06-01',
+        'anthropic-dangerous-direct-browser-access':'true'
+      },
       body: JSON.stringify({
+        model:'claude-sonnet-4-20250514',
         max_tokens:1000,
         system:`Είσαι ένας φιλικός, ζεστός ακροατής με ενσυναίσθηση. Μιλάς Ελληνικά.
 Ακούς τον χρήστη με κατανόηση. Δεν δίνεις ιατρικές/νομικές συμβουλές.
