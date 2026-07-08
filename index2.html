@@ -4615,21 +4615,18 @@ function _ttsGetLang(){
   return _ttsLangMap[shortCode] || _ttsLangMap[code] || (shortCode.length===2 ? shortCode+'-'+shortCode.toUpperCase() : code);
 }
 
-var _ttsAudio = null; /* το τρέχον <audio> του ElevenLabs, αν παίζει κάτι */
-
 function _ttsStop(){
   if(window.speechSynthesis){ window.speechSynthesis.cancel(); }
-  if(_ttsAudio){ _ttsAudio.pause(); _ttsAudio = null; }
   _ttsSpeaking = false;
   if(_ttsBtn){ _ttsBtn.classList.remove('speaking'); _ttsBtn.title='Ανάγνωση'; }
   _ttsBtn = null;
 }
 
-/* Παλιά μέθοδος (φωνές browser) - χρησιμοποιείται ΜΟΝΟ ως fallback αν το ElevenLabs αποτύχει */
-function _ttsBuildAndSpeakBrowser(text, btn, langCode, voices){
+function _ttsBuildAndSpeak(text, btn, langCode, voices){
   var matchVoice = null;
   var prefix = langCode.split('-')[0].toLowerCase();
   if(voices && voices.length > 0){
+    /* 1. Ψάξε από τη λίστα προτιμώμενων ονομάτων */
     var preferredList = _ttsPreferredVoice[langCode];
     if(preferredList){
       for(var pi=0; pi<preferredList.length; pi++){
@@ -4637,9 +4634,11 @@ function _ttsBuildAndSpeakBrowser(text, btn, langCode, voices){
         if(matchVoice) break;
       }
     }
+    /* 2. Exact lang match */
     if(!matchVoice){
       matchVoice = voices.find(function(v){ return v.lang.toLowerCase() === langCode.toLowerCase(); });
     }
+    /* 3. Prefix match */
     if(!matchVoice){
       matchVoice = voices.find(function(v){ return v.lang.toLowerCase().startsWith(prefix); });
     }
@@ -4658,65 +4657,26 @@ function _ttsBuildAndSpeakBrowser(text, btn, langCode, voices){
   setTimeout(function(){ window.speechSynthesis.speak(utt); }, 80);
 }
 
-/* Νέα μέθοδος: φυσική φωνή μέσω ElevenLabs (server-side, key κρυφό) */
-async function _ttsSpeakElevenLabs(text, btn, langCode, voicesForFallback){
-  _ttsBtn = btn;
-  _ttsSpeaking = true;
-  if(btn){ btn.classList.add('speaking'); btn.textContent='⏳'; btn.title='Σταμάτα'; }
-
-  /* Χωρίζουμε σε κομμάτια ~1500 χαρακτήρων για μεγάλα κείμενα */
-  var chunks = [];
-  var tmp = text.trim();
-  while(tmp.length > 0){
-    if(tmp.length <= 1500){ chunks.push(tmp); break; }
-    var cut = tmp.lastIndexOf(' ', 1500);
-    if(cut < 0) cut = 1500;
-    chunks.push(tmp.substring(0, cut).trim());
-    tmp = tmp.substring(cut).trim();
-  }
-
-  try{
-    for(var i=0; i<chunks.length; i++){
-      if(!_ttsSpeaking || _ttsBtn !== btn) return; /* ο χρήστης πάτησε "σταμάτα" στο μεταξύ */
-
-      var resp = await fetch('/api/tts', {
-        method:'POST',
-        headers:{ 'Content-Type':'application/json' },
-        body: JSON.stringify({ text: chunks[i], lang: langCode })
-      });
-
-      if(!resp.ok) throw new Error('tts-failed');
-
-      var blob = await resp.blob();
-      var url = URL.createObjectURL(blob);
-      var audio = new Audio(url);
-      _ttsAudio = audio;
-      if(btn){ btn.textContent='🔊'; }
-
-      await new Promise(function(resolve, reject){
-        audio.onended = resolve;
-        audio.onerror = reject;
-        audio.play().catch(reject);
-      });
-
-      URL.revokeObjectURL(url);
-    }
-    _ttsStop();
-  }catch(e){
-    console.warn('ElevenLabs TTS απέτυχε, επιστροφή στη φωνή του browser:', e);
-    /* Fallback: παλιά μέθοδος με τις φωνές του browser */
-    _ttsBuildAndSpeakBrowser(text, btn, langCode, voicesForFallback);
-  }
-}
-
 function ttsSpeakText(text, btn){
+  if(!window.speechSynthesis){ alert('Ο browser σου δεν υποστηρίζει ανάγνωση κειμένου.'); return; }
   if(_ttsSpeaking && _ttsBtn === btn){ _ttsStop(); return; }
   _ttsStop();
   if(!text || !text.trim()) return;
 
   var langCode = _ttsGetLang();
-  var voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
-  _ttsSpeakElevenLabs(text, btn, langCode, voices);
+  var voices = window.speechSynthesis.getVoices();
+
+  /* Αν οι φωνές δεν έχουν φορτώσει ακόμα (Chrome), περιμένουμε */
+  if(voices.length === 0){
+    if(btn){ btn.textContent='⏳'; }
+    window.speechSynthesis.onvoiceschanged = function(){
+      var v2 = window.speechSynthesis.getVoices();
+      if(btn){ btn.textContent='🔊'; }
+      _ttsBuildAndSpeak(text, btn, langCode, v2);
+    };
+    return;
+  }
+  _ttsBuildAndSpeak(text, btn, langCode, voices);
 }
 
 async function ttsSpeakDoorText(wrapperId, btn){

@@ -1,0 +1,14 @@
+[build]
+  functions = "netlify/functions"
+
+# Ανακατεύθυνση: το index.html καλεί /api/chat και /api/tts,
+# το Netlify τα στέλνει στα πραγματικά τους functions.
+[[redirects]]
+  from = "/api/chat"
+  to = "/.netlify/functions/chat"
+  status = 200
+
+[[redirects]]
+  from = "/api/tts"
+  to = "/.netlify/functions/tts"
+  status = 200
