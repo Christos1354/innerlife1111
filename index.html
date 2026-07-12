@@ -137,6 +137,230 @@ html, body { margin:0; padding:0; width:100%; height:100vh; background:#000; ove
 @keyframes mystery  { 0%{opacity:0.5;filter:brightness(0.7)} 50%{opacity:1;filter:brightness(1.3)} 100%{opacity:0.5;filter:brightness(0.7)} }
 @keyframes qmark    { 0%{transform:scale(1) rotate(-5deg);opacity:0.6} 50%{transform:scale(1.2) rotate(5deg);opacity:1} 100%{transform:scale(1) rotate(-5deg);opacity:0.6} }
 
+/* ════════════════════════════════════════════
+   ΠΑΓΚΟΣΜΙΟ ΤΟΠΙΟ ΠΡΟΣΕΥΧΗΣ — ουδέτερο, χωρίς
+   συγκεκριμένα θρησκευτικά σύμβολα κτιρίου
+   ════════════════════════════════════════════ */
+.exotic-landscape {
+  background:
+    radial-gradient(ellipse at 50% 12%, rgba(255,190,170,0.3) 0%, transparent 50%),
+    linear-gradient(180deg, #3a1240 0%, #5c1c46 28%, #7a2848 52%, #4a1638 78%, #260c28 100%);
+  position: relative;
+  overflow: hidden;
+}
+.exotic-landscape::before {
+  /* Αστέρια */
+  content:'';
+  position:absolute; inset:0;
+  background-image:
+    radial-gradient(1.5px 1.5px at 20% 20%, #fff, transparent),
+    radial-gradient(1px 1px at 60% 10%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 80% 25%, #fff, transparent),
+    radial-gradient(1px 1px at 35% 8%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 90% 15%, #fff, transparent),
+    radial-gradient(1px 1px at 10% 30%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 50% 22%, #fff, transparent);
+  opacity: 0.7;
+  animation: twinkle 4s ease-in-out infinite alternate;
+}
+.exotic-landscape::after {
+  /* Απαλά, ουδέτερα "βουνά" στο βάθος — δίνουν αίσθηση τοπίου */
+  content:'';
+  position:absolute; left:0; right:0; bottom:0; height:32%;
+  background: linear-gradient(180deg, transparent 0%, rgba(10,8,20,0.9) 60%);
+  clip-path: polygon(0% 100%, 0% 55%, 12% 40%, 24% 58%, 38% 30%, 52% 52%, 66% 22%, 80% 48%, 92% 34%, 100% 50%, 100% 100%);
+  background-color: #150c28;
+}
+
+.faith-circle {
+  position: absolute;
+  top: 4%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: clamp(140px, 44%, 230px);
+  height: clamp(140px, 44%, 230px);
+  border-radius: 50%;
+  background: conic-gradient(from 0deg,
+    #6b1e3c 0deg 36deg, #7a2848 36deg 72deg,
+    #6b1e3c 72deg 108deg, #7a2848 108deg 144deg,
+    #6b1e3c 144deg 180deg, #7a2848 180deg 216deg,
+    #6b1e3c 216deg 252deg, #7a2848 252deg 288deg,
+    #6b1e3c 288deg 324deg, #7a2848 324deg 360deg);
+  border: 2px solid #d4af37;
+  box-shadow: 0 0 25px rgba(212,175,55,0.35), inset 0 0 20px rgba(0,0,0,0.35);
+  z-index: 60;
+}
+.faith-symbol {
+  position: absolute;
+  color: #f5e4b8;
+  text-shadow: 0 0 6px rgba(0,0,0,0.9);
+  left: 50%; top: 50%;
+  line-height: 1;
+  text-align: center;
+}
+.faith-label {
+  position: absolute;
+  color: #f0d060;
+  letter-spacing: 0.03em;
+  left: 50%; top: 50%;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  text-shadow: 0 0 4px rgba(0,0,0,0.9);
+}
+.faith-center-glow {
+  position:absolute; inset:26%;
+  border-radius:50%;
+  background: radial-gradient(circle at 35% 30%, #fff2c8 0%, #e8c15a 35%, #b8892a 80%);
+  border: 2px solid #f5e4b8;
+  box-shadow: 0 0 18px rgba(255,215,120,0.6), inset 0 0 10px rgba(120,70,10,0.4);
+  display:flex; align-items:center; justify-content:center;
+}
+.faith-center-glow svg { width:64%; height:64%; }
+
+.side-photo {
+  position: absolute;
+  top: 2.5%;
+  width: clamp(42px, 16%, 70px);
+  height: clamp(42px, 16%, 70px);
+  border-radius: 50%;
+  border: 2px solid #d4af37;
+  box-shadow: 0 0 14px rgba(212,175,55,0.4);
+  object-fit: cover;
+  z-index: 62;
+}
+.side-photo.left  { left: 3%; }
+.side-photo.right { right: 3%; }
+.faith-center-glow {
+  position:absolute; inset:22%;
+  border-radius:50%;
+  background: radial-gradient(circle, rgba(255,220,140,0.35) 0%, transparent 70%);
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+.dedication-panel {
+  position: absolute;
+  right: 2.5%;
+  top: 22%;
+  width: min(30%, 150px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  z-index: 70;
+}
+.panagia-icon {
+  width: 78%;
+  max-width: 90px;
+  border-radius: 8px;
+  border: 2px solid #f0d060;
+  box-shadow: 0 0 16px 4px rgba(255,210,120,0.55), 0 0 30px 8px rgba(255,180,80,0.25);
+  filter: brightness(1.12) saturate(1.05);
+}
+.dedication-box {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+  background: rgba(4,6,16,0.5);
+  border: 1px solid rgba(212,175,55,0.35);
+  border-radius: 12px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+.dedication-box textarea {
+  width: 100%;
+  min-height: 78px;
+  max-height: 130px;
+  resize: none;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(212,175,55,0.6);
+  background: rgba(4,6,16,0.75);
+  color: #f0e8d0;
+  font-family: Georgia, serif;
+  font-size: 11px;
+  line-height: 1.4;
+  box-sizing: border-box;
+}
+.dedication-box textarea::placeholder { color: rgba(220,205,170,0.6); }
+#light-candle-btn {
+  padding: 11px 12px;
+  border-radius: 24px;
+  border: 1px solid #f0d060;
+  background: linear-gradient(180deg, #d4af37, #8b6914);
+  color: #1a1204;
+  font-family: Georgia, serif;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  box-shadow: 0 0 18px rgba(212,175,55,0.5);
+  touch-action: manipulation;
+  min-height: 44px;
+}
+#light-candle-btn:active { transform: scale(0.97); }
+
+/* ── Αριστερό πλαίσιο: οι προσευχές που γράφτηκαν ── */
+.prayer-scroll {
+  position: absolute;
+  left: 2.5%;
+  top: 12%;
+  bottom: 34%;
+  width: min(28%, 140px);
+  background: rgba(4,6,16,0.5);
+  border: 1px solid rgba(212,175,55,0.35);
+  border-radius: 12px;
+  z-index: 70;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column-reverse;
+  padding: 8px;
+  box-sizing: border-box;
+  gap: 6px;
+}
+.prayer-entry {
+  color: #ffd700;
+  font-weight: 700;
+  font-family: Georgia, serif;
+  font-size: 11px;
+  line-height: 1.35;
+  text-shadow: 0 0 6px rgba(255,200,60,0.5);
+  animation: prayerRise 0.5s ease-out;
+  flex-shrink: 0;
+}
+@keyframes prayerRise { from{ opacity:0; transform:translateY(10px);} to{ opacity:1; transform:translateY(0);} }
+
+/* ── Κυκλικός/φυσικός "κήπος" κεριών (μοτίβο ηλίανθου) ── */
+.candle-wall {
+  position: absolute;
+  left: 50%;
+  bottom: 4%;
+  transform: translateX(-50%);
+  width: min(56%, 240px);
+  height: min(38%, 170px);
+  z-index: 55;
+}
+.mini-candle {
+  position: absolute;
+  width: 4px;
+  height: 40px;
+  background: linear-gradient(180deg,#f5e4b8,#e0bd6e);
+  border-radius: 2px 2px 1px 1px;
+  box-shadow: 0 0 6px rgba(255,180,60,0.5);
+  animation: fadein 0.5s ease-out;
+}
+.mini-candle .floga { width:5px; height:11px; top:-10px; }
+/* Παλιά στοιχεία πύλης προσευχής — μόνιμα ανενεργά, ό,τι κι αν τα ξαναδείξει παλιός κώδικας */
+#edit-name-btn, #pencil-label, #name-input-panel { display:none !important; }
+
+.mini-candle .mini-label {
+  position:absolute; bottom:-16px; left:50%; transform:translateX(-50%);
+  font-size:8px; color:#fffcf2; text-shadow:1px 1px 2px #000;
+  white-space:nowrap; max-width:70px; overflow:hidden; text-overflow:ellipsis;
+}
+
 #entrance-page {
     position:fixed; inset:0; z-index:9000;
     background:#060c1a;
@@ -339,6 +563,10 @@ button, .lang-btn, .cat-btn, .menu-btn, .toc-btn, .ka-b {
    bottom/top = κατακόρυφη, left/right = οριζόντια */
 #pagari { position:absolute; bottom:30%; right:8%;  width:38%; height:12%; z-index:100; cursor:pointer !important; }
 #ammos  { position:absolute; bottom:17%; left:7%;   width:40%; height:5%;  z-index:100; cursor:pointer !important; }
+.ammos-tray {
+  position:absolute; bottom:14%; left:7%; width:40%; height:16%;
+  z-index:120; overflow:visible;
+}
 
 /* hints removed */
 .kantili { position:absolute; width:40px; height:60px; z-index:100; cursor:pointer !important; }
@@ -1086,35 +1314,8 @@ button, .lang-btn, .cat-btn, .menu-btn, .toc-btn, .ka-b {
     <div id="shrine-box"></div>
     <div id="candle-light" style="position:absolute;inset:0;pointer-events:none;z-index:150;opacity:0;transition:opacity 0.3s;"></div>
 
-    <!-- ═══ ΟΔΗΓΙΕΣ — εμφανίζονται αρχικά, κλείνουν με κλικ ═══ -->
-    <div id="church-guide" onclick="this.style.display='none'"
-      style="position:absolute;bottom:4%;left:50%;transform:translateX(-50%);
-      width:88%;max-width:340px;z-index:2000;cursor:pointer;
-      background:rgba(4,6,16,0.88);border:1px solid rgba(212,175,55,0.5);
-      border-radius:10px;padding:14px 16px;
-      box-shadow:0 0 20px rgba(212,175,55,0.15);
-      font-family:Georgia,serif;text-align:center;">
-      <div id="guide-title" style="color:#d4af37;font-size:13px;font-weight:700;letter-spacing:0.15em;margin-bottom:4px;">
-        🕯️ ΠΩΣ ΝΑ ΧΡΗΣΙΜΟΠΟΙΗΣΕΤΕ ΤΗΝ ΕΚΚΛΗΣΙΑ
-      </div>
-      <div id="guide-click" style="color:#d4af37;font-size:11px;letter-spacing:0.08em;margin-bottom:10px;">
-        — με κλικ —
-      </div>
-      <div id="guide-steps" style="color:#c8c0a8;font-size:12px;line-height:1.9;text-align:left;">
-        ✏️ <b style="color:#f0d060;">Γράψε</b> ένα όνομα ή μια ευχή<br>
-        🕯️ <b style="color:#f0d060;">Πάρε κερί</b> από το παγκάρι<br>
-        🔥 <b style="color:#f0d060;">Άναψέ το</b> από το καντήλι<br>
-        🙏 <b style="color:#f0d060;">Τοποθέτησέ το</b> στην άμμο<br>
-        🎵 <b style="color:#f0d060;">Επέλεξε</b> Προσευχές ή Ψαλμούς<br>
-        🤫 <b style="color:#f0d060;">Παρέμεινε</b> σιωπηλός για λίγο
-      </div>
-      <div id="guide-close" style="color:#d4af37;font-size:11px;font-weight:700;margin-top:10px;letter-spacing:0.1em;">
-        [ πάτα για να κλείσεις ]
-      </div>
-    </div>
-
-    <div id="pencil-label">✏️ Γράψε<br>παράκληση</div>
-    <button id="edit-name-btn">✏️</button>
+    <div id="pencil-label" style="display:none !important;">✏️ Γράψε<br>παράκληση</div>
+    <button id="edit-name-btn" style="display:none !important;">✏️</button>
 
 <!-- ═══ ΕΙΚΟΝΙΔΙΟ ΣΥΝΕΙΣΦΟΡΑΣ — ακριβώς κάτω από το μολύβι ═══ -->
 <a id="donate-btn" href="#"
@@ -1190,7 +1391,7 @@ button, .lang-btn, .cat-btn, .menu-btn, .toc-btn, .ka-b {
     <div id="donate-thanks" style="color:#f0d060;font-size:12px;">Ευχαριστούμε από καρδιάς 💛</div>
   </div>
 </div>
-    <div id="name-input-panel">
+    <div id="name-input-panel" style="display:none !important;">
       <input id="prayer-name" type="text" placeholder="Όνομα / Για χάρη..." autocomplete="off">
       <button id="save-prayer-name">Αποθήκευση</button>
     </div>
@@ -3342,6 +3543,8 @@ function epSetLang(lang, btn){
   window._gtCurrentLang = lang;
   document.documentElement.lang = lang;
   _translateDynamicContent(lang);
+  retranslatePrayerScroll(lang);
+  retranslateGateUI(lang);
 }
 
 function epOpenMenu(){
@@ -3538,7 +3741,7 @@ function epGoTo(dest){
     document.getElementById('door-page').style.display='none';
     document.getElementById('door-chat-btn').style.display='none';
     document.getElementById('door-chat-panel').style.display='none';
-    initChurch(); preloadAllAudio();
+    initChurch(); preloadAllAudio(); resizeChurch();
     /* Χωρίς αυτόματη αναπαραγωγή — ο επισκέπτης επιλέγει */
   }
 
@@ -3643,110 +3846,153 @@ if(BG_PHOTO){
 
 function initChurch(){
   const sb=document.getElementById('shrine-box');
-  if(sb.querySelector('#mainKeri')) return;
-  sb.style.backgroundImage="url('"+CHURCH_BG+"')";
+  if(sb.querySelector('#ammos-tray')) return;
+  sb.classList.remove('exotic-landscape');
+  sb.style.backgroundImage = "url('"+BG_CHURCH+"')";
   sb.innerHTML=`
-    <div id="mainKeri" class="keri"><div class="floga" id="mainFloga"></div><div class="keri-body"></div></div>
-    <div id="eternal-keri" class="is-lit" style="position:absolute;bottom:16%;left:16%;width:18px;height:110px;z-index:450;cursor:pointer;">
+    <div id="eternal-keri" class="is-lit" style="position:absolute;bottom:16%;left:16%;width:18px;height:110px;z-index:450;">
       <div class="floga" style="top:-20px;margin-left:1px;scale:1.2;"></div><div class="keri-body"></div>
     </div>
-    <div id="pagari"></div>
-    <div id="ammos"></div>
-    <div id="k1" class="kantili" onclick="event.stopPropagation()"><div class="floga static-floga"></div></div>
-    <div id="k2" class="kantili" onclick="event.stopPropagation()"><div class="floga static-floga"></div></div>`;
-  mKeri=document.getElementById('mainKeri');
-  mFloga=document.getElementById('mainFloga');
+    <div class="ammos-tray" id="ammos-tray"></div>
+    <div class="prayer-scroll" id="prayer-scroll"></div>
+    <div class="dedication-panel">
+      <img class="panagia-icon" src="panagia.jpg" alt="" onerror="this.style.display='none'">
+      <div class="dedication-box">
+        <textarea id="dedication-text" placeholder="Γράψε την προσευχή σου ή την παράκλησή σου, για κάποιον που αγαπάς και νοιάζεσαι." maxlength="120"></textarea>
+        <button id="light-candle-btn">🕯️ Άναψε ένα κερί</button>
+      </div>
+    </div>`;
+  renderCandleWall();
+  retranslateGateUI(_getPrayerLang());
+  document.getElementById('light-candle-btn').addEventListener('click', lightCandle);
+}
 
-  /* ══════════════════════════════════════════════════════
-     CANDLE INTERACTION — touch + mouse
-     ══════════════════════════════════════════════════════ */
-  const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-  const pagari = document.getElementById('pagari');
-  const ammos  = document.getElementById('ammos');
 
-  /* ── Hints πολύγλωσσα ── */
-  const _hintLang = {
-    el: { idle:'πάτα εδώ για κερί', hold:'άφησε στην άμμο ↓' },
-    en: { idle:'tap here for candle', hold:'release on sand ↓' },
-    ru: { idle:'нажми для свечи', hold:'положи на песок ↓' },
-    ro: { idle:'atinge pentru lumânare', hold:'lasă pe nisip ↓' }
-  };
-  function _getLang(){ return (document.documentElement.lang||'el').slice(0,2); }
-  function _hint(key){ const l=_getLang(); return (_hintLang[l]||_hintLang.el)[key]; }
+/* Μεταφράζει το κουμπί και το placeholder της Πύλης Προσευχής —
+   δουλεύει ανεξάρτητα από το Google Translate, ώστε να ισχύει
+   πάντα, ακόμη και μετά από reset() που ξαναφτιάχνει τη σκηνή */
+const GATE_UI_EL = {
+  btn: '🕯️ Άναψε ένα κερί',
+  ph:  'Γράψε την προσευχή σου ή την παράκλησή σου, για κάποιον που αγαπάς και νοιάζεσαι.'
+};
+async function retranslateGateUI(lang){
+  const btn = document.getElementById('light-candle-btn');
+  const ta  = document.getElementById('dedication-text');
+  if(!btn || !ta) return;
+  if(!lang || lang === 'el'){
+    btn.textContent = GATE_UI_EL.btn;
+    ta.placeholder  = GATE_UI_EL.ph;
+    return;
+  }
+  const [tBtn, tPh] = await Promise.all([
+    _myMemoryTranslate('Άναψε ένα κερί', 'el|'+lang),
+    _myMemoryTranslate(GATE_UI_EL.ph, 'el|'+lang)
+  ]);
+  btn.textContent = '🕯️ ' + tBtn;
+  ta.placeholder  = tPh;
+}
 
-  let _hintEl = null;
-  function _showHint(type){
-    if(!isTouchDevice) return;
-    if(!_hintEl){
-      _hintEl = document.createElement('div');
-      _hintEl.style.cssText = 'position:absolute;pointer-events:none;z-index:200;'
-        + 'color:rgba(255,220,120,0.92);font-size:11px;letter-spacing:0.1em;'
-        + 'text-shadow:0 0 10px #000,0 0 16px rgba(255,140,0,0.8);'
-        + 'animation:shimmer 2s infinite;white-space:nowrap;';
-      sb.appendChild(_hintEl);
-    }
-    if(type==='idle'){
-      _hintEl.textContent = _hint('idle');
-      _hintEl.style.cssText += 'bottom:34%;right:8%;left:auto;top:auto;';
-      _hintEl.style.display='block';
-    } else if(type==='hold'){
-      _hintEl.textContent = _hint('hold');
-      _hintEl.style.cssText += 'bottom:20%;left:7%;right:auto;top:auto;';
-      _hintEl.style.display='block';
-    } else {
-      _hintEl.style.display='none';
-    }
+function loadCandleWall(){
+  try{ return JSON.parse(localStorage.getItem('proseyxitari-wall')||'[]'); }
+  catch(e){ return []; }
+}
+function saveCandleWall(list){
+  /* Κρατάμε μόνο τα τελευταία 60 για να μη φορτώνει άσκοπα η σελίδα */
+  localStorage.setItem('proseyxitari-wall', JSON.stringify(list.slice(-60)));
+}
+
+/* Τοποθετεί το i-οστό κερί σε φυσικό, κυκλικό σχηματισμό
+   (μοτίβο "ηλίανθου" — γωνία χρυσού λόγου, όπως στη φύση) */
+
+function renderCandleWall(){
+  const tray = document.getElementById('ammos-tray');
+  if(!tray) return;
+  tray.innerHTML='';
+  loadCandleWall().forEach(()=>{
+    tray.appendChild(_buildOldStyleCandle());
+  });
+  renderPrayerScroll();
+}
+function _buildOldStyleCandle(){
+  const c=document.createElement('div');
+  c.className='keri';
+  c.style.position='absolute';
+  c.style.display='inline-block';
+  c.style.left = (Math.random()*80)+'%';
+  c.style.bottom = (Math.random()*55)+'%';
+  c.style.top='auto';
+  c.innerHTML='<div class="floga"></div><div class="keri-body"></div>';
+  return c;
+}
+
+/* ── Αριστερό πλαίσιο: εμφανίζει τις προσευχές, μεταφρασμένες στην τρέχουσα γλώσσα ── */
+function renderPrayerScroll(){
+  const scroll = document.getElementById('prayer-scroll');
+  if(!scroll) return;
+  scroll.innerHTML='';
+  const list = loadCandleWall().filter(item=>item.text).slice(-8);
+  list.forEach(item=>_appendPrayerEntry(item.text, false));
+}
+function _appendPrayerEntry(text, animate){
+  const scroll = document.getElementById('prayer-scroll');
+  if(!scroll || !text) return;
+  const entry = document.createElement('div');
+  entry.className = 'prayer-entry';
+  entry.textContent = text;
+  entry.dataset.original = text;
+  scroll.appendChild(entry);
+  /* Κρατάμε μόνο τις τελευταίες 8 ορατές — οι παλιές "εκτοπίζονται" */
+  while(scroll.children.length > 8){ scroll.removeChild(scroll.firstChild); }
+  const lang = _getPrayerLang();
+  if(lang !== 'el') _translatePrayerEntry(entry, lang);
+}
+function _getPrayerLang(){
+  return (window._gtCurrentLang || document.documentElement.lang || 'el').slice(0,2);
+}
+async function _translatePrayerEntry(entry, lang){
+  const original = entry.dataset.original;
+  const translated = await _myMemoryTranslate(original, 'el|'+lang);
+  if(translated) entry.textContent = translated;
+}
+/* Καλείται όταν ο επισκέπτης αλλάζει γλώσσα, ώστε να μεταφραστούν και οι προσευχές */
+function retranslatePrayerScroll(lang){
+  document.querySelectorAll('#prayer-scroll .prayer-entry').forEach(entry=>{
+    if(lang === 'el'){ entry.textContent = entry.dataset.original; }
+    else { _translatePrayerEntry(entry, lang); }
+  });
+}
+
+function lightCandle(){
+  const input = document.getElementById('dedication-text');
+  const text = (input.value||'').trim();
+
+  const list = loadCandleWall();
+  const tray = document.getElementById('ammos-tray');
+  const candle = _buildOldStyleCandle();
+  tray.appendChild(candle);
+  candle.classList.add('is-lit');
+
+  list.push({text: text, ts: Date.now()});
+  saveCandleWall(list);
+
+  if(text) _appendPrayerEntry(text, true);
+
+  incrementCandleCount();
+  match.currentTime = 0; match.play();
+
+  /* Απαλή λάμψη γύρω από το νέο κερί */
+  if(candleLight){
+    const r = candle.getBoundingClientRect();
+    const box = document.getElementById('shrine-box').getBoundingClientRect();
+    const px = ((r.left+r.width/2-box.left)/box.width*100).toFixed(1);
+    const py = ((r.top-box.top)/box.height*100).toFixed(1);
+    candleLight.style.background =
+      `radial-gradient(circle at ${px}% ${py}%, rgba(255,200,80,0.3) 0%, rgba(255,160,40,0.12) 15%, transparent 40%)`;
+    candleLight.style.opacity='1';
+    setTimeout(()=>{ candleLight.style.opacity='0'; }, 900);
   }
 
-  if(isTouchDevice){
-    _showHint('idle');
-
-    /* ── Παγκάρι: touchstart → πάρε κερί ── */
-    pagari.addEventListener('touchstart', function(e){
-      e.preventDefault(); e.stopPropagation();
-      if(holding) return;
-      const t = e.touches[0];
-      holding=true; lit=false;
-      mFloga.style.display='none';
-      mKeri.style.display='block';
-      /* Άμεση τοποθέτηση χωρίς rAF για zero lag */
-      const r = sb.getBoundingClientRect();
-      mKeri.style.left = (t.clientX - r.left - 6)  + 'px';
-      mKeri.style.top  = (t.clientY - r.top  - 90) + 'px';
-      mKeri.style.transform = 'none';
-      _showHint('hold');
-    }, {passive:false});
-
-    /* ── Global touchmove: σέρνε κερί ── */
-    window.addEventListener('touchmove', function(e){
-      if(!holding||!mKeri) return;
-      e.preventDefault();
-      const t = e.touches[0];
-      const r = sb.getBoundingClientRect();
-      mKeri.style.left = (t.clientX - r.left - 6)  + 'px';
-      mKeri.style.top  = (t.clientY - r.top  - 90) + 'px';
-      _checkIgnite(t.clientX, t.clientY, r);
-    }, {passive:false});
-
-    /* ── Global touchend: αν στην άμμο → τοποθέτησε ── */
-    window.addEventListener('touchend', function(e){
-      hideCandleLight();
-      if(!holding) return;
-      const t = e.changedTouches[0];
-      /* Επεκτείνουμε το target της άμμου κατά 40px για πιο εύκολη τοποθέτηση */
-      const ar = ammos.getBoundingClientRect();
-      const inAmmos = t.clientX >= ar.left - 20 && t.clientX <= ar.right  + 20
-                   && t.clientY >= ar.top  - 40 && t.clientY <= ar.bottom + 40;
-      if(inAmmos){ _placeDown(t.clientX, t.clientY); _showHint('idle'); }
-    }, {passive:true});
-
-  } else {
-    /* ── Desktop: click ── */
-    pagari.addEventListener('click', function(e){ pickUp(e); });
-    ammos.addEventListener('click',  function(e){ placeDown(e); });
-  }
-
-  resizeChurch();
+  input.value='';
 }
 
 function resizeChurch(){
@@ -4175,110 +4421,8 @@ function _updateDoorMusicUI(activeIdx){
   });
 }
 
-let mKeri=null, mFloga=null, holding=false, lit=false, prayerForName='';
 const match=document.getElementById('sound-match');
-
-function pickUp(e){
-  e.stopPropagation();
-  if(!mKeri||holding) return;
-  holding=true; lit=false;
-  mFloga.style.display='none';
-  mKeri.style.display='block';
-  const cX = e.touches&&e.touches.length ? e.touches[0].clientX : e.clientX;
-  const cY = e.touches&&e.touches.length ? e.touches[0].clientY : e.clientY;
-  _setKeriPos(cX, cY);
-}
-function placeDown(e){
-  const cX = e.touches&&e.touches.length ? e.touches[0].clientX : e.clientX;
-  const cY = e.touches&&e.touches.length ? e.touches[0].clientY : e.clientY;
-  _placeDown(cX, cY);
-}
 const candleLight = document.getElementById('candle-light');
-
-function _setKeriPos(clientX, clientY){
-  /* Τοποθετεί το κερί ώστε το δάχτυλο/ποντίκι να κρατά τη βάση */
-  const box = document.getElementById('shrine-box');
-  const r   = box.getBoundingClientRect();
-  const x   = clientX - r.left;
-  const y   = clientY - r.top;
-  mKeri.style.left = (x - 6)  + 'px';  /* 6px = μισό πλάτος κεριού */
-  mKeri.style.top  = (y - 90) + 'px';  /* 90px = ύψος κεριού */
-  mKeri.style.transform = 'none';
-  _checkIgnite(clientX, clientY, r);
-  if(lit && candleLight){
-    const px = ((x)/r.width*100).toFixed(1);
-    const py = ((y-28)/r.height*100).toFixed(1);
-    candleLight.style.background =
-      `radial-gradient(circle at ${px}% ${py}%, rgba(255,200,80,0.28) 0%, rgba(255,160,40,0.12) 12%, rgba(255,120,20,0.04) 25%, transparent 45%)`;
-    candleLight.style.opacity='1';
-  } else if(candleLight){
-    candleLight.style.opacity='0';
-  }
-}
-
-function _checkIgnite(clientX, clientY, r){
-  if(lit) return;
-  document.querySelectorAll('.static-floga,.is-lit,#eternal-keri,#k1 .floga,#k2 .floga').forEach(s=>{
-    const sr = s.getBoundingClientRect();
-    const dist = Math.hypot(clientX-(sr.left+sr.width/2), (clientY-50)-sr.top);
-    const threshold = (s.classList.contains('static-floga')||s.id==='k1'||s.id==='k2') ? 55 : 30;
-    if(dist < threshold){ lit=true; mFloga.style.display='block'; match.currentTime=0; match.play(); }
-  });
-}
-
-let _rafPending = false;
-function updatePos(e){
-  if(!holding||!mKeri) return;
-  const cX = e.touches&&e.touches.length ? e.touches[0].clientX : e.clientX;
-  const cY = e.touches&&e.touches.length ? e.touches[0].clientY : e.clientY;
-  if(_rafPending) return;
-  _rafPending = true;
-  requestAnimationFrame(function(){
-    _rafPending = false;
-    _setKeriPos(cX, cY);
-  });
-}
-
-function _placeDown(clientX, clientY){
-  if(!mKeri||!holding) return;
-  const box = document.getElementById('shrine-box');
-  const clone = mKeri.cloneNode(true); clone.id=''; clone.classList.add('placed');
-  clone.style.left = mKeri.style.left;
-  clone.style.top  = mKeri.style.top;
-  if(lit){ clone.classList.add('is-lit'); incrementCandleCount(); }
-  if(prayerForName){
-    const lbl=document.createElement('div'); lbl.className='prayer-label';
-    lbl.textContent=prayerForName; clone.appendChild(lbl);
-  }
-  clone.onclick=function(ev){
-    ev.stopPropagation();
-    if(this.classList.contains('is-lit')){ this.classList.remove('is-lit'); this.classList.add('unlit'); }
-    else { this.remove(); pickUp(ev); }
-  };
-  clone.addEventListener('touchstart', function(ev){
-    ev.stopPropagation(); if(ev.cancelable) ev.preventDefault();
-    if(this.classList.contains('is-lit')){ this.classList.remove('is-lit'); this.classList.add('unlit'); }
-    else { this.remove(); }
-  }, {passive:false});
-  box.appendChild(clone);
-  holding=false; mKeri.style.display='none'; hideCandleLight();
-}
-
-function hideCandleLight(){ if(candleLight) candleLight.style.opacity='0'; }
-
-/* Desktop events only */
-window.addEventListener('mousemove', updatePos);
-window.addEventListener('mouseup',   function(){ hideCandleLight(); });
-
-document.getElementById('edit-name-btn').onclick=()=>{
-  const p=document.getElementById('name-input-panel');
-  p.style.display=p.style.display==='flex'?'none':'flex';
-};
-document.getElementById('save-prayer-name').onclick=()=>{
-  prayerForName=document.getElementById('prayer-name').value.trim()||'μια ψυχή';
-  document.getElementById('prayer-name').value='';
-  document.getElementById('name-input-panel').style.display='none';
-};
 
 if('serviceWorker' in navigator){
   window.addEventListener('load', ()=>{
@@ -4369,8 +4513,16 @@ function resetChurch() {
   document.getElementById('images-modal').classList.remove('open');
   document.getElementById('naoi-modal').classList.remove('open');
   document.getElementById('kati-allo-modal').style.display='none';
-  /* Σβήνει τα τοποθετημένα κεριά */
+  /* Σβήνει τα τοποθετημένα κεριά (παλιό σύστημα, αν υπάρχουν ακόμη) */
   document.querySelectorAll('#shrine-box .placed').forEach(c=>c.remove());
+  /* Καθαρίζει όλα τα κεριά & τις προσευχές του κήπου */
+  localStorage.removeItem('proseyxitari-wall');
+  localStorage.removeItem('proseyxitari-candles');
+  const wall = document.getElementById('ammos-tray');
+  const scroll = document.getElementById('prayer-scroll');
+  if(wall) wall.innerHTML='';
+  if(scroll) scroll.innerHTML='';
+  updateCandleDisplay(0);
   /* Σταματά μουσική */
   audio.pause();
 }
@@ -4615,108 +4767,118 @@ function _ttsGetLang(){
   return _ttsLangMap[shortCode] || _ttsLangMap[code] || (shortCode.length===2 ? shortCode+'-'+shortCode.toUpperCase() : code);
 }
 
-var _ttsAudio = null; /* το τρέχον <audio> του ElevenLabs, αν παίζει κάτι */
-
 function _ttsStop(){
   if(window.speechSynthesis){ window.speechSynthesis.cancel(); }
-  if(_ttsAudio){ _ttsAudio.pause(); _ttsAudio = null; }
   _ttsSpeaking = false;
   if(_ttsBtn){ _ttsBtn.classList.remove('speaking'); _ttsBtn.title='Ανάγνωση'; }
   _ttsBtn = null;
 }
 
-/* Παλιά μέθοδος (φωνές browser) - χρησιμοποιείται ΜΟΝΟ ως fallback αν το ElevenLabs αποτύχει */
-function _ttsBuildAndSpeakBrowser(text, btn, langCode, voices){
+function _ttsFindVoice(langCode, voices){
   var matchVoice = null;
   var prefix = langCode.split('-')[0].toLowerCase();
-  if(voices && voices.length > 0){
-    var preferredList = _ttsPreferredVoice[langCode];
-    if(preferredList){
-      for(var pi=0; pi<preferredList.length; pi++){
-        matchVoice = voices.find(function(v){ return v.name === preferredList[pi]; });
-        if(matchVoice) break;
-      }
-    }
-    if(!matchVoice){
-      matchVoice = voices.find(function(v){ return v.lang.toLowerCase() === langCode.toLowerCase(); });
-    }
-    if(!matchVoice){
-      matchVoice = voices.find(function(v){ return v.lang.toLowerCase().startsWith(prefix); });
+  var preferredList = _ttsPreferredVoice[langCode];
+  if(preferredList){
+    for(var pi=0; pi<preferredList.length; pi++){
+      matchVoice = voices.find(function(v){ return v.name === preferredList[pi]; });
+      if(matchVoice) break;
     }
   }
-  var utt = new SpeechSynthesisUtterance(text.trim());
-  utt.lang = langCode;
-  if(matchVoice) utt.voice = matchVoice;
-  utt.rate = 0.78;
-  utt.pitch = 1.0;
+  if(!matchVoice) matchVoice = voices.find(function(v){ return v.lang.toLowerCase() === langCode.toLowerCase(); });
+  if(!matchVoice) matchVoice = voices.find(function(v){ return v.lang.toLowerCase().startsWith(prefix); });
+  return matchVoice;
+}
+
+/* Χωρίζει το κείμενο σε μικρές φράσεις με βάση τη στίξη (κόμμα, τελεία,
+   άνω τελεία, θαυμαστικό, ερωτηματικό, παρενθέσεις) ώστε να διαβάζεται
+   με φυσικές παύσεις, σαν άνθρωπος, αντί να τα λέει όλα μονορούφι. */
+function _ttsBuildPhrases(text){
+  var tokens = text.split(/([.,;·!?()])/);
+  var phrases = [];
+  var current = '';
+  var parenDepth = 0;
+  var pauseMap = { '.':520, '!':480, '?':480, ';':380, '·':380, ',':220 };
+
+  for(var i=0; i<tokens.length; i++){
+    var tok = tokens[i];
+    if(tok === undefined || tok === '') continue;
+
+    if(tok === '('){
+      if(current.trim()){ phrases.push({text:current.trim(), pause:150, inParens:parenDepth>0}); }
+      current = '';
+      parenDepth++;
+      continue;
+    }
+    if(tok === ')'){
+      if(current.trim()){ phrases.push({text:current.trim(), pause:260, inParens:true}); }
+      current = '';
+      parenDepth = Math.max(0, parenDepth-1);
+      continue;
+    }
+
+    var pause = pauseMap[tok];
+    if(pause !== undefined){
+      current += tok;
+      if(current.trim()){ phrases.push({text:current.trim(), pause:pause, inParens:parenDepth>0}); }
+      current = '';
+    } else {
+      current += tok;
+    }
+  }
+  if(current.trim()){ phrases.push({text:current.trim(), pause:300, inParens:parenDepth>0}); }
+  return phrases;
+}
+
+/* Διαβάζει το κείμενο φράση-φράση, με παύση ανάλογη της στίξης μετά από
+   κάθε φράση, και ελαφρώς πιο απαλό/χαμηλότερο τόνο για ό,τι είναι σε
+   παρένθεση — έτσι ακούγεται σαν σχόλιο "εν παρόδω", πιο ανθρώπινα. */
+async function _ttsSpeakNatural(text, btn, langCode, voices){
+  var matchVoice = _ttsFindVoice(langCode, voices);
+  var phrases = _ttsBuildPhrases(text);
+
   _ttsBtn = btn;
   _ttsSpeaking = true;
   if(btn){ btn.classList.add('speaking'); btn.title='Σταμάτα'; }
-  utt.onend = function(){ _ttsStop(); };
-  utt.onerror = function(e){ console.warn('TTS error:',e.error); _ttsStop(); };
-  window.speechSynthesis.cancel();
-  setTimeout(function(){ window.speechSynthesis.speak(utt); }, 80);
-}
 
-/* Νέα μέθοδος: φυσική φωνή μέσω ElevenLabs (server-side, key κρυφό) */
-async function _ttsSpeakElevenLabs(text, btn, langCode, voicesForFallback){
-  _ttsBtn = btn;
-  _ttsSpeaking = true;
-  if(btn){ btn.classList.add('speaking'); btn.textContent='⏳'; btn.title='Σταμάτα'; }
-
-  /* Χωρίζουμε σε κομμάτια ~1500 χαρακτήρων για μεγάλα κείμενα */
-  var chunks = [];
-  var tmp = text.trim();
-  while(tmp.length > 0){
-    if(tmp.length <= 1500){ chunks.push(tmp); break; }
-    var cut = tmp.lastIndexOf(' ', 1500);
-    if(cut < 0) cut = 1500;
-    chunks.push(tmp.substring(0, cut).trim());
-    tmp = tmp.substring(cut).trim();
+  for(var i=0; i<phrases.length; i++){
+    if(!_ttsSpeaking || _ttsBtn !== btn) return;
+    var p = phrases[i];
+    await new Promise(function(resolve){
+      var utt = new SpeechSynthesisUtterance(p.text);
+      utt.lang = langCode;
+      if(matchVoice) utt.voice = matchVoice;
+      utt.rate = 0.92;
+      utt.pitch = p.inParens ? 0.94 : 1.0;
+      utt.volume = p.inParens ? 0.9 : 1.0;
+      utt.onend = resolve;
+      utt.onerror = resolve;
+      window.speechSynthesis.speak(utt);
+    });
+    if(!_ttsSpeaking || _ttsBtn !== btn) return;
+    await new Promise(function(resolve){ setTimeout(resolve, p.pause); });
   }
-
-  try{
-    for(var i=0; i<chunks.length; i++){
-      if(!_ttsSpeaking || _ttsBtn !== btn) return; /* ο χρήστης πάτησε "σταμάτα" στο μεταξύ */
-
-      var resp = await fetch('/api/tts', {
-        method:'POST',
-        headers:{ 'Content-Type':'application/json' },
-        body: JSON.stringify({ text: chunks[i], lang: langCode })
-      });
-
-      if(!resp.ok) throw new Error('tts-failed');
-
-      var blob = await resp.blob();
-      var url = URL.createObjectURL(blob);
-      var audio = new Audio(url);
-      _ttsAudio = audio;
-      if(btn){ btn.textContent='🔊'; }
-
-      await new Promise(function(resolve, reject){
-        audio.onended = resolve;
-        audio.onerror = reject;
-        audio.play().catch(reject);
-      });
-
-      URL.revokeObjectURL(url);
-    }
-    _ttsStop();
-  }catch(e){
-    console.warn('ElevenLabs TTS απέτυχε, επιστροφή στη φωνή του browser:', e);
-    /* Fallback: παλιά μέθοδος με τις φωνές του browser */
-    _ttsBuildAndSpeakBrowser(text, btn, langCode, voicesForFallback);
-  }
+  _ttsStop();
 }
 
 function ttsSpeakText(text, btn){
+  if(!window.speechSynthesis){ alert('Ο browser σου δεν υποστηρίζει ανάγνωση κειμένου.'); return; }
   if(_ttsSpeaking && _ttsBtn === btn){ _ttsStop(); return; }
   _ttsStop();
   if(!text || !text.trim()) return;
 
   var langCode = _ttsGetLang();
-  var voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
-  _ttsSpeakElevenLabs(text, btn, langCode, voices);
+  var voices = window.speechSynthesis.getVoices();
+
+  if(voices.length === 0){
+    if(btn){ btn.textContent='⏳'; }
+    window.speechSynthesis.onvoiceschanged = function(){
+      var v2 = window.speechSynthesis.getVoices();
+      if(btn){ btn.textContent='🔊'; }
+      _ttsSpeakNatural(text, btn, langCode, v2);
+    };
+    return;
+  }
+  _ttsSpeakNatural(text, btn, langCode, voices);
 }
 
 async function ttsSpeakDoorText(wrapperId, btn){
