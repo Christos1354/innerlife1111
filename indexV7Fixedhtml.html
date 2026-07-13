@@ -36,14 +36,7 @@
 *, body, select, button, h1, p { font-family:'Cinzel',Georgia,serif !important; }
 :root { --zoom-level:87%; }
 * { -webkit-tap-highlight-color:transparent; outline:none !important; box-sizing:border-box; }
-html, body {
-  margin:0; padding:0; width:100%;
-  height:100vh;                      /* fallback 1: παλιά browsers */
-  height:calc(var(--vh, 1vh) * 100); /* fallback 2: JS-υπολογισμένο πραγματικό ύψος (Android/παλιά iOS) */
-  height:100dvh;                     /* ΔΙΟΡΘΩΣΗ: πραγματικό ορατό ύψος — δεν κρύβει το menu πίσω από τη γραμμή διευθύνσεων */
-  background:#000; overflow:hidden; display:flex; flex-direction:column;
-  user-select:none; -webkit-user-select:none; cursor:crosshair !important;
-}
+html, body { margin:0; padding:0; width:100%; height:100vh; background:#000; overflow:hidden; display:flex; flex-direction:column; user-select:none; -webkit-user-select:none; cursor:crosshair !important; }
 
 @keyframes twinkle  { 0%{opacity:0.15} 100%{opacity:1} }
 @keyframes arcpulse { 0%{opacity:0.75} 50%{opacity:1} 100%{opacity:0.75} }
@@ -593,7 +586,6 @@ button, .lang-btn, .cat-btn, .menu-btn, .toc-btn, .ka-b {
     height:140px; background:#000; border-top:2px solid #d4af37;
     display:flex; justify-content:space-around; align-items:center;
     padding:6px 3px; z-index:2000; gap:2px;
-    padding-bottom: max(6px, env(safe-area-inset-bottom)); /* δεν κρύβεται πίσω από το gesture bar του iPhone */
 }
 .menu-group { flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:0 1px; height:100%; }
 
@@ -782,7 +774,6 @@ button, .lang-btn, .cat-btn, .menu-btn, .toc-btn, .ka-b {
     max-height: none  !important;
     flex-wrap: wrap   !important;
     padding: 2px 1px  !important;
-    padding-bottom: max(4px, env(safe-area-inset-bottom)) !important;
     gap: 2px          !important;
     overflow: visible !important;
     align-items: flex-start !important;
@@ -854,8 +845,6 @@ button, .lang-btn, .cat-btn, .menu-btn, .toc-btn, .ka-b {
     overflow-x: auto   !important;
     overflow-y: visible !important;   /* visible ώστε τα sub-menus να ανοίγουν */
     padding: 2px 2px   !important;
-    padding-left: max(2px, env(safe-area-inset-left)) !important;
-    padding-right: max(2px, env(safe-area-inset-right)) !important;
     gap: 3px           !important;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
@@ -896,26 +885,6 @@ button, .lang-btn, .cat-btn, .menu-btn, .toc-btn, .ka-b {
 
 </style>
 <script>
-/* ΔΙΟΡΘΩΣΗ MOBILE VIEWPORT: υπολογίζει το πραγματικό ορατό ύψος
-   (χωρίς τη γραμμή διευθύνσεων/εργαλείων του κινητού) και το αποθηκεύει
-   στη μεταβλητή --vh. Έτσι το menu-bar δεν κόβεται ποτέ εκτός οθόνης. */
-(function(){
-  function setRealVH(){
-    var h = (window.visualViewport ? window.visualViewport.height : window.innerHeight) * 0.01;
-    document.documentElement.style.setProperty('--vh', h + 'px');
-  }
-  setRealVH();
-  window.addEventListener('resize', setRealVH);
-  window.addEventListener('orientationchange', function(){
-    setRealVH();
-    setTimeout(setRealVH, 100);
-    setTimeout(setRealVH, 400);
-    setTimeout(setRealVH, 800);
-  });
-  if(window.visualViewport){
-    window.visualViewport.addEventListener('resize', setRealVH);
-  }
-})();
 /* googleTranslateInit defined below with full SEO support */
 </script>
 </head>
@@ -3100,17 +3069,10 @@ const KATI_ALLO_CONTENT = [
 
 { type:'text', title:'Το Τέλος της Μάσκας', body:'Παρουσιάζουμε διαφορετικό εαυτό στη δουλειά, στη φιλία, στην οικογένεια, στα social media. Ο Ιούγκ το ονόμαζε "persona" — και προειδοποιούσε: αν ταυτιστείς με τη μάσκα, χάνεις τον εαυτό σου. Η ωριμότητα δεν είναι να φοράς την κατάλληλη μάσκα — είναι να χρειάζεσαι όλο και λιγότερες.' },
 
-  /* -- ΕΤΟΙΜΑ ΠΑΡΑΔΕΙΓΜΑΤΑ: άλλαξε μόνο το όνομα αρχείου (file) με το δικό σου -- */
-  /* ΦΩΤΟΓΡΑΦΙΑ: ανέβασε το αρχείο (π.χ. mou-foto.jpg) στον ίδιο φάκελο με το index.html */
-  // { type:'image',      file:'mou-foto.jpg',  caption:'Η δική μου λεζάντα' },
-  /* ΜΟΥΣΙΚΗ / ΗΧΟΣ: mp3, m4a, wav — ίδιος φάκελος */
-  // { type:'audio',      file:'mousiki.mp3',   caption:'Τίτλος τραγουδιού' },
-  /* ΒΙΝΤΕΟ (τοπικό αρχείο mp4) — ίδιος φάκελος. Για μεγάλα βίντεο προτίμησε YouTube (δες παρακάτω) */
-  // { type:'video-file', file:'video.mp4',     caption:'Τίτλος βίντεο' },
-  /* ΒΙΝΤΕΟ από YouTube — βάλε τον σύνδεσμο "embed": https://www.youtube.com/embed/ΚΩΔΙΚΟΣ_ΒΙΝΤΕΟ */
-  // { type:'link',       url:'https://www.youtube.com/embed/ΚΩΔΙΚΟΣ',  caption:'Τίτλος βίντεο στο YouTube' },
   /* { type:'text',  title:'Τίτλος', body:'Το κείμενό σου...' }, */
+  /* { type:'image', file:'foto.jpg', caption:'Λεζάντα' }, */
   /* { type:'pdf',   file:'keimeno.pdf', caption:'Τίτλος PDF' }, */
+  /* { type:'audio', file:'audio.m4a', caption:'Τίτλος ήχου' }, */
 ];
 
 /* Φόντο της σελίδας ΚΑΤΙ ΑΛΛΟ
@@ -4052,9 +4014,6 @@ function resizeChurch(){
   wrapper.style.height = Math.floor(h) + 'px';
 }
 window.addEventListener('resize', resizeChurch);
-if(window.visualViewport){
-  window.visualViewport.addEventListener('resize', resizeChurch);
-}
 window.addEventListener('orientationchange', function(){
   setTimeout(resizeChurch, 100);
   setTimeout(resizeChurch, 400);
@@ -4971,5 +4930,3 @@ if(window.speechSynthesis){
   window.speechSynthesis.onvoiceschanged = function(){ window.speechSynthesis.getVoices(); };
 }
 </script>
-</body>
-</html>
