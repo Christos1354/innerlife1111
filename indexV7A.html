@@ -3372,13 +3372,11 @@ function loadCandleCount(){
 async function fetchGlobalCandleCount(){
   try{
     const res  = await fetch(CANDLES_API, { method:'GET' });
-    if(res.ok){
-      const data = await res.json();
-      if(typeof data.total === 'number'){
-        localStorage.setItem('proseyxitari-candles', String(data.total));
-        updateCandleDisplay(data.total);
-        return;
-      }
+    const data = await res.json();
+    if(typeof data.total === 'number'){
+      localStorage.setItem('proseyxitari-candles', String(data.total));
+      updateCandleDisplay(data.total);
+      return;
     }
   }catch(e){ console.warn('Παγκόσμιος μετρητής κεριών μη διαθέσιμος, δείχνω τοπικό αριθμό.', e); }
   updateCandleDisplay();
@@ -3390,12 +3388,10 @@ async function incrementCandleCount(){
   updateCandleDisplay(optimistic);
   try{
     const res  = await fetch(CANDLES_API, { method:'POST' });
-    if(res.ok){
-      const data = await res.json();
-      if(typeof data.total === 'number'){
-        localStorage.setItem('proseyxitari-candles', String(data.total));
-        updateCandleDisplay(data.total);
-      }
+    const data = await res.json();
+    if(typeof data.total === 'number'){
+      localStorage.setItem('proseyxitari-candles', String(data.total));
+      updateCandleDisplay(data.total);
     }
   }catch(e){ console.warn('Το κερί μετρήθηκε τοπικά αλλά όχι στον παγκόσμιο μετρητή (offline;).', e); }
 }
