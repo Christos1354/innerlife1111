@@ -29,12 +29,12 @@ export async function onRequestGet(context) {
   const origin = context.request.headers.get('Origin') || '';
   try {
     const kv = context.env.CANDLES_KV;
-    if (!kv) throw new Error('CANDLES_KV binding missing');
+    if (!kv) throw new Error('CANDLES_KV binding missing (context.env.CANDLES_KV is ' + typeof kv + ')');
     const current = parseInt((await kv.get('total')) || '0', 10);
     return new Response(JSON.stringify({ total: current }), { headers: corsHeaders(origin) });
   } catch (err) {
-    // ΣΗΜΑΝΤΙΚΟ: status 500 (όχι 200) ώστε ο client να ΜΗΝ εμπιστευτεί/εμφανίσει λάθος total:0
-    return new Response(JSON.stringify({ error: 'KV not bound yet' }), {
+    // ΠΡΟΣΩΡΙΝΟ debug: δείχνουμε το ΠΡΑΓΜΑΤΙΚΟ σφάλμα για να το εντοπίσουμε
+    return new Response(JSON.stringify({ error: String(err && err.message || err) }), {
       status: 500,
       headers: corsHeaders(origin)
     });
@@ -46,14 +46,14 @@ export async function onRequestPost(context) {
   const origin = context.request.headers.get('Origin') || '';
   try {
     const kv = context.env.CANDLES_KV;
-    if (!kv) throw new Error('CANDLES_KV binding missing');
+    if (!kv) throw new Error('CANDLES_KV binding missing (context.env.CANDLES_KV is ' + typeof kv + ')');
     const current = parseInt((await kv.get('total')) || '0', 10);
     const next = current + 1;
     await kv.put('total', String(next));
     return new Response(JSON.stringify({ total: next }), { headers: corsHeaders(origin) });
   } catch (err) {
-    // ΣΗΜΑΝΤΙΚΟ: status 500 (όχι 200) ώστε ο client να ΜΗΝ εμπιστευτεί/εμφανίσει λάθος total:0
-    return new Response(JSON.stringify({ error: 'KV not bound yet' }), {
+    // ΠΡΟΣΩΡΙΝΟ debug: δείχνουμε το ΠΡΑΓΜΑΤΙΚΟ σφάλμα για να το εντοπίσουμε
+    return new Response(JSON.stringify({ error: String(err && err.message || err) }), {
       status: 500,
       headers: corsHeaders(origin)
     });
