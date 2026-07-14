@@ -836,12 +836,6 @@ button, .lang-btn, .cat-btn, .menu-btn, .toc-btn, .ka-b {
     min-height: 0  !important;
     overflow: hidden !important;
   }
-  #byzantine-frame-wrapper {
-    aspect-ratio: unset !important; /* γεμίζει όλο τον χώρο, δεν περιορίζεται πια στο 16:9 */
-  }
-  #shrine-box {
-    background-size: cover !important; /* η εικόνα της εκκλησίας γεμίζει πλήρως, δεν μικραίνει */
-  }
 
   /* Φλόγες πολύ μικρές */
   .floga         { width: 5px !important; height: 10px !important; }
@@ -4105,15 +4099,9 @@ function resizeChurch(){
   const vw = viewport.clientWidth;
   const vh = viewport.clientHeight;
 
-  const isSmallLandscape = window.matchMedia('(max-height:500px) and (orientation:landscape)').matches;
-  if(isSmallLandscape){
-    /* Σε χαμηλά landscape κινητά: γεμίζει ΟΛΟ τον διαθέσιμο χώρο (καμία μαύρη λωρίδα,
-       η εικόνα της εκκλησίας δεν μικραίνει πια). */
-    wrapper.style.width  = vw + 'px';
-    wrapper.style.height = vh + 'px';
-    return;
-  }
-
+  /* Διατηρούμε ΠΑΝΤΑ την αναλογία 16:9 — έτσι τα κεριά/κηροπήγια (τοποθετημένα
+     με % συντεταγμένες πάνω στη φωτογραφία) μένουν πάντα ευθυγραμμισμένα.
+     Η εικόνα γίνεται όσο πιο μεγάλη γίνεται χωρίς να κόβεται/παραμορφώνεται. */
   let w, h;
   if(vw / vh > 16/9){
     h = vh; w = h * 16/9;
