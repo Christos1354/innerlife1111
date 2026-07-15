@@ -1,0 +1,7 @@
+name = "innerlife1111"
+compatibility_date = "2026-06-06"
+pages_build_output_dir = "."
+
+[[kv_namespaces]]
+binding = "CANDLES_KV"
+id = "087fa065a234497e8c8cc561464e6c22"
