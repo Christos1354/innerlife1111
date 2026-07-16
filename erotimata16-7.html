@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ερωτήματα Ζωής</title>
+
+<!-- ================= STYLE ================= -->
+<style>
+
+/* ====== BACKGROUND ====== */
+body{
+  margin:0;
+  font-family:Arial;
+  background-image:url('COSMOS.jpg');
+  /* ⬇️ ΑΛΛΑΓΗ: από contain σε cover για να γεμίζει όλη την οθόνη */
+  background-size:cover;
+  background-position:center;
+  background-attachment:fixed;
+  /* ⬇️ ΠΡΟΣΘΗΚΗ: να μην επαναλαμβάνεται */
+  background-repeat:no-repeat;
+  color:#FFD700;
+  /* ⬇️ ΠΡΟΣΘΗΚΗ: ελάχιστο ύψος για να καλύπτει όλη την οθόνη */
+  min-height:100vh;
+}
+
+/* overlay */
+body::before{
+  content:"";
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.2);
+  z-index:-1;
+}
+
+/* SEARCH */
+.search-wrapper{
+  position:relative;
+  width:90%;
+  max-width:400px;
+  margin:20px auto;
+}
+
+#search{
+  width:100%;
+  padding:12px 45px 12px 15px;
+  border-radius:12px;
+  border:none;
+  font-size:16px;
+  box-sizing:border-box;
+}
+
+#clearSearch{
+  position:absolute;
+  right:14px;
+  top:50%;
+  transform:translateY(-50%);
+  cursor:pointer;
+  font-size:18px;
+  color:#555;
+  user-select:none;
+}
+
+#clearSearch:hover{
+  color:black;
+}
+
+.highlight{
+  background:yellow !important;
+  color:black !important;
+  padding:2px 4px;
+  border-radius:4px;
+  font-weight:bold;
+}
+
+/* ====== TRANSLATE WRAPPER ====== */
+.translate-wrapper {
+  width: 90%;
+  max-width: 400px;
+  margin: 0 auto 20px auto;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 12px;
+  padding: 10px 0;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.translate-wrapper select {
+  background: rgba(255, 255, 255, 0.15);
+  color: #FFD700;
+  border: 1px solid rgba(255, 215, 0, 0.4);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  max-width: 200px;
+}
+
+.translate-wrapper select option {
+  background: #1a1a2e;
+  color: #FFD700;
+}
+
+.translate-wrapper button {
+  background: rgba(255, 215, 0, 0.2);
+  color: #FFD700;
+  border: 1px solid rgba(255, 215, 0, 0.4);
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 13px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.translate-wrapper button:hover {
+  background: rgba(255, 215, 0, 0.4);
+}
+
+/* ====== ΚΟΥΜΠΙ ΕΠΙΣΤΡΟΦΗΣ ====== */
+.back-btn{
+  position:fixed;
+  top:15px;
+  left:15px;
+  padding:10px 14px;
+  background:rgba(0,0,0,0.7);
+  color:#FFD700;
+  border:1px solid #FFD700;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:bold;
+  z-index:1000;
+}
+
+/* ====== BOX ΚΕΙΜΕΝΟΥ ====== */
+.box{
+  max-width:700px;
+  margin:16px auto;
+  padding:14px 16px;
+  border-radius:15px;
+  background:rgba(0,0,0,0.5);
+  transition: all 0.3s ease;
+}
+
+.box.search-match {
+  border: 3px solid #FFD700 !important;
+  box-shadow: 0 0 40px rgba(255, 215, 0, 0.4) !important;
+  background: rgba(0, 0, 0, 0.85) !important;
+}
+
+.no-results {
+  text-align: center;
+  padding: 40px 20px;
+  font-size: 20px;
+  color: #FFD700;
+  background: rgba(0,0,0,0.5);
+  border-radius: 15px;
+  max-width: 700px;
+  margin: 20px auto;
+}
+
+.box h3{
+  font-size:22px;
+  margin:0 0 10px 0;
+}
+
+.box p{
+  font-size:18px;
+  line-height:1.7;
+  margin:0;
+}
+
+.box ul{
+  padding-left:22px;
+  margin-top:10px;
+  margin-bottom:10px;
+}
+
+.box li{
+  margin-bottom:8px;
+  line-height:1.6;
+}
+
+/* ΚΟΥΜΠΙ ΔΙΑΛΟΓΙΣΜΟΥ */
+.meditate-btn{
+  margin-top:15px;
+  padding:10px 16px;
+  border-radius:12px;
+  border:none;
+  background:#8a2be2;
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+  font-size:16px;
+}
+
+/* MEDITATION SCREEN */
+#meditation{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(180deg,#4b0082,#140022);
+}
+
+.circle{
+  width:100px;
+  height:100px;
+  border-radius:50%;
+  background:white;
+  margin:20px auto;
+  animation:breath 6s infinite;
+}
+
+@keyframes breath{
+  0%{transform:scale(1)}
+  50%{transform:scale(1.6)}
+  100%{transform:scale(1)}
+}
+
+#meditation button {
+  background: rgba(255, 215, 0, 0.2);
+  color: #FFD700;
+  border: 2px solid #FFD700;
+  border-radius: 12px;
+  padding: 12px 30px;
+  font-size: 18px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+#meditation button:hover {
+  background: rgba(255, 215, 0, 0.4);
+}
+
+.translate-me {
+  transition: all 0.3s ease;
+}
+
+/* ====== ΕΞΤΡΑ ΓΙΑ ΚΙΝΗΤΑ ====== */
+@media(max-width:600px){
+
+  .box h3{
+    font-size:18px;
+  }
+
+  .box p{
+    font-size:16px;
+  }
+
+  .translate-wrapper select {
+    font-size: 12px;
+    max-width: 140px;
+  }
+
+  .translate-wrapper button {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+  
+  /* ⬇️ ΠΡΟΣΘΗΚΗ: καλύτερη εμφάνιση φόντου σε κινητά */
+  body {
+    background-size:cover;
+    background-attachment:scroll;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- SEARCH -->
+<div class="search-wrapper">
+  <input id="search" placeholder="🔍 Αναζήτηση...">
+  <span id="clearSearch">✕</span>
+</div>
+
+<!-- ====== TRANSLATE ====== -->
+<div class="translate-wrapper">
+  <select id="translateLang">
+    <option value="el">🇬🇷 Ελληνικά</option>
+    <option value="en">🇬🇧 English</option>
+    <option value="fr">🇫🇷 Français</option>
+    <option value="de">🇩🇪 Deutsch</option>
+    <option value="es">🇪🇸 Español</option>
+    <option value="it">🇮🇹 Italiano</option>
+    <option value="pt">🇵🇹 Português</option>
+    <option value="ru">🇷🇺 Русский</option>
+    <option value="ar">🇸🇦 العربية</option>
+    <option value="zh-CN">🇨🇳 中文</option>
+    <option value="ja">🇯🇵 日本語</option>
+    <option value="ko">🇰🇷 한국어</option>
+    <option value="hi">🇮🇳 हिन्दी</option>
+    <option value="tr">🇹🇷 Türkçe</option>
+    <option value="nl">🇳🇱 Nederlands</option>
+    <option value="sv">🇸🇪 Svenska</option>
+    <option value="pl">🇵🇱 Polski</option>
+    <option value="uk">🇺🇦 Українська</option>
+    <option value="ro">🇷🇴 Română</option>
+    <option value="hu">🇭🇺 Magyar</option>
+    <option value="cs">🇨🇿 Čeština</option>
+    <option value="th">🇹🇭 ไทย</option>
+    <option value="vi">🇻🇳 Tiếng Việt</option>
+    <option value="id">🇮🇩 Bahasa Indonesia</option>
+    <option value="ms">🇲🇾 Bahasa Melayu</option>
+    <option value="fil">🇵🇭 Filipino</option>
+    <option value="no">🇳🇴 Norsk</option>
+    <option value="da">🇩🇰 Dansk</option>
+    <option value="fi">🇫🇮 Suomi</option>
+    <option value="he">🇮🇱 עברית</option>
+    <option value="fa">🇮🇷 فارسی</option>
+    <option value="ur">🇵🇰 اردو</option>
+    <option value="bn">🇧🇩 বাংলা</option>
+    <option value="ta">🇮🇳 தமிழ்</option>
+    <option value="te">🇮🇳 తెలుగు</option>
+    <option value="ml">🇮🇳 മലയാളം</option>
+    <option value="sw">🇹🇿 Kiswahili</option>
+    <option value="am">🇪🇹 አማርኛ</option>
+    <option value="ne">🇳🇵 नेपाली</option>
+    <option value="si">🇱🇰 සිංහල</option>
+    <option value="my">🇲🇲 မြန်မာ</option>
+    <option value="km">🇰🇭 ខ្មែរ</option>
+    <option value="lo">🇱🇦 ລາວ</option>
+    <option value="mn">🇲🇳 Монгол</option>
+    <option value="ka">🇬🇪 ქართული</option>
+    <option value="hy">🇦🇲 Հայերեն</option>
+    <option value="az">🇦🇿 Azərbaycan</option>
+    <option value="sq">🇦🇱 Shqip</option>
+    <option value="mk">🇲🇰 Македонски</option>
+    <option value="sr">🇷🇸 Српски</option>
+    <option value="hr">🇭🇷 Hrvatski</option>
+    <option value="sl">🇸🇮 Slovenščina</option>
+    <option value="et">🇪🇪 Eesti</option>
+    <option value="lv">🇱🇻 Latviešu</option>
+    <option value="lt">🇱🇹 Lietuvių</option>
+    <option value="is">🇮🇸 Íslenska</option>
+    <option value="af">🇿🇦 Afrikaans</option>
+  </select>
+  <button onclick="translatePage()">🌐 Μετάφραση</button>
+  <button onclick="resetTranslation()">↩️ Επαναφορά</button>
+</div>
+
+<button class="back-btn translate-me" onclick="location.href='index.html'">
+⬅ Πίσω στις Πύλες
+</button>
+
+<div id="content"></div>
+
+<!-- ====== MEDITATION ====== -->
+<div id="meditation">
+  <div style="text-align:center;color:white;">
+    <h2 class="translate-me">
+      Πάρε 3 βαθιές αναπνοές...<br>
+      Μείνε ακίνητος...<br>
+      Άφησε τα όλα να ηρεμήσουν.<br>
+      «Η πιο βαθιά ηρεμία κρύβεται σε μια βαθιά ανάσα.»
+    </h2>
+
+    <div class="circle"></div>
+
+    <button onclick="closeMeditation()" class="translate-me">
+      Έξοδος
+    </button>
+  </div>
+</div>
+
+<!-- ================= SCRIPT ================= -->
+<script>
+
+/* ==================================================
+   TRANSLATE FUNCTIONS
+================================================== */
+
+let originalHTML = '';
+let isTranslated = false;
+
+function translatePage() {
+  const lang = document.getElementById('translateLang').value;
+  
+  if (lang === 'el') {
+    resetTranslation();
+    return;
+  }
+  
+  if (!originalHTML) {
+    const container = document.getElementById('content');
+    originalHTML = container.innerHTML;
+  }
+  
+  const elementsToTranslate = [];
+  
+  document.querySelectorAll('.box h3, .box .answer, .box p, .box li, .box ul, #content h2').forEach(el => {
+    elementsToTranslate.push(el);
+  });
+  
+  const backBtn = document.querySelector('.back-btn');
+  if (backBtn) elementsToTranslate.push(backBtn);
+  
+  document.querySelectorAll('#meditation .translate-me').forEach(el => {
+    elementsToTranslate.push(el);
+  });
+  
+  let translatedCount = 0;
+  const totalElements = elementsToTranslate.length;
+  
+  elementsToTranslate.forEach((el, index) => {
+    const text = el.innerText;
+    if (text && text.trim().length > 0 && !el.querySelector('ul, li, p, strong, em')) {
+      translateText(text, lang, function(translated) {
+        if (translated) {
+          el.innerHTML = translated;
+        }
+        translatedCount++;
+        if (translatedCount === totalElements) {
+          isTranslated = true;
+          const searchInput = document.getElementById('search');
+          if (searchInput && searchInput.value.trim() !== '') {
+            performExactSearch(searchInput.value.trim());
+          }
+        }
+      });
+    } else if (el.querySelector('ul, li, p, strong, em')) {
+      translateComplexElement(el, lang, function() {
+        translatedCount++;
+        if (translatedCount === totalElements) {
+          isTranslated = true;
+          const searchInput = document.getElementById('search');
+          if (searchInput && searchInput.value.trim() !== '') {
+            performExactSearch(searchInput.value.trim());
+          }
+        }
+      });
+    } else {
+      translatedCount++;
+      if (translatedCount === totalElements) {
+        isTranslated = true;
+      }
+    }
+  });
+}
+
+function translateComplexElement(element, targetLang, callback) {
+  const walker = document.createTreeWalker(
+    element,
+    NodeFilter.SHOW_TEXT,
+    {
+      acceptNode: function(node) {
+        if (node.textContent.trim() === '') return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    }
+  );
+  
+  const textNodes = [];
+  let node = walker.nextNode();
+  while (node) {
+    textNodes.push(node);
+    node = walker.nextNode();
+  }
+  
+  if (textNodes.length === 0) {
+    callback();
+    return;
+  }
+  
+  let completed = 0;
+  
+  textNodes.forEach((textNode, index) => {
+    const text = textNode.textContent;
+    if (text && text.trim().length > 0) {
+      translateText(text, targetLang, function(translated) {
+        if (translated) {
+          textNode.textContent = translated;
+        }
+        completed++;
+        if (completed === textNodes.length) {
+          callback();
+        }
+      });
+    } else {
+      completed++;
+      if (completed === textNodes.length) {
+        callback();
+      }
+    }
+  });
+}
+
+function translateText(text, targetLang, callback) {
+  const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=el&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`;
+  
+  fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      if (data && data[0]) {
+        let translated = '';
+        data[0].forEach(item => {
+          translated += item[0];
+        });
+        callback(translated);
+      } else {
+        callback(null);
+      }
+    })
+    .catch(error => {
+      console.error('Translation error:', error);
+      callback(null);
+    });
+}
+function resetTranslation() {
+  if (originalHTML) {
+    document.getElementById('content').innerHTML = originalHTML;
+    document.querySelector('.back-btn').innerHTML = '⬅ Πίσω στις Πύλες';
+    document.querySelector('#meditation h2').innerHTML = 
+      'Πάρε 3 βαθιές αναπνοές...<br>Μείνε ακίνητος...<br>Άφησε τα όλα να ηρεμήσουν.<br>«Η πιο βαθιά ηρεμία κρύβεται σε μια βαθιά ανάσα.»';
+    document.querySelector('#meditation button').innerHTML = 'Έξοδος';
+    isTranslated = false;
+    
+    // ⬇️ ΠΡΟΣΘΗΚΗ: Επαναφορά της γλώσσας στα Ελληνικά
+    document.getElementById('translateLang').value = 'el';
+    
+    const searchInput = document.getElementById('search');
+    if (searchInput && searchInput.value.trim() !== '') {
+      performExactSearch(searchInput.value.trim());
+    }
+  }
+}
+
+/* ==================================================
+   SEARCH - ΤΕΛΙΚΗ ΕΚΔΟΣΗ (με υποστήριξη αναζήτησης χωρίς τόνους)
+================================================== */
+
+function setupSearch() {
+  const searchInput = document.getElementById('search');
+  const clearBtn = document.getElementById('clearSearch');
+  let searchTimeout = null;
+  
+  searchInput.addEventListener('input', function() {
+    clearTimeout(searchTimeout);
+    const value = this.value.trim();
+    
+    searchTimeout = setTimeout(() => {
+      if (value === '') {
+        resetSearchResults();
+      } else {
+        performExactSearch(value);
+      }
+    }, 300);
+  });
+  
+  clearBtn.addEventListener('click', function() {
+    searchInput.value = '';
+    resetSearchResults();
+  });
+}
+
+function performExactSearch(searchTerm) {
+  const boxes = document.querySelectorAll('.box');
+  // Αφαιρούμε τόνους από την αναζήτηση
+  const term = searchTerm.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  
+  if (term === '' || term.length < 2) {
+    resetSearchResults();
+    return;
+  }
+  
+  // Αφαιρώ παλιά μηνύματα
+  const oldNoResults = document.querySelector('.no-results');
+  if (oldNoResults) oldNoResults.remove();
+  
+  // Αφαιρώ παλιά highlights και search-match
+  boxes.forEach(box => {
+    box.classList.remove('search-match');
+    box.style.border = 'none';
+    box.style.boxShadow = 'none';
+    box.querySelectorAll('.highlight').forEach(el => {
+      const parent = el.parentNode;
+      parent.replaceChild(document.createTextNode(el.textContent), el);
+      parent.normalize();
+    });
+  });
+  
+  const matches = [];
+  const nonMatches = [];
+  
+  boxes.forEach(box => {
+    // Παίρνω ΟΛΟ το κείμενο του box και αφαιρώ τόνους
+    const fullText = box.innerText.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    
+    if (fullText.includes(term)) {
+      matches.push(box);
+    } else {
+      nonMatches.push(box);
+    }
+  });
+  
+  if (matches.length === 0) {
+    const container = document.getElementById('content');
+    const msg = document.createElement('div');
+    msg.className = 'no-results';
+    msg.innerHTML = `🔍 <strong>Δεν βρέθηκε η λέξη: "${searchTerm}"</strong><br><br>Δοκίμασε με άλλη λέξη-κλειδί.`;
+    container.appendChild(msg);
+    
+    boxes.forEach(box => {
+      box.style.display = 'none';
+    });
+    return;
+  }
+  
+  const container = document.getElementById('content');
+  
+  const noResults = container.querySelector('.no-results');
+  if (noResults) noResults.remove();
+  
+  // ΠΡΩΤΑ κάνουμε highlight
+  matches.forEach(box => {
+    highlightAllText(box, searchTerm.trim());
+  });
+  
+  // Εμφάνισε τα αποτελέσματα (αντίστροφα - το τελευταίο να γίνει πρώτο)
+  for (let i = matches.length - 1; i >= 0; i--) {
+    const box = matches[i];
+    box.style.display = 'block';
+    box.classList.add('search-match');
+    box.style.border = '3px solid #FFD700';
+    box.style.boxShadow = '0 0 40px rgba(255, 215, 0, 0.4)';
+    container.prepend(box);
+  }
+  
+  nonMatches.forEach(box => {
+    box.style.display = 'none';
+    box.classList.remove('search-match');
+    box.style.border = 'none';
+    box.style.boxShadow = 'none';
+  });
+  
+  // ⬇️ ΑΛΛΑΓΗ: scroll στην ΚΟΡΥΦΗ του στοιχείου (block: 'start')
+  setTimeout(() => {
+    if (matches.length > 0) {
+      matches[0].scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+      });
+    }
+  }, 200);
+}
+
+function highlightAllText(element, word) {
+  // Αποθήκευση του αρχικού HTML
+  let html = element.innerHTML;
+  
+  // Δημιουργία regex για να βρει τη λέξη (με ή χωρίς τόνους)
+  const wordLower = word.toLowerCase();
+  
+  // Χάρτης για Ελληνικούς χαρακτήρες με τόνους
+  const chars = wordLower.split('');
+  let regexPattern = '';
+  
+  for (let char of chars) {
+    const tonosMap = {
+      'α': '[αάἀἁἂἃἄἅἆἇὰάᾀᾁᾂᾃᾄᾅᾆᾇ]',
+      'ε': '[εέἐἑἒἓἔἕὲέ]',
+      'η': '[ηήἠἡἢἣἤἥἦἧὴήᾐᾑᾒᾓᾔᾕᾖᾗ]',
+      'ι': '[ιίἰἱἲἳἴἵἶἷὶίϊΐ]',
+      'ο': '[οόὀὁὂὃὄὅὸό]',
+      'υ': '[υύὐὑὒὓὔὕὖὗὺύϋΰ]',
+      'ω': '[ωώὠὡὢὣὤὥὦὧὼώᾠᾡᾢᾣᾤᾥᾦᾧ]'
+    };
+    
+    if (tonosMap[char]) {
+      regexPattern += tonosMap[char];
+    } else {
+      regexPattern += char;
+    }
+  }
+  
+  const regex = new RegExp(`(${regexPattern})`, 'gi');
+  
+  // Αντικαθιστούμε το κείμενο με highlighted version
+  html = html.replace(regex, function(match) {
+    return `<span class="highlight">${match}</span>`;
+  });
+  
+  element.innerHTML = html;
+}
+
+function resetSearchResults() {
+  const boxes = document.querySelectorAll('.box');
+  const container = document.getElementById('content');
+  
+  const noResults = container.querySelector('.no-results');
+  if (noResults) noResults.remove();
+  
+  // Επαναφορά όλων των boxes στην αρχική σειρά
+  const sortedBoxes = Array.from(boxes).sort((a, b) => {
+    return parseInt(a.dataset.index || 0) - parseInt(b.dataset.index || 0);
+  });
+  
+  if (!boxes[0]?.dataset.index) {
+    boxes.forEach((box, i) => {
+      box.dataset.index = i;
+    });
+  }
+  
+  sortedBoxes.forEach(box => {
+    box.style.display = 'block';
+    box.classList.remove('search-match');
+    box.style.border = 'none';
+    box.style.boxShadow = 'none';
+    box.querySelectorAll('.highlight').forEach(el => {
+      const parent = el.parentNode;
+      parent.replaceChild(document.createTextNode(el.textContent), el);
+      parent.normalize();
+    });
+    container.appendChild(box);
+  });
+}
+
+/* ==================================================
+   ΕΡΩΤΗΜΑΤΑ (data - πλήρης)
+================================================== */
+
+const data = [
+
+{
+  "category": "Γνώση",
+  "q": "Η Σιωπή – 7 Απλά Βήματα προς τον Θεό",
+  "a": "<p>Υπάρχει μια ήσυχη φωνή του Θεού μέσα σου.</p> Είναι ο εσωτερικός οδηγός που σε βοηθά να ξεχωρίζεις την αλήθεια και να νιώθεις πραγματική αγάπη.</p><p>Όταν οι σκέψεις σε πληγώνουν ή σε κάνουν να νιώθεις άχρηστος, χάνεις την ηρεμία και τη σύνδεσή σου με τον Θεό.<p> Η λύση είναι η σιωπή: </p>Λίγα λεπτά κάθε μέρα για να ηρεμείς, να προσεύχεσαι και να ακούς μέσα σου.</p><p>Ακολούθησε αυτά τα 7 απλά βήματα καθημερινά, ή όποτε νιώθεις ότι χρειάζεσαι ηρεμία και καθοδήγηση.</p><p><strong>Βήμα 1: Χαλάρωσε το Σώμα</strong></p><p>Κάθισε ή ξάπλωσε άνετα, ώστε να μη σε ενοχλεί ο πόνος ή η θέση σου. Κλείσε τα μάτια και πάρε 3–5 βαθιές αναπνοές. Άφησε το σώμα σου να λυθεί.</p><p><em><strong>Γιατί; Όταν το σώμα είναι άνετο, η ψυχή μπορεί να ξεκουραστεί.</strong></em></p><p><strong>Βήμα 2: Ηρέμησε το Μυαλό</strong></p><p>Το μυαλό γεμίζει εύκολα με πολλές σκέψεις. Πες μέσα σου: «Μυαλό μου, ησύχασε τώρα. Εστιάζω στον Θεό ή στήν Αγάπη» Βρες ένα σημείο αναφοράς: επανέλαβε τη λέξη «Θεέ μου» ή «Αγάπη», άκου ήσυχη μουσική ή φαντάσου ένα ήρεμο τοπίο. Όταν ξεφύγεις, γύρνα ξανά στη φράση ή στην εικόνα.</p><p><em><strong>Γιατί; Το μυαλό σου μαθαίνει να ηρεμεί, σιγά-σιγά.</strong></em></p><p><strong>Βήμα 3: Μίλα στον Θεό</strong></p><p>Πες στον Θεό τα πάντα, όπως θα έλεγες στον καλύτερό σου φίλο ή σε έναν πολύ αγαπημένο άνθρωπο.</p><ul><li>«Θεέ μου, σήμερα ένιωσα…»</li><li>«Είμαι θυμωμένος, φοβισμένος, αγχωμένος ή χαρούμενος — σου τα λέω όλα.»</li><li>«Σε εμπιστεύομαι. Δεν κρύβω τίποτα από Σένα.»</li><li>«Σε ευχαριστώ που είσαι κοντά μου. Ακόμα κι αν δεν Σε βλέπω, Σε νιώθω.»</li></ul><ul><li>«Σε έχω ανάγκη σήμερα.»</li><li>«Βοήθησέ με να ηρεμήσω.»</li><li>«Δείξε μου τον δρόμο που πρέπει να πάρω.»</li></ul><p><em><strong>Γιατί; Χτίζεις μια ζεστή, προσωπική σχέση με τον Θεό.</strong></em></p><p><strong>Βήμα 4: Ζήτα Βοήθεια</strong></p><p>Τώρα έχεις την ευκαιρία να ζητήσεις πραγματικά πράγματα από τον Θεό.</p><ul><li>«Θεέ μου, μου λείπει η ηρεμία. Βοήθησέ με να ηρεμήσω.»</li><li>«Δεν ξέρω τι να κάνω στη ζωή μου. Δείξε μου τον δρόμο.»</li><li>«Έχω πρόβλημα με… [όνομα ανθρώπου, χρήματα, υγεία]. Βοήθησέ με.»</li><li>«Αν δεν ξέρω τι ακριβώς να ζητήσω, πες μου τι χρειάζομαι για να μεγαλώσω πνευματικά.»</li></ul><p>Μπορείς επίσης να προσευχηθείς για άλλους:</p><ul><li>«Θεέ μου, προσεύχομαι για τον… που δεν ξέρει πώς να ζητήσει βοήθεια.»</li><li>«Δώσε του την ηρεμία, τη δύναμη και την αγάπη Σου.»</li><li>«Δώσε μου την υπομονή να τον στηρίξω.»</li></ul><p><em><strong>Γιατί; Όταν ζητάς βοήθεια, ανοίγεις την πόρτα για λύσεις που δεν έβλεπες πριν</strong></em></p><p><strong>Βήμα 5: Ευχαρίστησε για Όσα Έχεις</strong></p><p>Στρέψε την προσοχή σου στα καλά και πες ευχαριστώ για:</p><ul><li>τη ζωή, τον αέρα, το φως, την υγεία.</li><li>την οικογένειά σου και τους φίλους σου.</li><li>την τροφή, το σπίτι και την ασφάλεια.</li><li>την αγάπη που έχεις δεχθεί ή έχεις δώσει.</li></ul><p>Μπορείς να πεις:</p><ul><li>«Ευχαριστώ Θεέ μου για τη ζωή μου, ακόμα και όταν είναι δύσκολη.»</li><li>«Ευχαριστώ που έχω οικογένεια που με στηρίζει.»</li><li>«Ευχαριστώ που έχω τη δύναμη να ζω και να αγαπώ.»</li><li>«Ευχαριστώ για την ησυχία που έχω τώρα.»</li><li>«Ευχαριστώ για… [όνομα ανθρώπου], για τη βοήθειά του.»</li><li>«Ευχαριστώ που έχω έναν Θεό που με ξέρει και με αγαπά.»</li></ul><p><em><strong>Γιατί; Η ευγνωμοσύνη σε μεταφέρει από την έλλειψη στην αφθονία.</strong></em></p><p><strong>Βήμα 6: Άκου Σιωπηλά</strong></p><p>Τώρα κλείνεις το στόμα και ανοίγεις την καρδιά. Αφιέρωσε 2–3 λεπτά για να ακούς μέσα σου. Μην περιμένεις μια δυνατή φωνή, αλλά μια ήσυχη, εσωτερική ένδειξη.</p><ul><li>«Θεέ μου, τώρα άκουσέ με… και άσε με να ακούσω Εσένα.»</li><li>«Μίλησέ μου μέσα από την ησυχία.»</li></ul><p>Η απάντηση συχνά έρχεται αργότερα, ξαφνικά, ή μέσα από μια λέξη της ημέρας σου ή από ένα βιβλίο.</p><p><em><strong>Γιατί; Ο Θεός συχνά μιλάει μέσα από την ησυχία, όχι τη φασαρία.</em></strong></p><p><strong>Βήμα 7: Δέξου την Αγκαλιά</strong></p><p>Φαντάσου την πιο όμορφη, ζεστή αγκαλιά που έχεις νιώσει ποτέ. Φαντάσου ότι ο Θεός σε κρατά.</p><ul><li>«Θεέ μου, γέμισε αυτή την αγκαλιά με την αγάπη Σου.»</li><li>«Γέμισε την ψυχή μου με ηρεμία, χαρά, θάρρος και αγάπη.»</li></ul><p>Μετά, άφησε τον εαυτό σου να ηρεμήσει. Νιώσε ότι ο Θεός σε τρέφει, όπως το φως τρέφει ένα φυτό.</p><p><em><strong>Γιατί; Έτσι η αγάπη του Θεού γίνεται πραγματική δύναμη μέσα σου.</em></strong></p><p><strong>Τελική Συμβουλή</strong></p><p>Κάνε αυτή τη δοκιμή καθημερινά για 5–10 λεπτά. Με τον καιρό η ηρεμία θα έρχεται πιο εύκολα. Η αγάπη και η αυτοπεποίθησή σου θα αυξηθούν.</p>"
+},
+
+{
+category:"Γνώση",
+q:"Γιατί υπάρχω;",
+a:"Δεν είσαι τυχαίος. Η ύπαρξή σου είναι μια ευκαιρία για αγάπη, εξέλιξη και συνειδητότητα. Κάθε μέρα σου δίνεται για να δημιουργήσεις κάτι καλύτερο."
+},
+{
+category:"Υγεία",
+
+q:"Πώς να ηρεμήσω;",
+a:`<p>Ίσως η πιο βαθιά αλήθεια είναι ότι ο άνθρωπος δεν ηρεμεί όταν ελέγξει τα πάντα· ηρεμεί όταν αποδεχτεί ότι δεν μπορεί να ελέγξει τα πάντα.</p>
+
+<p>Ο εγκέφαλος είναι φτιαγμένος για επιβίωση, όχι για μόνιμη γαλήνη. Αναζητά κινδύνους, προβλήματα, απαντήσεις, βεβαιότητα. Γι’ αυτό πολλές φορές το μυαλό κουράζεται ακόμη κι όταν όλα φαίνονται καλά. Δεν είναι αδυναμία· είναι η βιολογία μας.</p>
+
+<p>Η επιστήμη δείχνει ότι όταν ο άνθρωπος φοβάται, αγχώνεται ή υπεραναλύει, ενεργοποιείται το νευρικό σύστημα «μάχης ή φυγής». Η καρδιά επιταχύνει, η σκέψη σκοτεινιάζει και το μέλλον φαίνεται απειλητικό. Όμως το σώμα δεν ξεχωρίζει πάντα έναν πραγματικό κίνδυνο από μια φοβισμένη σκέψη. Έτσι πολλές φορές υποφέρουμε περισσότερο από αυτά που φανταζόμαστε παρά από αυτά που ζούμε.</p>
+
+<p>Η φιλοσοφία εδώ και χιλιάδες χρόνια λέει κάτι παρόμοιο:<br>
+Δεν μας ταράζουν μόνο τα γεγονότα, αλλά η ερμηνεία που τους δίνουμε.</p>
+
+<p>Η ηρεμία λοιπόν δεν είναι απουσία δυσκολιών. Είναι μια εσωτερική στάση:<br>
+να μπορείς να αναπνέεις μέσα στην αβεβαιότητα χωρίς να διαλύεσαι από αυτήν.</p>
+
+<p>Μερικές φορές χρειάζεται να θυμόμαστε:</p>
+
+<ul>
+<li>Δεν είναι όλες οι σκέψεις αλήθεια.</li>
+<li>Δεν χρειάζονται όλα άμεση λύση.</li>
+<li>Το σώμα κουράζεται όταν το μυαλό πολεμά ασταμάτητα.</li>
+<li>Κανένας άνθρωπος δεν έχει απόλυτο έλεγχο της ζωής.</li>
+<li>Η ψυχή ηρεμεί όταν επιστρέφει στο παρόν και όχι στις καταστροφές του αύριο.</li>
+</ul>
+
+<p>Και ίσως το πιο σημαντικό:</p>
+
+<p>Ο άνθρωπος δεν είναι μηχανή παραγωγής δύναμης και επιτυχίας.<br>
+Είναι ένα εύθραυστο αλλά θαυμαστό ον που χρειάζεται ανάπαυση, νόημα, σύνδεση, αγάπη και ελπίδα.</p>
+
+<p>Μερικές βαθιές ανάσες, λίγη σιωπή, ένας άνθρωπος που μας ακούει, ένα περπάτημα, λίγη φύση, λίγη αποδοχή… πολλές φορές θεραπεύουν περισσότερο απ’ όσο φανταζόμαστε.</p>
+
+<p><strong>Ηρεμία δεν σημαίνει ότι όλα λύθηκαν.</strong><br>
+Σημαίνει ότι για μια στιγμή σταματήσαμε να πολεμάμε τον εαυτό μας.</p>`
+
+},
+{
+category:"Εσωτερική Γαλήνη",
+q:"Γιατί αγχώνομαι;",
+a:"Δεν χρειάζεται να τα λύσεις όλα τώρα. <br> Δεν χρειάζεται να είσαι τέλειος. <br>Δεν χρειάζεται να ξέρεις τι θα γίνει αύριο. Απλά αναπνέεις. Μέσα… έξω… αργά. Και όσο αγχώνεσαι, θυμήσου αυτό: Το 90% από αυτά που αγχωνόμαστε ποτέ δεν συμβαίνουν.Και τα υπόλοιπα 10% συνήθως δεν είναι τόσο άσχημα όσο τα φανταζόμαστε..."
+},
+
+{
+category:"Πνευματικότητα",
+
+q:"Πώς μπορούμε να δείξουμε τον Θεό στους άλλους;",
+
+a:`<p>Οι άνθρωποι σήμερα κουράστηκαν από μεγάλα λόγια χωρίς αντίκρισμα. Ιδιαίτερα οι νέοι δεν πείθονται εύκολα από θεωρίες, συμβουλές ή φόβο. Αυτό που αγγίζει πραγματικά την ανθρώπινη ψυχή είναι η αυθεντικότητα.</p>
+
+<p>Η φιλοσοφία και η ψυχολογία συμφωνούν σε κάτι βαθύ:</p>
+
+<p><strong>Ο άνθρωπος επηρεάζεται περισσότερο από αυτό που βλέπει παρά από αυτό που ακούει.</strong></p>
+
+<p>Ένας ήρεμος άνθρωπος μεταδίδει ηρεμία.<br>
+Ένας καλός άνθρωπος γεννά εμπιστοσύνη.<br>
+Ένας άνθρωπος με κατανόηση και ταπεινότητα γίνεται φως χωρίς να προσπαθεί να επιβληθεί.</p>
+
+<p>Ίσως λοιπόν ο πιο δυνατός τρόπος να μιλήσουμε για τον Θεό δεν είναι να αποδείξουμε ότι υπάρχει, αλλά να ζούμε με τρόπο που να κάνει τους άλλους να νιώθουν την παρουσία Του μέσα από τις πράξεις μας.</p>
+
+<ul>
+<li>Με αγάπη αντί για σκληρότητα.</li>
+<li>Με συγχώρεση αντί για εκδίκηση.</li>
+<li>Με ταπεινότητα αντί για εγωισμό.</li>
+<li>Με ειρήνη αντί για φανατισμό.</li>
+<li>Με καλοσύνη ακόμη και όταν δεν υπάρχει ανταπόδοση.</li>
+</ul>
+
+<p>Η επιστήμη δείχνει ότι τα συναισθήματα και οι συμπεριφορές μεταδίδονται από άνθρωπο σε άνθρωπο. Η καλοσύνη, η ηρεμία και η ενσυναίσθηση επηρεάζουν βαθιά τον ψυχισμό των γύρω μας και δημιουργούν αίσθημα ασφάλειας και ελπίδας.</p>
+
+<p>Γι’ αυτό πολλές φορές ο άνθρωπος “βλέπει” τον Θεό όχι μέσα από επιχειρήματα, αλλά μέσα από μια πράξη αγάπης τη στιγμή που τη χρειάζεται περισσότερο.</p>
+
+<p><strong>Η ζωή μας πρέπει να μιλάει πριν από τα λόγια μας.</strong><br>
+Ίσως τότε η παρουσία του Θεού να γίνεται πιο αληθινή μέσα στον κόσμο.</p>`
+},
+
+
+/* === ΝΕΑ 7 ΕΡΩΤΗΜΑΤΑ === */
+{
+category:"Σκοπός",
+q:"Ποιος είναι ο σκοπός της ζωής;",
+a:"Ο σκοπός δεν είναι κάτι που βρίσκεις, είναι κάτι που δημιουργείς. Είναι να αγαπάς, να μαθαίνεις, να εξελίσσεσαι και να αφήνεις τον κόσμο λίγο καλύτερο από ό,τι τον βρήκες. Ο πραγματικός σκοπός είναι να γίνεις η καλύτερη εκδοχή του εαυτού σου."
+},
+{
+category:"Ευτυχία",
+q:"Γιατί δεν είμαι ευτυχισμένος;",
+a:"Η ευτυχία δεν είναι προορισμός, είναι τρόπος να περπατάς. Συχνά ψάχνουμε έξω αυτό που βρίσκεται μέσα μας. Σταμάτα να περιμένεις τις τέλειες συνθήκες. Ξεκίνα από την ευγνωμοσύνη για όσα έχεις τώρα."
+},
+{
+category:"Φόβος",
+q:"Πώς ξεπερνάω τον φόβο μου;",
+a:"Ο φόβος είναι ένα συναίσθημα, όχι μια πραγματικότητα. Κάθε φορά που κάνεις ένα βήμα παρόλο που φοβάσαι, μεγαλώνεις. Η δύναμη δεν είναι η απουσία φόβου, είναι η απόφαση να προχωρήσεις παρά τον φόβο."
+},
+{
+category:"Σχέσεις",
+q:"Γιατί οι σχέσεις μου αποτυγχάνουν;",
+a:"Οι σχέσεις δεν αποτυγχάνουν επειδή δεν είναι τέλειες, αλλά επειδή περιμένουμε να μας σώσουν. Μάθε πρώτα να είσαι ολόκληρος μόνος σου. Η υγιής σχέση δεν είναι δύο μισά που ενώνονται, αλλά δύο ολόκληροι άνθρωποι που επιλέγουν να περπατήσουν μαζί."
+},
+{
+category:"Αυτοεκτίμηση",
+q:"Δεν αισθάνομαι αρκετός. Τι κάνω;",
+a:"Αυτή η φωνή είναι ψέμα. Δεν χρειάζεται να γίνεις περισσότερος για να αξίζεις. Είσαι ήδη αρκετός ακριβώς όπως είσαι. Η αξία σου δεν εξαρτάται από την παραγωγικότητα, την εμφάνιση ή τις επιτυχίες σου. Υπάρχεις — και αυτό είναι αρκετό."
+},
+{
+category:"Θάνατος",
+q:"Τι γίνεται μετά τον θάνατο;",
+a:"Κανείς δεν ξέρει με βεβαιότητα. Αυτό που ξέρουμε είναι ότι η ζωή είναι πολύτιμη επειδή είναι περιορισμένη. Ίσως το πιο σημαντικό δεν είναι τι υπάρχει μετά, αλλά πώς ζούμε τώρα. Κάνε τη ζωή σου τόσο όμορφη, ώστε να μην φοβάσαι το τέλος."
+},
+{
+category:"Αλλαγή",
+q:"Πώς μπορώ να αλλάξω τη ζωή μου;",
+
+a:"Η αλλαγή δεν γίνεται με μία μεγάλη απόφαση, αλλά με μικρές καθημερινές επιλογές. Ξεκίνα από 1% καλύτερα κάθε μέρα. Άλλαξε τις συνήθειές σου και η ζωή σου θα αλλάξει. Το μέλλον σου χτίζεται από αυτά που κάνεις σήμερα."
+},
+{
+category:"Στρες",
+
+q:"Πώς διαχειρίζομαι το συνεχές στρες;",
+
+a:`<p>Το συνεχές στρες δεν σημαίνει πάντα ότι είσαι αδύναμος. Πολύ συχνά σημαίνει ότι το σώμα και το μυαλό σου προσπαθούν για πολύ καιρό να αντέξουν περισσότερα απ’ όσα μπορούν.</p>
+
+<p>Ο ανθρώπινος εγκέφαλος εξελίχθηκε για να αντιμετωπίζει στιγμιαίους κινδύνους — όχι ατελείωτη πίεση, πληροφορία, φόβο και υπερανάλυση κάθε μέρα. Όταν το στρες γίνεται μόνιμο, το νευρικό σύστημα μένει σε κατάσταση συναγερμού. Το σώμα κουράζεται, ο ύπνος χαλάει, η σκέψη σκοτεινιάζει και ακόμη και μικρά προβλήματα μοιάζουν τεράστια.</p>
+
+<p>Η επιστήμη δείχνει ότι το χρόνιο στρες αυξάνει την κορτιζόλη και κρατά τον οργανισμό σε συνεχή επιφυλακή. Αυτό επηρεάζει την ενέργεια, τη μνήμη, τη διάθεση και πολλές φορές ακόμη και το σώμα με πόνους, ταχυκαρδίες ή εξάντληση.</p>
+
+<p>Η φιλοσοφία όμως εδώ και αιώνες θυμίζει κάτι βαθύ:</p>
+
+<p><strong>Δεν εξαντλεί τον άνθρωπο μόνο αυτό που κουβαλά.<br>
+Τον εξαντλεί και το ότι δεν σταματά ποτέ να το κουβαλά.</strong></p>
+
+<p>Γι’ αυτό η διαχείριση του στρες δεν είναι μόνο “να γίνεις πιο δυνατός”. Είναι να μάθεις πότε να σταματάς, πότε να ξεκουράζεσαι και πότε να αφήνεις κάτω όσα δεν μπορείς να ελέγξεις.</p>
+
+<p>Μερικά πράγματα που πραγματικά βοηθούν:</p>
+
+<ul>
+<li>Λιγότερη υπερανάλυση και περισσότερη παρουσία στο τώρα.</li>
+<li>Ύπνος και ξεκούραση χωρίς ενοχές.</li>
+<li>Αργές βαθιές αναπνοές που ηρεμούν το νευρικό σύστημα.</li>
+<li>Λιγότερη έκθεση σε τοξική πληροφορία και αρνητικότητα.</li>
+<li>Κίνηση, φύση και ανθρώπινη επαφή.</li>
+<li>Να θυμάσαι ότι δεν χρειάζεται να λυθούν όλα σήμερα.</li>
+</ul>
+
+<p>Και ίσως το πιο σημαντικό:</p>
+
+<p>Το στρες πολλές φορές είναι η εσωτερική φωνή που λέει:<br>
+«Ζεις πολύ καιρό χωρίς πραγματική ανάπαυση.»</p>
+
+<p><strong>Η ηρεμία δεν έρχεται όταν εξαφανιστούν όλα τα προβλήματα.</strong><br>
+Έρχεται όταν το νευρικό σύστημα νιώσει ξανά ασφάλεια.</p>`
+}
+
+];
+
+/* ==================================================
+   RENDER
+================================================== */
+
+function render(){
+
+  const container = document.getElementById("content");
+
+  container.innerHTML = "";
+
+  const categories = {};
+
+  data.forEach(item=>{
+
+    if(!categories[item.category]){
+      categories[item.category] = [];
+    }
+
+    categories[item.category].push(item);
+
+  });
+
+  let boxIndex = 0;
+  for(let cat in categories){
+
+    container.innerHTML += `
+      <h2 style="text-align:center;" class="translate-me">
+        ${cat}
+      </h2>
+    `;
+
+    categories[cat].forEach(item=>{
+
+      container.innerHTML += `
+        <div class="box" data-index="${boxIndex}">
+          <h3 class="translate-me">${item.q}</h3>
+          <div class="answer translate-me">
+            ${item.a}
+          </div>
+          <button class="meditate-btn">
+            🧘 Διαλογισμός
+          </button>
+        </div>
+      `;
+      boxIndex++;
+
+    });
+
+  }
+
+  const containerEl = document.getElementById('content');
+  if (!originalHTML) {
+    originalHTML = containerEl.innerHTML;
+  }
+
+}
+
+
+/* ==================================================
+   MEDITATION
+================================================== */
+
+document.addEventListener("click",function(e){
+
+  if(e.target.classList.contains("meditate-btn")){
+
+    document.getElementById("meditation").style.display="flex";
+
+  }
+
+});
+
+function closeMeditation(){
+
+  document.getElementById("meditation").style.display="none";
+
+}
+
+
+/* ==================================================
+   START
+================================================== */
+
+render();
+setupSearch();
+
+</script>
+
+</body>
+</html>
