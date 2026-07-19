@@ -310,10 +310,25 @@ html, body {
 #light-candle-btn:active { transform: scale(0.97); }
 
 /* ── Αριστερό πλαίσιο: οι προσευχές που γράφτηκαν ── */
+.prayer-scroll-label {
+  position: absolute;
+  left: 2.5%;
+  top: 6%;
+  width: min(20%, 105px);
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #e8c96a;
+  text-align: center;
+  z-index: 71;
+  letter-spacing: 0.02em;
+  text-shadow: 0 0 3px rgba(255,215,0,0.5), 0 0 3px rgba(0,0,0,0.9);
+  pointer-events: none;
+}
 .prayer-scroll {
   position: absolute;
   left: 2.5%;
-  top: 12%;
+  top: 14%;
   bottom: 34%;
   width: min(20%, 105px);
   background: rgba(4,6,16,0.5);
@@ -1325,6 +1340,36 @@ button, .lang-btn, .cat-btn, .menu-btn, .toc-btn, .ka-b {
 <div id="now-playing"></div>
 <button id="back-to-entrance" onclick="goBackToDoors()" style="display:none;">← ΠΟΡΤΕΣ</button>
 
+<!-- ═══ ΔΙΑΛΟΓΙΣΜΟΣ ΑΝΑΠΝΟΗΣ ═══ -->
+<div id="breathing-modal" style="display:none;position:fixed;inset:0;z-index:9300;
+  background:#b39ddb;flex-direction:column;align-items:center;justify-content:center;padding:20px;box-sizing:border-box;">
+  <button onclick="closeBreathing()"
+    style="position:absolute;top:16px;right:18px;background:transparent;border:none;
+    color:#3a2a55;font-size:26px;cursor:pointer;z-index:2;">✕</button>
+
+  <div class="translate-me" style="color:#3a2a55;font-size:16px;line-height:1.9;text-align:center;
+    max-width:320px;font-family:Georgia,serif;margin-bottom:22px;text-shadow:0 0 6px rgba(255,255,255,0.5);">
+    Πάρε 3 βαθιές αναπνοές...<br>
+    Μείνε ακίνητος...<br>
+    Άφησε τα όλα να ηρεμήσουν.<br>
+    <em>«Η πιο βαθιά ηρεμία κρύβεται σε μια βαθιά ανάσα.»</em>
+  </div>
+
+  <div id="breathing-circle" style="width:120px;height:120px;border-radius:50%;
+    background:#ffffff;box-shadow:0 0 60px 20px rgba(255,255,255,0.5);
+    transition:transform 4s ease-in-out;transform:scale(0.6);"></div>
+  <div id="breathing-label" style="margin-top:36px;color:#3a2a55;font-size:20px;
+    letter-spacing:0.25em;font-family:Georgia,serif;text-shadow:0 0 10px rgba(255,255,255,0.6);">
+    ΕΙΣΠΝΟΗ
+  </div>
+  <audio id="breathing-audio" loop preload="none"></audio>
+
+  <button onclick="closeBreathing()" class="translate-me"
+    style="margin-top:38px;background:rgba(58,42,85,0.9);color:#fff;border:1px solid rgba(255,255,255,0.6);
+    padding:10px 32px;border-radius:24px;font-size:13px;letter-spacing:0.12em;cursor:pointer;
+    font-family:Georgia,serif;box-shadow:0 0 12px rgba(0,0,0,0.2);">ΕΞΟΔΟΣ</button>
+</div>
+
 <div id="door-page" style="display:none;position:fixed;inset:0;z-index:8000;background:#04080f;flex-direction:column;align-items:center;justify-content:flex-start;overflow:hidden;">
   <img id="door-bg-img" src="" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center;display:none;z-index:0;">
   <div id="door-title" style="display:none;"></div>
@@ -1360,6 +1405,13 @@ button, .lang-btn, .cat-btn, .menu-btn, .toc-btn, .ka-b {
       width:36px;height:36px;border-radius:50%;font-size:16px;
       cursor:pointer;font-family:Georgia,serif;flex-shrink:0;
       box-shadow:0 0 10px rgba(212,175,55,0.3);">⏸</button>
+    <button id="breathing-btn" onclick="openBreathing()"
+      title="Διαλογισμός Αναπνοής"
+      style="background:rgba(74,14,31,0.85);color:#fff;
+      border:1px solid rgba(255,255,255,0.5);
+      width:36px;height:36px;border-radius:50%;font-size:15px;
+      cursor:pointer;font-family:Georgia,serif;flex-shrink:0;
+      box-shadow:0 0 10px rgba(255,255,255,0.25);">🧘</button>
   </div>
 
   <!-- Chat overlay panel -->
@@ -1645,9 +1697,14 @@ button, .lang-btn, .cat-btn, .menu-btn, .toc-btn, .ka-b {
       margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;">
       <div style="color:#d4af37;font-size:18px;font-weight:700;font-family:Georgia,serif;
         letter-spacing:0.15em;text-shadow:0 0 12px rgba(212,175,55,0.5);" id="kati-header-title">✦ ΚΑΤΙ ΑΛΛΟ</div>
-      <button onclick="closeKatiAllo()"
-        style="background:transparent;border:1px solid rgba(212,175,55,0.5);color:#d4af37;
-        width:34px;height:34px;border-radius:50%;font-size:18px;cursor:pointer;">✕</button>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button onclick="openBreathing()" title="Διαλογισμός Αναπνοής"
+          style="background:rgba(74,14,31,0.85);border:1px solid rgba(255,255,255,0.5);color:#fff;
+          width:34px;height:34px;border-radius:50%;font-size:15px;cursor:pointer;">🧘</button>
+        <button onclick="closeKatiAllo()"
+          style="background:transparent;border:1px solid rgba(212,175,55,0.5);color:#d4af37;
+          width:34px;height:34px;border-radius:50%;font-size:18px;cursor:pointer;">✕</button>
+      </div>
     </div>
 
     <!-- Περιεχόμενο -->
@@ -1661,12 +1718,14 @@ button, .lang-btn, .cat-btn, .menu-btn, .toc-btn, .ka-b {
     <button onclick="document.getElementById('share-modal').style.display='none'"
       style="position:absolute;top:8px;right:12px;background:transparent;border:none;color:#00aaff;font-size:20px;cursor:pointer;">✕</button>
 
-    <!-- Μικρή καρδούλα συνεισφοράς — προαιρετική, διακριτική -->
-    <a href="#" onclick="event.preventDefault(); document.getElementById('donate-popup').style.display='flex';"
-      title="Συνεισφορά"
-      style="position:absolute;top:8px;left:12px;width:26px;height:26px;border-radius:50%;
-      background:rgba(139,105,20,0.7);display:flex;align-items:center;justify-content:center;
-      text-decoration:none;font-size:14px;box-shadow:0 0 8px rgba(212,175,55,0.5);">💛</a>
+    <div style="text-align:center;font-size:11px;font-weight:600;color:#e0c060;margin-top:34px;margin-bottom:6px;letter-spacing:0.02em;text-shadow:0 0 4px rgba(255,215,0,0.4);">
+      Εάν επιθυμείτε, προσφέρετε τη δωρεά σας πατώντας στην καρδούλα
+      <a href="#" onclick="event.preventDefault(); document.getElementById('donate-popup').style.display='flex';"
+        title="Συνεισφορά"
+        style="display:inline-flex;vertical-align:middle;margin-left:4px;width:22px;height:22px;border-radius:50%;
+        background:rgba(139,105,20,0.7);align-items:center;justify-content:center;
+        text-decoration:none;font-size:12px;box-shadow:0 0 6px rgba(212,175,55,0.4);">💛</a>
+    </div>
 
     <div style="text-align:center;margin-bottom:16px;padding:10px;border:1px solid rgba(212,175,55,0.3);border-radius:6px;background:rgba(0,0,0,0.3);">
       <div style="color:#f0d060;font-size:22px;font-weight:700;" id="candle-count-display">🕯️ ...</div>
@@ -2154,12 +2213,6 @@ const WISDOM_CONTENT = [
 { type:'text', title:'Αλήθεια και θάρρος', body:'Χρειάζεται θάρρος για να δεις την αλήθεια. Αλλά σε ελευθερώνει.' },
 
 { type:'text', title:'Εσωτερική σοφία', body:'Η πιο βαθιά γνώση είναι μέσα σου. Μάθε να την εμπιστεύεσαι.' },
-
-{ type:'text', title:'Κατεύθυνση ζωής', body:'Η γνώση σου δείχνει πού να πας.' },
-
-{ type:'text', title:'Αλήθεια και θάρρος', body:'Χρειάζεται θάρρος για να δεις την αλήθεια.' },
-
-{ type:'text', title:'Εσωτερική σοφία', body:'Η πιο βαθιά γνώση είναι μέσα σου.' },
 
    { type:'text', title:' Όταν κάποιος περνά δύσκολα;', body:`Αυτό που χρειάζεται είναι κάποιον
  που θα τον ακούσει, που θα τον στηρίξει και που θα τον παρηγορήσει.` },
@@ -4241,11 +4294,12 @@ function initChurch(){
       <div class="floga" style="top:-20px;margin-left:1px;scale:1.2;"></div><div class="keri-body"></div>
     </div>
     <div class="ammos-tray" id="ammos-tray"></div>
+    <div class="prayer-scroll-label">Εδώ βλέπετε την προσευχή σας (ορατή μόνο σε εσάς)</div>
     <div class="prayer-scroll" id="prayer-scroll"></div>
     <div class="dedication-panel">
       <img class="panagia-icon" src="panagia.jpg" alt="" onerror="this.style.display='none'">
       <div class="dedication-box">
-        <textarea id="dedication-text" placeholder="Γράψε την προσευχή σου ή την παράκλησή σου, για κάποιον που αγαπάς και νοιάζεσαι." maxlength="120"></textarea>
+        <textarea id="dedication-text" placeholder="Γράψτε την προσευχή σας και ακολούθως ανάψτε ένα κερί" maxlength="120"></textarea>
         <button id="light-candle-btn">🕯️ Άναψε ένα κερί</button>
       </div>
     </div>`;
@@ -4260,7 +4314,7 @@ function initChurch(){
    πάντα, ακόμη και μετά από reset() που ξαναφτιάχνει τη σκηνή */
 const GATE_UI_EL = {
   btn: '🕯️ Άναψε ένα κερί',
-  ph:  'Γράψε την προσευχή σου ή την παράκλησή σου, για κάποιον που αγαπάς και νοιάζεσαι.'
+  ph:  'Γράψτε την προσευχή σας και ακολούθως ανάψτε ένα κερί'
 };
 async function retranslateGateUI(lang){
   const btn = document.getElementById('light-candle-btn');
@@ -4531,6 +4585,43 @@ function kaShowItem(idx){
   setTimeout(()=>{ if(bs[idx]) bs[idx].scrollIntoView({behavior:'smooth',block:'start'}); },50);
 }
 
+/* ═══ ΔΙΑΛΟΓΙΣΜΟΣ ΑΝΑΠΝΟΗΣ — Εισπνοή / Εκπνοή ═══ */
+let _breathTimer = null;
+let _breathAudioFile = 'anapnoi.mp3'; /* ⬅ Βάλε εδώ το όνομα του δικού σου αρχείου ήχου αναπνοής */
+function openBreathing(){
+  const modal  = document.getElementById('breathing-modal');
+  const circle = document.getElementById('breathing-circle');
+  const label  = document.getElementById('breathing-label');
+  const audio  = document.getElementById('breathing-audio');
+  modal.style.display = 'flex';
+
+  if(audio && _breathAudioFile){
+    audio.src = _breathAudioFile;
+    audio.volume = 0.6;
+    audio.play().catch(()=>{ /* αν δεν υπάρχει ακόμα το αρχείο ήχου, συνεχίζει σιωπηλά */ });
+  }
+
+  function cycle(){
+    circle.style.transform = 'scale(1.3)';
+    label.textContent = 'ΕΙΣΠΝΟΗ';
+    _breathTimer = setTimeout(()=>{
+      circle.style.transform = 'scale(0.6)';
+      label.textContent = 'ΕΚΠΝΟΗ';
+      _breathTimer = setTimeout(cycle, 4200);
+    }, 4200);
+  }
+  circle.style.transform = 'scale(0.6)';
+  label.textContent = 'ΕΤΟΙΜΑΣΤΕΙΤΕ...';
+  _breathTimer = setTimeout(cycle, 1200);
+}
+function closeBreathing(){
+  const modal = document.getElementById('breathing-modal');
+  const audio = document.getElementById('breathing-audio');
+  modal.style.display = 'none';
+  if(_breathTimer) clearTimeout(_breathTimer);
+  if(audio){ audio.pause(); }
+}
+
 function openKatiAllo(){
   const modal   = document.getElementById('kati-allo-modal');
   const content = document.getElementById('kati-allo-content');
@@ -4563,9 +4654,11 @@ function openKatiAllo(){
     /* Κρυφό περιεχόμενο */
     h += '<div id="ka-c-'+i+'" class="ka-c" style="display:none;margin-bottom:10px;">';
     if(item.type==='text'){
+      var _kaTtsId = 'ka-tts-'+i;
+      var _kaBody = (item.body||'').replace(/\n/g,' ');
       h += '<div style="border-radius:8px;padding:18px 20px;background:rgba(255,254,248,0.93);box-shadow:0 2px 16px rgba(0,0,0,0.5);">'
-        + (item.title ? '<div style="color:#5a3a00;font-size:14px;font-weight:700;letter-spacing:0.08em;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #e0d0a0;">'+item.title+'</div>' : '')
-        + '<div style="color:#1a1200;font-size:15px;line-height:1.9;">'+(item.body||'').replace(/\n/g,'<br>')+'</div></div>';
+        + (item.title ? '<div style="color:#5a3a00;font-size:14px;font-weight:700;letter-spacing:0.08em;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #e0d0a0;display:flex;align-items:center;justify-content:space-between;gap:8px;"><span>'+item.title+'</span><button onclick="ttsSpeakDoorText(\''+_kaTtsId+'\',this)" title="Ανάγνωση" style="background:none;border:1px solid rgba(180,140,60,0.4);border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:14px;color:#8b6914;flex-shrink:0;display:flex;align-items:center;justify-content:center;">🔊</button></div>' : '')
+        + '<div id="'+_kaTtsId+'" data-orig="'+_kaBody.replace(/"/g,'&quot;')+'" style="color:#1a1200;font-size:15px;line-height:1.9;">'+(item.body||'').replace(/\n/g,'<br>')+'</div></div>';
     } else if(item.type==='image'){
       h += '<div style="text-align:center;padding:12px;background:rgba(0,0,0,0.75);border:1px solid rgba(212,175,55,0.3);border-radius:8px;">'
         + '<img src="'+item.file+'" style="max-width:100%;max-height:65vh;object-fit:contain;border-radius:6px;">'
@@ -5213,20 +5306,20 @@ function _ttsBuildPhrases(text){
   var phrases = [];
   var current = '';
   var parenDepth = 0;
-  var pauseMap = { '.':520, '!':480, '?':480, ';':380, '·':380, ',':220 };
+  var pauseMap = { '.':620, '!':560, '?':560, ';':440, '·':440, ',':280 };
 
   for(var i=0; i<tokens.length; i++){
     var tok = tokens[i];
     if(tok === undefined || tok === '') continue;
 
     if(tok === '('){
-      if(current.trim()){ phrases.push({text:current.trim(), pause:150, inParens:parenDepth>0}); }
+      if(current.trim()){ phrases.push({text:current.trim(), pause:180, inParens:parenDepth>0}); }
       current = '';
       parenDepth++;
       continue;
     }
     if(tok === ')'){
-      if(current.trim()){ phrases.push({text:current.trim(), pause:260, inParens:true}); }
+      if(current.trim()){ phrases.push({text:current.trim(), pause:320, inParens:true}); }
       current = '';
       parenDepth = Math.max(0, parenDepth-1);
       continue;
@@ -5241,7 +5334,7 @@ function _ttsBuildPhrases(text){
       current += tok;
     }
   }
-  if(current.trim()){ phrases.push({text:current.trim(), pause:300, inParens:parenDepth>0}); }
+  if(current.trim()){ phrases.push({text:current.trim(), pause:350, inParens:parenDepth>0}); }
   return phrases;
 }
 
@@ -5263,7 +5356,7 @@ async function _ttsSpeakNatural(text, btn, langCode, voices){
       var utt = new SpeechSynthesisUtterance(p.text);
       utt.lang = langCode;
       if(matchVoice) utt.voice = matchVoice;
-      utt.rate = 0.92;
+      utt.rate = 0.82;
       utt.pitch = p.inParens ? 0.94 : 1.0;
       utt.volume = p.inParens ? 0.9 : 1.0;
       utt.onend = resolve;
