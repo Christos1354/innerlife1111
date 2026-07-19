@@ -1342,12 +1342,12 @@ button, .lang-btn, .cat-btn, .menu-btn, .toc-btn, .ka-b {
 
 <!-- ═══ ΔΙΑΛΟΓΙΣΜΟΣ ΑΝΑΠΝΟΗΣ ═══ -->
 <div id="breathing-modal" style="display:none;position:fixed;inset:0;z-index:9300;
-  background:#b39ddb;flex-direction:column;align-items:center;justify-content:center;padding:20px;box-sizing:border-box;">
+  background:#681eb3;flex-direction:column;align-items:center;justify-content:center;padding:20px;box-sizing:border-box;">
   <button onclick="closeBreathing()"
     style="position:absolute;top:16px;right:18px;background:transparent;border:none;
     color:#3a2a55;font-size:26px;cursor:pointer;z-index:2;">✕</button>
 
-  <div class="translate-me" style="color:#3a2a55;font-size:16px;line-height:1.9;text-align:center;
+  <div class="translate-me" style="color:#ffd700;font-size:16px;line-height:1.9;text-align:center;
     max-width:320px;font-family:Georgia,serif;margin-bottom:22px;text-shadow:0 0 6px rgba(255,255,255,0.5);">
     Πάρε 3 βαθιές αναπνοές...<br>
     Μείνε ακίνητος...<br>
@@ -1358,7 +1358,7 @@ button, .lang-btn, .cat-btn, .menu-btn, .toc-btn, .ka-b {
   <div id="breathing-circle" style="width:120px;height:120px;border-radius:50%;
     background:#ffffff;box-shadow:0 0 60px 20px rgba(255,255,255,0.5);
     transition:transform 4s ease-in-out;transform:scale(0.6);"></div>
-  <div id="breathing-label" style="margin-top:36px;color:#3a2a55;font-size:20px;
+  <div id="breathing-label" style="display:none;margin-top:36px;color:#3a2a55;font-size:20px;
     letter-spacing:0.25em;font-family:Georgia,serif;text-shadow:0 0 10px rgba(255,255,255,0.6);">
     ΕΙΣΠΝΟΗ
   </div>
@@ -4405,7 +4405,7 @@ function retranslatePrayerScroll(lang){
 
 function lightCandle(){
   const input = document.getElementById('dedication-text');
-  const text = (input.value||'').trim() || 'ΜΙΑ ΨΥΧΗ';
+  const text = (input.value||'').trim() || 'Μία ψυχή';
 
   const list = loadCandleWall();
   const tray = document.getElementById('ammos-tray');
