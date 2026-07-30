@@ -971,7 +971,7 @@ button, .lang-btn, .cat-btn, .menu-btn, .toc-btn, .ka-b {
   display:flex;
   flex-direction:column;
   align-items:center;
-  justify-content:center;
+  justify-content:flex-end;
   gap:2px;
   flex:0 0 auto;
   min-height:0;
@@ -1480,7 +1480,7 @@ button, .lang-btn, .cat-btn, .menu-btn, .toc-btn, .ka-b {
     </div>
   </div>
   <!-- ΠΕΡΙΕΧΟΜΕΝΟ — scrollable -->
-  <div id="quiz-scroll-wrap" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 16px;position:relative;z-index:1;">
+  <div style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 16px;position:relative;z-index:1;">
     <div id="quiz-content" style="display:flex;flex-direction:column;gap:10px;max-width:480px;margin:0 auto;"></div>
     <div id="quiz-result" style="display:none;margin-top:14px;max-width:480px;margin-left:auto;margin-right:auto;
       background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.3);
@@ -1488,14 +1488,8 @@ button, .lang-btn, .cat-btn, .menu-btn, .toc-btn, .ka-b {
       <div id="quiz-result-text" style="color:#e8ddb8;font-size:14px;line-height:1.7;margin-bottom:14px;"></div>
       <button id="quiz-goto-btn" onclick="quizGoToGate()"
         style="background:rgba(212,175,55,0.2);border:1px solid #d4af37;
-        color:#d4af37;padding:10px 24px;border-radius:8px;font-size:14px;cursor:pointer;
-        display:block;margin:0 auto 10px;">
+        color:#d4af37;padding:10px 24px;border-radius:8px;font-size:14px;cursor:pointer;">
         Πήγαινέ με εκεί →
-      </button>
-      <button onclick="quizGoBack()" style="background:none;border:none;
-        color:rgba(232,221,184,0.6);font-size:12px;cursor:pointer;text-decoration:underline;
-        padding:4px;">
-        ← Πίσω στη λίστα
       </button>
     </div>
   </div>
@@ -6240,7 +6234,6 @@ const DAILY_QUIZ = [
 ];
 
 let quizSelectedDest = null;
-let _quizCurrentMode = 'quiz';
 
 function openQuiz(){
   const modal = document.getElementById('quiz-modal');
@@ -6248,9 +6241,7 @@ function openQuiz(){
   const qr = document.getElementById('quiz-result');
   const _qt=document.getElementById('quiz-title');if(_qt)_qt.textContent='✦ Κουίζ Αυτογνωσίας';
   const _qs=document.getElementById('quiz-subtitle');if(_qs)_qs.textContent='Ποια είναι η μεγαλύτερη πρόκλησή σου αυτή τη στιγμή;';
-  _quizCurrentMode = 'quiz';
   qr.style.display = 'none';
-  qc.style.display = 'flex';
   quizSelectedDest = null;
   const _gb=document.getElementById('quiz-goto-btn');if(_gb)_gb.style.display='';
   qc.innerHTML = QUIZ_QUESTIONS.map((q,i)=>`
@@ -6261,7 +6252,6 @@ function openQuiz(){
       <span style="color:${q.color};margin-right:8px;">${q.emoji}</span>${q.text}
     </button>`).join('');
   modal.style.display = 'flex';
-  const sw=document.getElementById('quiz-scroll-wrap'); if(sw) sw.scrollTop=0;
 }
 
 function quizSelect(idx){
@@ -6269,40 +6259,16 @@ function quizSelect(idx){
   if(!q) return;
   quizSelectedDest = q.dest;
 
-  /* Δυναμικό μήνυμα βασισμένο στα δεδομένα της ερώτησης */
-  const destMessages = {
-    'photos-daily':     'Η καθημερινότητα μπορεί να γίνει πιο ελαφριά. Η πύλη <strong>' + q.label + '</strong> έχει αυτό που χρειάζεσαι.',
-    'mystery-relations': (function(){
-      if(q.text && (q.text.indexOf('αξίζω') !== -1 || q.text.indexOf('αγάπη') !== -1))
-        return 'Αξίζεις αγάπη — πάνω από όλα από τον ίδιο σου τον εαυτό. Η πύλη <strong>' + q.label + '</strong> έχει κείμενα που μπορούν να σε βοηθήσουν να το πιστέψεις.';
-      return 'Οι σχέσεις είναι ο καθρέφτης μας. Η πύλη <strong>' + q.label + '</strong> σε περιμένει.';
-    })(),
-    'wisdom-philosophy':'Τα μεγάλα ερωτήματα αξίζουν βαθιές απαντήσεις. Η πύλη <strong>' + q.label + '</strong> ανοίγει για σένα.',
-    'wisdom2-science':  'Η ελπίδα και η γνώση είναι αχώριστες. Η πύλη <strong>' + q.label + '</strong> σε φωτίζει.',
-    'wisdom':           'Η σοφία δεν βρίσκεται — κερδίζεται. Η πύλη <strong>' + q.label + '</strong> σε περιμένει.',
-    'wisdom2':          'Η ελπίδα είναι το πιο ισχυρό συναίσθημα. Η πύλη <strong>' + q.label + '</strong> σε ενδυναμώνει.',
-    'photos':           'Σώμα και νους είναι ένα. Η πύλη <strong>' + q.label + '</strong> σε βοηθά να ανθίσεις.',
-    'meditation':       'Η εσωτερική γαλήνη είναι πάντα μέσα σου. Η πύλη <strong>' + q.label + '</strong> σε οδηγεί εκεί.',
-    'church':           'Η πίστη κινεί βουνά. Η πύλη <strong>' + q.label + '</strong> σε υποδέχεται με αγάπη.',
-    'science':          'Η γνώση ελευθερώνει. Η πύλη <strong>' + q.label + '</strong> ανοίγει νέους ορίζοντες.',
-    'philosophy':       'Τα μεγάλα ερωτήματα έχουν αξία. Η πύλη <strong>' + q.label + '</strong> σε συνοδεύει.',
-  };
-  const msg = destMessages[q.dest] ||
-    'Η πύλη <strong>' + q.label + '</strong> είναι ο σωστός προορισμός για σένα αυτή τη στιγμή.';
+  /* Στιγμιαία επισήμανση της επιλογής, μετά άμεση μετάβαση — χωρίς scroll */
+  document.querySelectorAll('[id^="qbtn-"]').forEach(function(b,i){
+    b.style.border    = i===idx ? '2px solid '+q.color : '1px solid rgba(212,175,55,0.15)';
+    b.style.background= i===idx ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.03)';
+  });
 
-  document.getElementById('quiz-result-text').innerHTML = msg;
-  document.getElementById('quiz-goto-btn').textContent = (q.emoji||'✦') + ' ' + q.label + ' →';
-
-  /* Κρύψε τη λίστα, δείξε το αποτέλεσμα — και μηδένισε αμέσως το scroll
-     (χωρίς animation) ώστε να φαίνεται απευθείας, χωρίς σκρολ. */
-  document.getElementById('quiz-content').style.display = 'none';
-  document.getElementById('quiz-result').style.display = 'block';
-  const sw = document.getElementById('quiz-scroll-wrap');
-  if(sw) sw.scrollTop = 0;
-}
-
-function quizGoBack(){
-  if(_quizCurrentMode === 'path30'){ openPath30(); } else { openQuiz(); }
+  setTimeout(function(){
+    closeQuiz();
+    setTimeout(()=>epGoTo(quizSelectedDest), 200);
+  }, 180);
 }
 
 function quizGoToGate(){
@@ -6698,9 +6664,7 @@ function openPath30(){
     '🍁 Οκτώβριος','🕯️ Νοέμβριος','⭐ Δεκέμβριος'];
   if(_qt) _qt.textContent = '🌱 Αυτοεξέλιξη 365 Ημερών';
   if(_qs) _qs.textContent = 'Επέλεξε τη μέρα σου — ή πάτα Σήμερα';
-  _quizCurrentMode = 'path30';
   qr.style.display='none';
-  qc.style.display='block';
   const _gb = document.getElementById('quiz-goto-btn');
   if(_gb) _gb.style.display='none';
 
@@ -6739,31 +6703,12 @@ function showPathDay(idx){
   const d=PATH_30[realIdx];if(!d)return;
   const gIdx=realIdx%7;
   const gates=['meditation', 'wisdom-philosophy', 'mystery-relations', 'photos-daily', 'wisdom2-science', 'church', 'wisdom-philosophy'];
-  const gLabels=['Νους & Ειρήνη', 'Γνώση & Φιλοσοφία', 'Γαλήνη & Σχέσεις', 'Υγεία & Καθημερινότητα', 'Ελπίδα & Επιστήμη', 'Πύλη Προσευχής', 'Γνώση & Φιλοσοφία'];
-  const dest=gates[gIdx]; const gLabel=gLabels[gIdx];
-  const quotes=['Η αλλαγή αρχίζει με μια αναπνοή.','Κάθε μέρα είναι νέα ευκαιρία.',
-    'Το μικρό βήμα κάνει τη μεγάλη διαφορά.','Η υπομονή είναι σοφία.',
-    'Αξίζεις την προσπάθεια.','Εδώ και τώρα — αρκεί.',
-    'Η ζωή ανθίζει εκεί που δίνεις προσοχή.'];
-  const quote=quotes[Math.floor(realIdx/7)%quotes.length];
-  const qr=document.getElementById('quiz-result');
-  const qc=document.getElementById('quiz-content');
-  document.getElementById('quiz-result-text').innerHTML=
-    '<div style="text-align:center;margin-bottom:12px;">'+
-    '<div style="font-size:40px;color:#d4af37;font-family:Georgia,serif;">'+d.day+'</div>'+
-    '<div style="font-size:19px;color:#fff8d0;font-family:Georgia,serif;margin:8px 0;font-weight:bold;">'+d.title+'</div></div>'+
-    '<div style="font-size:14px;color:#e8ddb8;line-height:1.85;margin-bottom:14px;">'+d.text+'</div>'+
-    '<div style="font-style:italic;color:#d4af37;font-size:12px;border-top:1px solid rgba(212,175,55,0.2);padding-top:10px;margin-bottom:16px;">"'+quote+'"</div>';
-  const gb=document.getElementById('quiz-goto-btn');
-  if(gb){gb.style.display='block';gb.textContent='✦ '+gLabel+' →';}
+  const dest=gates[gIdx];
   quizSelectedDest=dest;
 
-  /* Κρύψε τη λίστα ημερών, δείξε αμέσως το κείμενο της ημέρας — και μηδένισε
-     αμέσως το scroll (χωρίς animation), ώστε να φαίνεται απευθείας χωρίς σκρολ. */
-  qc.style.display='none';
-  qr.style.display='block';
-  const sw=document.getElementById('quiz-scroll-wrap');
-  if(sw) sw.scrollTop=0;
+  /* Άμεση μετάβαση στην πύλη — χωρίς ενδιάμεση οθόνη κειμένου, χωρίς scroll */
+  closeQuiz();
+  setTimeout(()=>epGoTo(quizSelectedDest), 200);
 }
 
 function shareContent(title, text){

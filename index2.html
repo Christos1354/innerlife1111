@@ -466,7 +466,7 @@ button, .lang-btn, .cat-btn, .menu-btn, .toc-btn, .ka-b {
 
 #ep-arch-menu {
     display:none; position:absolute; inset:0;
-    flex-direction:column; align-items:center; justify-content:center;
+    flex-direction:column; align-items:center; justify-content:flex-start;
     padding:4px 6px 4px; z-index:30;
     animation:fadein 0.55s ease;
     overflow-y:auto; -webkit-overflow-scrolling:touch;
@@ -490,8 +490,6 @@ button, .lang-btn, .cat-btn, .menu-btn, .toc-btn, .ka-b {
   align-items:center;
   gap:6px;
   width:100%;
-  flex:1;
-  min-height:0;
   box-sizing:border-box;
   padding:2px 0 4px;
   position:relative;
@@ -499,23 +497,26 @@ button, .lang-btn, .cat-btn, .menu-btn, .toc-btn, .ka-b {
 .arch-row {
   display:flex;
   justify-content:center;
+  align-items:flex-end;
   gap:5px;
   width:100%;
-  flex:1;
-  min-height:0;
 }
 .arch-row .arch-btn {
   flex:1;
-  max-width:24%;
-  min-width:0;
+  /* ΠΛΑΤΟΣ κάθε πύλης: το μικρότερο ανάμεσα σε "22% του πλάτους" (καλό για κινητό,
+     όπου το ύψος της οθόνης δεν είναι πρόβλημα) ΚΑΙ σε μια τιμή βασισμένη στο
+     ΥΨΟΣ της οθόνης (καλό για Mac/desktop, όπου το πλάτος είναι μεγάλο αλλά το
+     ύψος περιορισμένο) — έτσι οι πύλες γεμίζουν την οθόνη παντού χωρίς σκρολ. */
+  max-width:min(22%, 22dvh);
+  min-width:50px;
 }
 .arch-btn {
   display:flex; flex-direction:column; align-items:center; justify-content:flex-end;
-  cursor:pointer; background:transparent; border:none; padding:0 2px 4px;
-  transition:transform 0.18s; min-height:0;
+  cursor:pointer; background:transparent; border:none; padding:0 2px 2px;
+  transition:transform 0.18s; flex-shrink:1;
 }
 .arch-btn:hover { transform:scale(1.03); }
-.arch-svg { width:100%; flex:1; min-height:0; overflow:visible; }
+.arch-svg { width:100%; flex:1; min-height:0; overflow:visible; max-height:42vh; }
 .tts-arch-btn {
   background: none;
   border: none;
@@ -559,6 +560,27 @@ button, .lang-btn, .cat-btn, .menu-btn, .toc-btn, .ka-b {
   min-height:34px;
 }
 .ep-back-btn:hover { background:rgba(255,210,60,0.15); border-color:#ffe060; color:#fff; }
+
+/* ═══ ΕΓΓΥΗΣΗ "ΜΙΑ ΣΕΛΙΔΑ, ΧΩΡΙΣ ΣΚΡΟΛ" ΓΙΑ ΤΙΣ ΠΥΛΕΣ ═══
+   Σε χαμηλά/πλάγια (landscape) ύψη οθόνης όλα τα στοιχεία μαζεύονται
+   ώστε ΠΟΤΕ να μη χρειάζεται σκρολ για να φανούν οι πύλες και το κουμπί επιστροφής. */
+@media screen and (max-height: 500px) {
+  .ep-menu-subtitle   { font-size:7px !important; margin:0 0 1px !important; }
+  #search-bar         { margin-bottom:2px !important; margin-top:0 !important; }
+  #search-bar input   { padding:4px 10px !important; }
+  #search-bar button  { width:26px !important; height:26px !important; }
+  .arch-grid          { gap:2px !important; padding:1px 0 2px !important; }
+  .arch-row           { gap:3px !important; }
+  .arch-svg           { max-height:24vh !important; }
+  .arch-label         { font-size:6.5px !important; padding:0 !important; }
+  .gold-circle-btn    { width:clamp(28px,7dvh,44px) !important; height:clamp(28px,7dvh,44px) !important; }
+  .gold-circle-label  { font-size:6px !important; }
+  .ep-back-btn        { margin:1px auto !important; padding:3px 16px !important; font-size:9px !important; min-height:24px !important; }
+}
+@media screen and (max-height: 380px) {
+  .arch-svg           { max-height:19vh !important; }
+  .gold-circle-btn    { width:clamp(24px,6dvh,36px) !important; height:clamp(24px,6dvh,36px) !important; }
+}
 
 #church-viewport {
     flex:1; position:relative; width:100%;
@@ -971,10 +993,9 @@ button, .lang-btn, .cat-btn, .menu-btn, .toc-btn, .ka-b {
   display:flex;
   flex-direction:column;
   align-items:center;
-  justify-content:center;
   gap:2px;
   flex:0 0 auto;
-  min-height:0;
+  align-self:center;
 }
 .gold-circle-label {
   font-family:Georgia,serif;
@@ -986,10 +1007,8 @@ button, .lang-btn, .cat-btn, .menu-btn, .toc-btn, .ka-b {
   text-align:center;
 }
 .gold-circle-btn {
-  width:clamp(34px,6vw,54px);
-  height:clamp(34px,6vw,54px);
-  min-width:clamp(34px,6vw,54px) !important;
-  min-height:clamp(34px,6vw,54px) !important;
+  width:clamp(46px,min(12vw,16dvh),90px);
+  height:clamp(46px,min(12vw,16dvh),90px);
   border-radius:50%;
   padding:0;
   border:none;
@@ -1003,7 +1022,6 @@ button, .lang-btn, .cat-btn, .menu-btn, .toc-btn, .ka-b {
              inset 0 -2px 4px rgba(80,50,0,0.4);
   transition:transform 0.2s,box-shadow 0.2s;
   display:block;
-  flex-shrink:0;
 }
 .gold-circle-btn:hover {
   transform:scale(1.1);
@@ -1369,7 +1387,7 @@ button, .lang-btn, .cat-btn, .menu-btn, .toc-btn, .ka-b {
       </div><!-- /row1 -->
 
       <!-- Σειρά 2: κύκλοι + 3 πύλες -->
-      <div class="arch-row" style="min-height:0;">
+      <div class="arch-row" style="align-items:center;flex:0.85;">
 
         <!-- Χρυσός Κύκλος Αυτογνωσίας -->
         <div class="gold-circle-wrap">
@@ -1480,7 +1498,7 @@ button, .lang-btn, .cat-btn, .menu-btn, .toc-btn, .ka-b {
     </div>
   </div>
   <!-- ΠΕΡΙΕΧΟΜΕΝΟ — scrollable -->
-  <div id="quiz-scroll-wrap" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 16px;position:relative;z-index:1;">
+  <div style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 16px;position:relative;z-index:1;">
     <div id="quiz-content" style="display:flex;flex-direction:column;gap:10px;max-width:480px;margin:0 auto;"></div>
     <div id="quiz-result" style="display:none;margin-top:14px;max-width:480px;margin-left:auto;margin-right:auto;
       background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.3);
@@ -1488,14 +1506,8 @@ button, .lang-btn, .cat-btn, .menu-btn, .toc-btn, .ka-b {
       <div id="quiz-result-text" style="color:#e8ddb8;font-size:14px;line-height:1.7;margin-bottom:14px;"></div>
       <button id="quiz-goto-btn" onclick="quizGoToGate()"
         style="background:rgba(212,175,55,0.2);border:1px solid #d4af37;
-        color:#d4af37;padding:10px 24px;border-radius:8px;font-size:14px;cursor:pointer;
-        display:block;margin:0 auto 10px;">
+        color:#d4af37;padding:10px 24px;border-radius:8px;font-size:14px;cursor:pointer;">
         Πήγαινέ με εκεί →
-      </button>
-      <button onclick="quizGoBack()" style="background:none;border:none;
-        color:rgba(232,221,184,0.6);font-size:12px;cursor:pointer;text-decoration:underline;
-        padding:4px;">
-        ← Πίσω στη λίστα
       </button>
     </div>
   </div>
@@ -6240,7 +6252,6 @@ const DAILY_QUIZ = [
 ];
 
 let quizSelectedDest = null;
-let _quizCurrentMode = 'quiz';
 
 function openQuiz(){
   const modal = document.getElementById('quiz-modal');
@@ -6248,9 +6259,7 @@ function openQuiz(){
   const qr = document.getElementById('quiz-result');
   const _qt=document.getElementById('quiz-title');if(_qt)_qt.textContent='✦ Κουίζ Αυτογνωσίας';
   const _qs=document.getElementById('quiz-subtitle');if(_qs)_qs.textContent='Ποια είναι η μεγαλύτερη πρόκλησή σου αυτή τη στιγμή;';
-  _quizCurrentMode = 'quiz';
   qr.style.display = 'none';
-  qc.style.display = 'flex';
   quizSelectedDest = null;
   const _gb=document.getElementById('quiz-goto-btn');if(_gb)_gb.style.display='';
   qc.innerHTML = QUIZ_QUESTIONS.map((q,i)=>`
@@ -6261,13 +6270,23 @@ function openQuiz(){
       <span style="color:${q.color};margin-right:8px;">${q.emoji}</span>${q.text}
     </button>`).join('');
   modal.style.display = 'flex';
-  const sw=document.getElementById('quiz-scroll-wrap'); if(sw) sw.scrollTop=0;
 }
 
 function quizSelect(idx){
   const q = idx===-1 ? QUIZ_QUESTIONS._todayQ : QUIZ_QUESTIONS[idx];
   if(!q) return;
   quizSelectedDest = q.dest;
+
+  /* Highlight επιλεγμένο */
+  document.querySelectorAll('[id^="qbtn-"]').forEach(function(b,i){
+    b.style.border    = i===idx ? '2px solid '+q.color : '1px solid rgba(212,175,55,0.15)';
+    b.style.background= i===idx ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.03)';
+  });
+  const todayBtn = document.getElementById('qbtn-today');
+  if(todayBtn){
+    todayBtn.parentElement.style.border = idx===-1
+      ? '2px solid '+q.color : '2px solid rgba(212,175,55,0.6)';
+  }
 
   /* Δυναμικό μήνυμα βασισμένο στα δεδομένα της ερώτησης */
   const destMessages = {
@@ -6293,16 +6312,12 @@ function quizSelect(idx){
   document.getElementById('quiz-result-text').innerHTML = msg;
   document.getElementById('quiz-goto-btn').textContent = (q.emoji||'✦') + ' ' + q.label + ' →';
 
-  /* Κρύψε τη λίστα, δείξε το αποτέλεσμα — και μηδένισε αμέσως το scroll
-     (χωρίς animation) ώστε να φαίνεται απευθείας, χωρίς σκρολ. */
-  document.getElementById('quiz-content').style.display = 'none';
-  document.getElementById('quiz-result').style.display = 'block';
-  const sw = document.getElementById('quiz-scroll-wrap');
-  if(sw) sw.scrollTop = 0;
-}
-
-function quizGoBack(){
-  if(_quizCurrentMode === 'path30'){ openPath30(); } else { openQuiz(); }
+  const resultEl = document.getElementById('quiz-result');
+  resultEl.style.display = 'block';
+  /* Scroll ώστε να φανεί το αποτέλεσμα */
+  setTimeout(function(){
+    resultEl.scrollIntoView({ behavior:'smooth', block:'nearest' });
+  }, 80);
 }
 
 function quizGoToGate(){
@@ -6698,9 +6713,7 @@ function openPath30(){
     '🍁 Οκτώβριος','🕯️ Νοέμβριος','⭐ Δεκέμβριος'];
   if(_qt) _qt.textContent = '🌱 Αυτοεξέλιξη 365 Ημερών';
   if(_qs) _qs.textContent = 'Επέλεξε τη μέρα σου — ή πάτα Σήμερα';
-  _quizCurrentMode = 'path30';
   qr.style.display='none';
-  qc.style.display='block';
   const _gb = document.getElementById('quiz-goto-btn');
   if(_gb) _gb.style.display='none';
 
@@ -6748,6 +6761,7 @@ function showPathDay(idx){
   const quote=quotes[Math.floor(realIdx/7)%quotes.length];
   const qr=document.getElementById('quiz-result');
   const qc=document.getElementById('quiz-content');
+  qc.innerHTML='';
   document.getElementById('quiz-result-text').innerHTML=
     '<div style="text-align:center;margin-bottom:12px;">'+
     '<div style="font-size:40px;color:#d4af37;font-family:Georgia,serif;">'+d.day+'</div>'+
@@ -6757,13 +6771,8 @@ function showPathDay(idx){
   const gb=document.getElementById('quiz-goto-btn');
   if(gb){gb.style.display='block';gb.textContent='✦ '+gLabel+' →';}
   quizSelectedDest=dest;
-
-  /* Κρύψε τη λίστα ημερών, δείξε αμέσως το κείμενο της ημέρας — και μηδένισε
-     αμέσως το scroll (χωρίς animation), ώστε να φαίνεται απευθείας χωρίς σκρολ. */
-  qc.style.display='none';
   qr.style.display='block';
-  const sw=document.getElementById('quiz-scroll-wrap');
-  if(sw) sw.scrollTop=0;
+  setTimeout(function(){qr.scrollIntoView({behavior:'smooth',block:'nearest'});},80);
 }
 
 function shareContent(title, text){
