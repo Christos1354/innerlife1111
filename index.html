@@ -1264,9 +1264,14 @@ function removeAccents(str) {
         style="flex:1;padding:7px 12px;border-radius:20px;border:1px solid rgba(212,175,55,0.5);
         background:rgba(4,8,20,0.85);color:#fffbe0;font-size:13px;font-family:Georgia,serif;
         outline:none;"/>
-      <button onclick="document.getElementById('search-input').value='';doSearch('');"
+      <button onclick="document.getElementById('search-input').value='';doSearch('');document.getElementById('search-results').dataset.mode='';"
         style="background:transparent;border:none;color:#d4af37;font-size:16px;cursor:pointer;
         padding:0 4px;">✕</button>
+      <button onclick="toggleFavoritesPanel()" title="Αγαπημένα"
+        style="background:transparent;border:none;cursor:pointer;
+        padding:0 6px;flex-shrink:0;display:flex;align-items:center;gap:4px;white-space:nowrap;">
+        <span style="font-size:16px;">❤️</span><span style="font-size:10px;color:#d4af37;letter-spacing:0.03em;font-family:Georgia,serif;">Αγαπημένα</span>
+      </button>
       <!-- ⏸ Pause δίπλα στο search — κρυφό αρχικά -->
       <button id="arch-pause-btn" onclick="toggleGlobalMusic()"
         title="Παύση / Συνέχεια"
@@ -5068,7 +5073,96 @@ function epGoBack(){
   document.getElementById('ep-door').style.display='flex';
   setTimeout(updateFloatCircles,50);
 }
-function renderDoorContent(contentList){
+/* ════ ΣΩΣΤΑ, ΤΡΕΧΟΝΤΑ ΟΝΟΜΑΤΑ ΠΥΛΩΝ (όπως τα βλέπει ο χρήστης στην είσοδο) ════
+   Χρησιμοποιείται για τα Αγαπημένα, ώστε να μη δείχνει παλιούς/εσωτερικούς τίτλους. */
+const DEST_DISPLAY_NAMES = {
+  'meditation': 'Νους & Ειρήνη',
+  'wisdom-philosophy': 'Γνώση & Φιλοσοφία',
+  'wisdom': 'Γνώση & Φιλοσοφία',
+  'philosophy': 'Γνώση & Φιλοσοφία',
+  'mystery-relations': 'Γαλήνη & Σχέσεις',
+  'mystery': 'Γαλήνη & Σχέσεις',
+  'relations': 'Γαλήνη & Σχέσεις',
+  'photos-daily': 'Υγεία & Καθημερινότητα',
+  'photos': 'Υγεία & Καθημερινότητα',
+  'daily': 'Υγεία & Καθημερινότητα',
+  'wisdom2-science': 'Ελπίδα & Επιστήμη',
+  'wisdom2': 'Ελπίδα & Επιστήμη',
+  'science': 'Ελπίδα & Επιστήμη',
+  'music-direct': 'Πύλη της Μουσικής',
+  'church': 'Πύλη Προσευχής & Λατρείας',
+  'psalms': 'Πύλη Προσευχής & Λατρείας',
+  'kati': '✦ ΚΑΤΙ ΑΛΛΟ'
+};
+function getGateDisplayName(dest){
+  return DEST_DISPLAY_NAMES[dest] || dest || '';
+}
+
+/* ════ ΑΓΑΠΗΜΕΝΑ (αποθηκεύονται στη συσκευή του κάθε χρήστη) ════ */
+function _favKey(){ return 'innerlife_favorites'; }
+function getFavorites(){
+  try { return JSON.parse(localStorage.getItem(_favKey()) || '[]'); }
+  catch(e){ return []; }
+}
+function isFavorite(dest, idx){
+  return getFavorites().some(function(f){ return f.dest===dest && f.idx===idx; });
+}
+function toggleFavoriteItem(dest, idx, title, preview, gateLabel, btnEl){
+  var favs = getFavorites();
+  var i = favs.findIndex(function(f){ return f.dest===dest && f.idx===idx; });
+  var nowFav;
+  if(i>=0){ favs.splice(i,1); nowFav=false; }
+  else { favs.push({dest:dest, idx:idx, title:title||'', preview:(preview||'').slice(0,80), gateName:getGateDisplayName(dest)}); nowFav=true; }
+  try { localStorage.setItem(_favKey(), JSON.stringify(favs)); } catch(e){}
+  if(btnEl){
+    btnEl.textContent = nowFav ? '❤️' : '♡';
+    btnEl.style.color = nowFav ? '#e0203c' : '#8b6914';
+  }
+}
+function removeFavorite(dest, idx, ev){
+  if(ev) ev.stopPropagation();
+  var favs = getFavorites();
+  var i = favs.findIndex(function(f){ return f.dest===dest && f.idx===idx; });
+  if(i>=0){ favs.splice(i,1); try{ localStorage.setItem(_favKey(), JSON.stringify(favs)); }catch(e){} }
+  openFavorites(); /* ξαναζωγράφισε τη λίστα */
+}
+function openFavorites(){
+  const resultsEl = document.getElementById('search-results');
+  if(!resultsEl) return;
+  const favs = getFavorites();
+  resultsEl.dataset.mode = 'favorites';
+  if(!favs.length){
+    resultsEl.innerHTML = '<div style="padding:14px;color:#8a7040;text-align:center;font-size:13px;">Δεν έχεις αγαπημένα ακόμα ♡<br>Πάτα την καρδούλα σε ένα κείμενο για να το αποθηκεύσεις.</div>';
+    resultsEl.style.display = 'block';
+    return;
+  }
+  var h = '<div style="padding:8px 14px;color:#e0203c;font-size:11px;letter-spacing:0.08em;border-bottom:1px solid rgba(212,175,55,0.15);">❤️ ΤΑ ΑΓΑΠΗΜΕΝΑ ΣΟΥ</div>';
+  favs.forEach(function(f){
+    h += '<div style="padding:10px 14px;cursor:pointer;border-bottom:1px solid rgba(212,175,55,0.15);display:flex;align-items:center;gap:8px;" onmouseover="this.style.background=\'rgba(212,175,55,0.1)\'" onmouseout="this.style.background=\'transparent\'">'
+      + '<div onclick="searchOpen(\''+f.dest+'\','+f.idx+')" style="flex:1;min-width:0;">'
+      + (f.gateName ? '<div style="color:#d4af37;font-size:11px;letter-spacing:0.08em;margin-bottom:2px;">'+f.gateName+'</div>' : '')
+      + (f.title ? '<div style="color:#fffbe0;font-size:13px;font-weight:600;">'+f.title+'</div>' : '')
+      + (f.preview ? '<div style="color:#a09070;font-size:11px;margin-top:3px;">'+f.preview+'</div>' : '')
+      + '</div>'
+      + '<button onclick="removeFavorite(\''+f.dest+'\','+f.idx+',event)" title="Διαγραφή" style="background:transparent;border:none;color:#a05050;font-size:16px;cursor:pointer;flex-shrink:0;padding:4px;">✕</button>'
+      + '</div>';
+  });
+  resultsEl.innerHTML = h;
+  resultsEl.style.display = 'block';
+}
+function toggleFavoritesPanel(){
+  const resultsEl = document.getElementById('search-results');
+  if(!resultsEl) return;
+  if(resultsEl.style.display === 'block' && resultsEl.dataset.mode === 'favorites'){
+    resultsEl.style.display = 'none';
+    resultsEl.innerHTML = '';
+    resultsEl.dataset.mode = '';
+    return;
+  }
+  openFavorites();
+}
+
+function renderDoorContent(contentList, textColor, dest, gateLabel){
   const box = document.getElementById('door-content-box');
   if(!box) return;
   box.innerHTML = '';
@@ -5079,15 +5173,31 @@ function renderDoorContent(contentList){
 
   let activeIdx = -1;
   let activeContentEl = null; /* το τρέχον ανοιχτό περιεχόμενο */
-  const visitedItems = new Set(); /* παρακολουθεί ποια άνοιξε ο χρήστης */
+  /* Ποια στοιχεία έχουν ανοιχτεί -- φορτώνεται από τη συσκευή, ώστε να θυμάται ο χρήστης τι είδε */
+  const visitedKey = 'innerlife_visited_' + (dest || 'unknown');
+  let visitedItems;
+  try { visitedItems = new Set(JSON.parse(localStorage.getItem(visitedKey) || '[]')); }
+  catch(e){ visitedItems = new Set(); }
+  function persistVisited(){
+    try { localStorage.setItem(visitedKey, JSON.stringify(Array.from(visitedItems))); } catch(e){}
+  }
+  function addVisitedDot(btn){
+    if(btn.querySelector('.visited-dot')) return;
+    const d = document.createElement('span');
+    d.className = 'visited-dot';
+    d.style.cssText = 'display:inline-block;width:11px;height:11px;border-radius:50%;background:#4a90d9;margin-left:6px;flex-shrink:0;border:1.5px solid rgba(255,255,255,0.6);box-shadow:0 0 9px rgba(74,144,217,1);';
+    btn.appendChild(d);
+  }
 
   function showItem(idx){
     activeIdx = idx;
     const item = contentList[idx];
     /* Αφαίρεσε παλιό περιεχόμενο */
     if(activeContentEl){ activeContentEl.remove(); activeContentEl=null; }
-    /* Σημείωσε ως ανοιγμένο */
+    /* Σημείωσε ως ανοιγμένο -- και αποθήκευσε στη συσκευή */
+    const wasNew = !visitedItems.has(idx);
     visitedItems.add(idx);
+    if(wasNew) persistVisited();
     toc.querySelectorAll('.toc-btn').forEach((b,i)=>{
       const isActive  = i===idx;
       const isVisited = visitedItems.has(i);
@@ -5097,17 +5207,12 @@ function renderDoorContent(contentList){
       /* Μπλε dot για επισκεφθέντα — εκτός αν είναι τώρα ανοιχτό */
       const dot = b.querySelector('.visited-dot');
       if(isVisited && !isActive){
-        if(!dot){
-          const d = document.createElement('span');
-          d.className = 'visited-dot';
-          d.style.cssText = 'display:inline-block;width:7px;height:7px;border-radius:50%;background:#4a90d9;margin-left:6px;flex-shrink:0;box-shadow:0 0 5px rgba(74,144,217,0.7);';
-          b.appendChild(d);
-        }
+        addVisitedDot(b);
+        const d2 = b.querySelector('.visited-dot');
+        if(d2) d2.style.display = 'inline-block';
       } else if(dot && isActive){
         /* Κρύψε dot όσο είναι ανοιχτό */
         dot.style.display = 'none';
-      } else if(dot && !isActive && isVisited){
-        dot.style.display = 'inline-block';
       }
     });
     const wrap = document.createElement('div');
@@ -5118,10 +5223,14 @@ function renderDoorContent(contentList){
       const _ttsId = 'tts-wrap-'+idx;
       const _ttsBody = (item.body||'').replace(/\n/g,' ');
       const _shareId = 'share-btn-'+idx;
-      wrap.innerHTML = `<div style="border-radius:8px;padding:18px 20px;background:rgba(255,254,248,0.93);box-shadow:0 2px 16px rgba(0,0,0,0.5);">${item.title?`<div style="color:#5a3a00;font-size:14px;font-weight:700;letter-spacing:0.1em;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #e0d0a0;display:flex;align-items:center;justify-content:space-between;gap:8px;"><span><span style="color:#d4af37;margin-right:5px;">✦</span>${item.title}</span><button onclick="ttsSpeakDoorText('${_ttsId}',this)" title="Ανάγνωση" style="background:none;border:1px solid rgba(180,140,60,0.4);border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:14px;color:#8b6914;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.2s;" onmouseover="this.style.background='rgba(180,140,60,0.15)'" onmouseout="this.style.background='none'">🔊</button></div>`:''}<div id="${_ttsId}" data-orig="${_ttsBody.replace(/"/g,'&quot;')}" class="dropcap-p" style="color:#0a0800;font-size:15px;line-height:1.9;">${(item.body||'').replace(/\n/g,'<br>')}</div><div style="margin-top:12px;text-align:right;"><button id="${_shareId}" style="background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.35);color:#8b6914;padding:6px 16px;border-radius:20px;font-size:13px;cursor:pointer;letter-spacing:0.04em;font-weight:600;">↗ Κοινοποίηση</button></div></div>`;
+      const _favId = 'fav-btn-'+idx;
+      const _isFav = isFavorite(dest, idx);
+      wrap.innerHTML = `<div style="border-radius:8px;padding:18px 20px;background:rgba(255,254,248,0.93);box-shadow:0 2px 16px rgba(0,0,0,0.5);">${item.title?`<div style="color:#5a3a00;font-size:14px;font-weight:700;letter-spacing:0.1em;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #e0d0a0;display:flex;align-items:center;justify-content:space-between;gap:8px;"><span><span style="color:#d4af37;margin-right:5px;">✦</span>${item.title}</span><button onclick="ttsSpeakDoorText('${_ttsId}',this)" title="Ανάγνωση" style="background:none;border:1px solid rgba(180,140,60,0.4);border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:14px;color:#8b6914;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.2s;" onmouseover="this.style.background='rgba(180,140,60,0.15)'" onmouseout="this.style.background='none'">🔊</button></div>`:''}<div id="${_ttsId}" data-orig="${_ttsBody.replace(/"/g,'&quot;')}" class="dropcap-p" style="color:#0a0800;font-size:15px;line-height:1.9;">${(item.body||'').replace(/\n/g,'<br>')}</div><div style="margin-top:12px;text-align:right;display:flex;justify-content:flex-end;gap:8px;"><button id="${_favId}" title="Αγαπημένο" style="background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.35);color:${_isFav?'#e0203c':'#8b6914'};padding:6px 14px;border-radius:20px;font-size:15px;cursor:pointer;line-height:1;">${_isFav?'❤️':'♡'}</button><button id="${_shareId}" style="background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.35);color:#8b6914;padding:6px 16px;border-radius:20px;font-size:13px;cursor:pointer;letter-spacing:0.04em;font-weight:600;">↗ Κοινοποίηση</button></div></div>`;
       /* Attach share event safely — no inline escaping needed */
       const _shareBtn = wrap.querySelector('#'+_shareId);
       if(_shareBtn){ _shareBtn.addEventListener('click', function(){ shareContent(item.title||'', item.body||''); }); }
+      const _favBtn = wrap.querySelector('#'+_favId);
+      if(_favBtn){ _favBtn.addEventListener('click', function(){ toggleFavoriteItem(dest, idx, item.title||'', (item.body||'').slice(0,80), gateLabel||'', _favBtn); }); }
     } else if(item.type==='image'){
       wrap.innerHTML = `<div style="text-align:center;"><img src="${item.file}" alt="${item.caption||''}" style="max-width:100%;max-height:65vh;object-fit:contain;border-radius:6px;box-shadow:0 4px 16px rgba(0,0,0,0.5);">${item.caption?`<div style="color:#ffe060;font-size:11px;margin-top:8px;">${item.caption}</div>`:''}</div>`;
     } else if(item.type==='video'){
@@ -5234,6 +5343,7 @@ function renderDoorContent(contentList){
       };
     }
     toc.appendChild(btn);
+    if(item.type!=='music-track' && visitedItems.has(idx)) addVisitedDot(btn);
   });
 
   box.appendChild(toc);
@@ -5279,7 +5389,7 @@ function epGoTo(dest){
     const chatPanel = document.getElementById('door-chat-panel');
     if(chatPanel) chatPanel.style.display = 'none';
     document.getElementById('now-playing').style.display = 'none';
-    renderDoorContent(contentList, textColor);
+    renderDoorContent(contentList, textColor, dest, titleText);
     preloadAllAudio();
     if(hasAudio && autoPlay) setTimeout(()=>playCurrentAudio(audioCat), 300);
   }
@@ -5709,6 +5819,20 @@ function kaShowItem(idx){
   const el = document.getElementById('ka-c-'+idx);
   if(el) el.style.display='block';
   if(bs[idx]){ bs[idx].style.background='rgba(255,255,200,0.2)'; bs[idx].style.borderColor='#ffe060'; bs[idx].style.fontWeight='700'; }
+  /* Σημείωσε ως ανοιγμένο -- και αποθήκευσε στη συσκευή */
+  try {
+    var _kaV = new Set(JSON.parse(localStorage.getItem('innerlife_visited_kati') || '[]'));
+    if(!_kaV.has(idx)){
+      _kaV.add(idx);
+      localStorage.setItem('innerlife_visited_kati', JSON.stringify(Array.from(_kaV)));
+      if(bs[idx] && !bs[idx].querySelector('.visited-dot')){
+        var _kaDot = document.createElement('span');
+        _kaDot.className = 'visited-dot';
+        _kaDot.style.cssText = 'display:inline-block;width:11px;height:11px;border-radius:50%;background:#4a90d9;margin-left:2px;flex-shrink:0;border:1.5px solid rgba(255,255,255,0.6);box-shadow:0 0 9px rgba(74,144,217,1);';
+        bs[idx].insertBefore(_kaDot, bs[idx].lastElementChild);
+      }
+    }
+  } catch(e){}
   setTimeout(()=>{ if(bs[idx]) bs[idx].scrollIntoView({behavior:'smooth',block:'start'}); },50);
 }
 
@@ -5771,21 +5895,29 @@ function openKatiAllo(){
 
   /* Χτίζω λίστα τίτλων */
   const ico = {text:'📖',image:'🖼️',pdf:'📄','video-file':'🎬',audio:'🎵',link:'🔗'};
+  /* Ποια θέματα έχουν ήδη ανοιχτεί σε αυτή τη συσκευή */
+  let _kaVisited;
+  try { _kaVisited = new Set(JSON.parse(localStorage.getItem('innerlife_visited_kati') || '[]')); }
+  catch(e){ _kaVisited = new Set(); }
   let h = '';
   KATI_ALLO_CONTENT.forEach(function(item,i){
     var lbl = item.title||item.caption||item.file||('Θέμα '+(i+1));
     var ic  = ico[item.type]||'•';
+    var dotHtml = _kaVisited.has(i) ? '<span class="visited-dot" style="display:inline-block;width:11px;height:11px;border-radius:50%;background:#4a90d9;margin-left:2px;flex-shrink:0;border:1.5px solid rgba(255,255,255,0.6);box-shadow:0 0 9px rgba(74,144,217,1);"></span>' : '';
     /* Κουμπί τίτλος */
     h += '<button class="ka-b" onclick="kaShowItem('+i+')" style="display:flex;align-items:center;gap:8px;width:100%;text-align:left;padding:10px 14px;background:rgba(0,0,0,0.4);color:#fffbe0;border:1px solid rgba(255,255,255,0.15);border-radius:6px;cursor:pointer;font-size:13px;font-family:Georgia,serif;margin-bottom:5px;">'
-  + '<span>'+ic+'</span><span style="color:#f0d060;font-size:11px;font-weight:600;margin-right:6px;min-width:28px;">'+(i+1)+'</span><span style="flex:1;">'+lbl+'</span><span style="opacity:0.4;">›</span></button>';
+  + '<span>'+ic+'</span><span style="color:#f0d060;font-size:11px;font-weight:600;margin-right:6px;min-width:28px;">'+(i+1)+'</span><span style="flex:1;">'+lbl+'</span>'+dotHtml+'<span style="opacity:0.4;">›</span></button>';
     /* Κρυφό περιεχόμενο */
     h += '<div id="ka-c-'+i+'" class="ka-c" style="display:none;margin-bottom:10px;">';
     if(item.type==='text'){
       var _kaTtsId = 'ka-tts-'+i;
       var _kaBody = (item.body||'').replace(/\n/g,' ');
+      var _kaFavId = 'ka-fav-'+i;
+      var _kaIsFav = isFavorite('kati', i);
       h += '<div style="border-radius:8px;padding:18px 20px;background:rgba(255,254,248,0.93);box-shadow:0 2px 16px rgba(0,0,0,0.5);">'
         + (item.title ? '<div style="color:#5a3a00;font-size:14px;font-weight:700;letter-spacing:0.08em;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #e0d0a0;display:flex;align-items:center;justify-content:space-between;gap:8px;"><span>'+item.title+'</span><button onclick="ttsSpeakDoorText(\''+_kaTtsId+'\',this)" title="Ανάγνωση" style="background:none;border:1px solid rgba(180,140,60,0.4);border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:14px;color:#8b6914;flex-shrink:0;display:flex;align-items:center;justify-content:center;">🔊</button></div>' : '')
-        + '<div id="'+_kaTtsId+'" data-orig="'+_kaBody.replace(/"/g,'&quot;')+'" style="color:#1a1200;font-size:15px;line-height:1.9;">'+(item.body||'').replace(/\n/g,'<br>')+'</div></div>';
+        + '<div id="'+_kaTtsId+'" data-orig="'+_kaBody.replace(/"/g,'&quot;')+'" style="color:#1a1200;font-size:15px;line-height:1.9;">'+(item.body||'').replace(/\n/g,'<br>')+'</div>'
+        + '<div style="margin-top:12px;text-align:right;"><button id="'+_kaFavId+'" title="Αγαπημένο" style="background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.35);color:'+(_kaIsFav?'#e0203c':'#8b6914')+';padding:6px 14px;border-radius:20px;font-size:15px;cursor:pointer;line-height:1;">'+(_kaIsFav?'❤️':'♡')+'</button></div></div>';
     } else if(item.type==='image'){
       h += '<div style="text-align:center;padding:12px;background:rgba(0,0,0,0.75);border:1px solid rgba(212,175,55,0.3);border-radius:8px;">'
         + '<img src="'+item.file+'" style="max-width:100%;max-height:65vh;object-fit:contain;border-radius:6px;">'
@@ -5807,6 +5939,16 @@ function openKatiAllo(){
     h += '</div>'; /* κλείσιμο ka-c */
   });
   content.innerHTML = h;
+  /* Ενεργοποίηση κουμπιών ❤ αγαπημένων (μετά την εισαγωγή στο DOM) */
+  KATI_ALLO_CONTENT.forEach(function(item,i){
+    if(item.type!=='text') return;
+    var fb = document.getElementById('ka-fav-'+i);
+    if(fb){
+      fb.addEventListener('click', function(){
+        toggleFavoriteItem('kati', i, item.title||'', (item.body||'').slice(0,80), '✦ ΚΑΤΙ ΑΛΛΟ', fb);
+      });
+    }
+  });
 }
 
 /* ════ ΑΝΑΖΗΤΗΣΗ ΠΕΡΙΕΧΟΜΕΝΟΥ ════ */
@@ -5844,7 +5986,7 @@ function _highlightMatch(text, cleanQuery){
 function doSearch(query){
   const resultsEl = document.getElementById('search-results');
   query = (query||'').trim().toLowerCase();
-  if(query.length < 2){ resultsEl.style.display='none'; resultsEl.innerHTML=''; return; }
+  if(query.length < 2){ resultsEl.style.display='none'; resultsEl.innerHTML=''; resultsEl.dataset.mode=''; return; }
 
   /* Καθαρίζουμε το query από τόνους */
   var cleanQuery = removeAccents(query);
@@ -5889,6 +6031,7 @@ function doSearch(query){
 
   if(results.length===0){
     resultsEl.innerHTML='<div style="padding:14px;color:#8a7040;text-align:center;font-size:13px;">Δεν βρέθηκε αποτέλεσμα</div>';
+    resultsEl.dataset.mode='search';
     resultsEl.style.display='block'; return;
   }
 
@@ -5906,7 +6049,7 @@ function doSearch(query){
     }
     h+='</div>';
   });
-  resultsEl.innerHTML=h; resultsEl.style.display='block';
+  resultsEl.innerHTML=h; resultsEl.dataset.mode='search'; resultsEl.style.display='block';
 }
 
 function searchOpen(dest, itemIdx){
@@ -7589,6 +7732,7 @@ function openQuiz(){
       border-radius:6px;padding:9px 12px;margin-bottom:5px;cursor:pointer;
       display:flex;align-items:center;gap:8px;transition:background 0.15s;
       text-align:left;width:100%;">
+      <span style="font-size:11px;color:#f0d060;font-weight:700;text-shadow:0 0 6px rgba(240,200,60,0.8);min-width:22px;text-align:right;flex-shrink:0;">${i+1}</span>
       <span style="font-size:15px;color:${q.color};min-width:20px;text-align:center;flex-shrink:0;">${q.emoji}</span>
       <span style="font-size:13px;color:#fffbe0;font-family:Georgia,serif;flex:1;">${q.text}</span>
     </button>`).join('');
@@ -8070,7 +8214,7 @@ function openPath30(){
       'border-radius:6px;padding:9px 12px;margin-bottom:5px;cursor:pointer;'+
       'display:flex;align-items:center;gap:8px;transition:background 0.15s;"'+
       '>'+
-      '<span style="font-size:10px;color:#d4af37;min-width:24px;text-align:right;">'+d.day+'</span>'+
+      '<span style="font-size:10px;color:#f0d060;min-width:24px;text-align:right;text-shadow:0 0 6px rgba(240,200,60,0.8);font-weight:700;">'+d.day+'</span>'+
       '<span style="font-size:13px;color:#fffbe0;font-family:Georgia,serif;">'+d.title+
       (isToday?' <span style="font-size:9px;color:#80e080;background:rgba(80,180,80,0.15);border:1px solid rgba(80,180,80,0.3);border-radius:8px;padding:1px 5px;vertical-align:middle;">Σήμερα</span>':'')+
       '</span></div>';
@@ -8100,7 +8244,7 @@ function showPathDay(idx){
   const qc=document.getElementById('quiz-content');
   document.getElementById('quiz-result-text').innerHTML=
     '<div style="text-align:center;margin-bottom:12px;">'+
-    '<div style="font-size:40px;color:#d4af37;font-family:Georgia,serif;">'+d.day+'</div>'+
+    '<div style="font-size:40px;color:#f0d060;font-family:Georgia,serif;text-shadow:0 0 14px rgba(240,200,60,0.85);">'+d.day+'</div>'+
     '<div style="font-size:19px;color:#fff8d0;font-family:Georgia,serif;margin:8px 0;font-weight:bold;">'+d.title+'</div></div>'+
     '<div style="font-size:14px;color:#e8ddb8;line-height:1.85;margin-bottom:14px;">'+d.text+'</div>'+
     '<div style="font-style:italic;color:#d4af37;font-size:12px;border-top:1px solid rgba(212,175,55,0.2);padding-top:10px;margin-bottom:16px;">"'+quote+'"</div>';
