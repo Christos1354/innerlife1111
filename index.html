@@ -1495,7 +1495,7 @@ function removeAccents(str) {
   </div>
   <!-- ΠΕΡΙΕΧΟΜΕΝΟ — scrollable -->
   <div id="quiz-scroll-wrap" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 16px;position:relative;z-index:1;">
-    <div id="quiz-content" style="display:flex;flex-direction:column;gap:0px;max-width:480px;margin:0 auto;"></div>
+    <div id="quiz-content" style="display:flex;flex-direction:column;gap:10px;max-width:480px;margin:0 auto;"></div>
     <div id="quiz-result" style="display:none;margin-top:14px;max-width:480px;margin-left:auto;margin-right:auto;
       background:rgba(4,8,20,0.7);border:1px solid rgba(212,175,55,0.3);
       border-radius:12px;padding:16px;text-align:center;">
@@ -5218,13 +5218,16 @@ function renderDoorContent(contentList, textColor, dest, gateLabel){
       const _ttsBody = (item.body||'').replace(/\n/g,' ');
       const _shareId = 'share-btn-'+idx;
       const _favId = 'fav-btn-'+idx;
+      const _topId = 'top-btn-'+idx;
       const _isFav = isFavorite(dest, idx);
-      wrap.innerHTML = `<div style="border-radius:8px;padding:18px 20px;background:rgba(255,254,248,0.93);box-shadow:0 2px 16px rgba(0,0,0,0.5);">${item.title?`<div style="color:#5a3a00;font-size:14px;font-weight:700;letter-spacing:0.1em;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #e0d0a0;display:flex;align-items:center;justify-content:space-between;gap:8px;"><span><span style="color:#d4af37;margin-right:5px;">✦</span>${item.title}</span><button onclick="ttsSpeakDoorText('${_ttsId}',this)" title="Ανάγνωση" style="background:none;border:1px solid rgba(180,140,60,0.4);border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:14px;color:#8b6914;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.2s;" onmouseover="this.style.background='rgba(180,140,60,0.15)'" onmouseout="this.style.background='none'">🔊</button></div>`:''}<div id="${_ttsId}" data-orig="${_ttsBody.replace(/"/g,'&quot;')}" class="dropcap-p" style="color:#0a0800;font-size:15px;line-height:1.9;">${(item.body||'').replace(/\n/g,'<br>')}</div><div style="margin-top:12px;text-align:right;display:flex;justify-content:flex-end;gap:8px;"><button id="${_favId}" title="Αγαπημένο" style="background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.35);color:${_isFav?'#e0203c':'#8b6914'};padding:6px 14px;border-radius:20px;font-size:15px;cursor:pointer;line-height:1;">${_isFav?'❤️':'♡'}</button><button id="${_shareId}" style="background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.35);color:#8b6914;padding:6px 16px;border-radius:20px;font-size:13px;cursor:pointer;letter-spacing:0.04em;font-weight:600;">↗ Κοινοποίηση</button></div></div>`;
+      wrap.innerHTML = `<div style="border-radius:8px;padding:18px 20px;background:rgba(255,254,248,0.93);box-shadow:0 2px 16px rgba(0,0,0,0.5);">${item.title?`<div style="color:#5a3a00;font-size:14px;font-weight:700;letter-spacing:0.1em;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #e0d0a0;display:flex;align-items:center;justify-content:space-between;gap:8px;"><span><span style="color:#d4af37;margin-right:5px;">✦</span>${item.title}</span><button onclick="ttsSpeakDoorText('${_ttsId}',this)" title="Ανάγνωση" style="background:none;border:1px solid rgba(180,140,60,0.4);border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:14px;color:#8b6914;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.2s;" onmouseover="this.style.background='rgba(180,140,60,0.15)'" onmouseout="this.style.background='none'">🔊</button></div>`:''}<div id="${_ttsId}" data-orig="${_ttsBody.replace(/"/g,'&quot;')}" class="dropcap-p" style="color:#0a0800;font-size:15px;line-height:1.9;">${(item.body||'').replace(/\n/g,'<br>')}</div><div style="margin-top:12px;display:flex;justify-content:flex-end;align-items:center;gap:8px;"><button id="${_topId}" title="Πίσω στην αρχή" style="background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.35);color:#8b6914;width:32px;height:32px;border-radius:50%;font-size:15px;cursor:pointer;line-height:1;flex-shrink:0;">↑</button><button id="${_favId}" title="Αγαπημένο" style="background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.35);color:${_isFav?'#e0203c':'#8b6914'};padding:6px 14px;border-radius:20px;font-size:15px;cursor:pointer;line-height:1;">${_isFav?'❤️':'♡'}</button><button id="${_shareId}" style="background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.35);color:#8b6914;padding:6px 16px;border-radius:20px;font-size:13px;cursor:pointer;letter-spacing:0.04em;font-weight:600;">↗ Κοινοποίηση</button></div></div>`;
       /* Attach share event safely — no inline escaping needed */
       const _shareBtn = wrap.querySelector('#'+_shareId);
       if(_shareBtn){ _shareBtn.addEventListener('click', function(){ shareContent(item.title||'', item.body||''); }); }
       const _favBtn = wrap.querySelector('#'+_favId);
       if(_favBtn){ _favBtn.addEventListener('click', function(){ toggleFavoriteItem(dest, idx, item.title||'', (item.body||'').slice(0,80), gateLabel||'', _favBtn); }); }
+      const _topBtn = wrap.querySelector('#'+_topId);
+      if(_topBtn){ _topBtn.addEventListener('click', function(){ const dcb=document.getElementById('door-content-box'); if(dcb) dcb.scrollTo({top:0,behavior:'smooth'}); }); }
     } else if(item.type==='image'){
       wrap.innerHTML = `<div style="text-align:center;"><img src="${item.file}" alt="${item.caption||''}" style="max-width:100%;max-height:65vh;object-fit:contain;border-radius:6px;box-shadow:0 4px 16px rgba(0,0,0,0.5);">${item.caption?`<div style="color:#ffe060;font-size:11px;margin-top:8px;">${item.caption}</div>`:''}</div>`;
     } else if(item.type==='video'){
@@ -5908,11 +5911,12 @@ function openKatiAllo(){
       var _kaBody = (item.body||'').replace(/\n/g,' ');
       var _kaFavId = 'ka-fav-'+i;
       var _kaShareId = 'ka-share-'+i;
+      var _kaTopId = 'ka-top-'+i;
       var _kaIsFav = isFavorite('kati', i);
       h += '<div style="border-radius:8px;padding:18px 20px;background:rgba(255,254,248,0.93);box-shadow:0 2px 16px rgba(0,0,0,0.5);">'
         + (item.title ? '<div style="color:#5a3a00;font-size:14px;font-weight:700;letter-spacing:0.08em;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #e0d0a0;display:flex;align-items:center;justify-content:space-between;gap:8px;"><span>'+item.title+'</span><button onclick="ttsSpeakDoorText(\''+_kaTtsId+'\',this)" title="Ανάγνωση" style="background:none;border:1px solid rgba(180,140,60,0.4);border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:14px;color:#8b6914;flex-shrink:0;display:flex;align-items:center;justify-content:center;">🔊</button></div>' : '')
         + '<div id="'+_kaTtsId+'" data-orig="'+_kaBody.replace(/"/g,'&quot;')+'" style="color:#1a1200;font-size:15px;line-height:1.9;">'+(item.body||'').replace(/\n/g,'<br>')+'</div>'
-        + '<div style="margin-top:12px;text-align:right;display:flex;justify-content:flex-end;gap:8px;"><button id="'+_kaFavId+'" title="Αγαπημένο" style="background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.35);color:'+(_kaIsFav?'#e0203c':'#8b6914')+';padding:6px 14px;border-radius:20px;font-size:15px;cursor:pointer;line-height:1;">'+(_kaIsFav?'❤️':'♡')+'</button><button id="'+_kaShareId+'" style="background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.35);color:#8b6914;padding:6px 16px;border-radius:20px;font-size:13px;cursor:pointer;letter-spacing:0.04em;font-weight:600;">↗ Κοινοποίηση</button></div></div>';
+        + '<div style="margin-top:12px;display:flex;justify-content:flex-end;align-items:center;gap:8px;"><button id="'+_kaTopId+'" title="Πίσω στην αρχή" style="background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.35);color:#8b6914;width:32px;height:32px;border-radius:50%;font-size:15px;cursor:pointer;line-height:1;flex-shrink:0;">↑</button><button id="'+_kaFavId+'" title="Αγαπημένο" style="background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.35);color:'+(_kaIsFav?'#e0203c':'#8b6914')+';padding:6px 14px;border-radius:20px;font-size:15px;cursor:pointer;line-height:1;">'+(_kaIsFav?'❤️':'♡')+'</button><button id="'+_kaShareId+'" style="background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.35);color:#8b6914;padding:6px 16px;border-radius:20px;font-size:13px;cursor:pointer;letter-spacing:0.04em;font-weight:600;">↗ Κοινοποίηση</button></div></div>';
     } else if(item.type==='image'){
       h += '<div style="text-align:center;padding:12px;background:rgba(0,0,0,0.75);border:1px solid rgba(212,175,55,0.3);border-radius:8px;">'
         + '<img src="'+item.file+'" style="max-width:100%;max-height:65vh;object-fit:contain;border-radius:6px;">'
@@ -5947,6 +5951,13 @@ function openKatiAllo(){
     if(sb){
       sb.addEventListener('click', function(){
         shareContent(item.title||'', item.body||'');
+      });
+    }
+    var tb = document.getElementById('ka-top-'+i);
+    if(tb){
+      tb.addEventListener('click', function(){
+        var m = document.getElementById('kati-allo-modal');
+        if(m) m.scrollTo({top:0,behavior:'smooth'});
       });
     }
   });
@@ -6372,10 +6383,11 @@ function googleTranslateInit(){
   const s=document.createElement('style');
   s.textContent = '.goog-te-banner-frame{display:none!important;visibility:hidden!important;height:0!important}'
     + '.goog-te-menu-frame{max-width:100%!important}'
-    + '.goog-te-balloon-frame{display:none!important}'
+    + '.goog-te-balloon-frame{display:none!important;visibility:hidden!important;height:0!important}'
     + '.goog-tooltip{display:none!important}'
     + '.goog-tooltip:hover{display:none!important}'
-    + '.goog-text-highlight{background:none!important;box-shadow:none!important}'
+    + '.goog-text-highlight{background:none!important;box-shadow:none!important;pointer-events:none!important}'
+    + 'font.goog-text-highlight{pointer-events:none!important}'
     + 'iframe.skiptranslate{display:none!important;visibility:hidden!important;height:0!important}'
     + 'body{top:0!important;position:static!important}'
     + 'html{margin-top:0!important}'
@@ -6383,23 +6395,49 @@ function googleTranslateInit(){
     + '.skiptranslate.goog-te-gadget>span:last-child{display:none!important}';
   document.head.appendChild(s);
 
-  /* Ασφαλιστική δικλείδα: η Google επανατοποθετεί περιοδικά inline style στο <body>/<html>
+  /* Ασφαλιστική δικλείδα #1: η Google επανατοποθετεί περιοδικά inline style στο <body>/<html>
      (π.χ. body.style.top = '40px') όταν εμφανίζει το banner. Το ακυρώνουμε αμέσως. */
   function _resetGoogOffset(){
     if(document.body.style.top && document.body.style.top !== '0px'){ document.body.style.top = '0px'; }
     if(document.documentElement.style.marginTop && document.documentElement.style.marginTop !== '0px'){
       document.documentElement.style.marginTop = '0px';
     }
-    /* Αφαιρώ κάθε ορφανό google iframe (banner/menu/balloon) που δεν χρησιμοποιούμε */
     document.querySelectorAll('iframe.goog-te-banner-frame, iframe.goog-te-balloon-frame').forEach(function(f){
-      f.style.display = 'none';
-      f.style.height = '0';
+      f.style.setProperty('display','none','important');
+      f.style.setProperty('height','0','important');
     });
   }
   const _gtObserver = new MutationObserver(_resetGoogOffset);
   _gtObserver.observe(document.documentElement, { attributes:true, attributeFilter:['style','class'] });
   _gtObserver.observe(document.body, { attributes:true, attributeFilter:['style','class'] });
   setInterval(_resetGoogOffset, 1000);
+
+  /* Ασφαλιστική δικλείδα #2 — η πιο σημαντική:
+     Η "φούσκα" (balloon) που εμφανίζεται όταν κάποιος αγγίζει μεταφρασμένη λέξη σε κινητό
+     είναι πάντα ένα ΝΕΟ <iframe> που η Google προσθέτει απευθείας μέσα στο <body>, τη στιγμή
+     του πατήματος. Παρακολουθούμε το <body> για κάθε νέο iframe και το κρύβουμε ΑΜΕΣΩΣ,
+     πριν προλάβει να φανεί στην οθόνη — ανεξάρτητα από το ακριβές class/id που θα του δώσει
+     η Google (τα οποία αλλάζουν κατά καιρούς). */
+  function _isStrayGoogleIframe(node){
+    if(!node || node.tagName !== 'IFRAME') return false;
+    if(node.id === 'google_translate_element' || node.closest('#google_translate_element')) return false;
+    const cls = node.className || '';
+    const id  = node.id || '';
+    const src = node.getAttribute('src') || '';
+    return /goog/i.test(cls) || /^:\d/.test(id) || /translate\.google/i.test(src) || (cls==='' && src==='');
+  }
+  const _bodyIframeObserver = new MutationObserver(function(mutations){
+    mutations.forEach(function(m){
+      m.addedNodes && m.addedNodes.forEach(function(node){
+        if(_isStrayGoogleIframe(node)){
+          node.style.setProperty('display','none','important');
+          node.style.setProperty('height','0','important');
+          node.style.setProperty('visibility','hidden','important');
+        }
+      });
+    });
+  });
+  _bodyIframeObserver.observe(document.body, { childList:true, subtree:true });
 })();
 
 /* particles removed */
