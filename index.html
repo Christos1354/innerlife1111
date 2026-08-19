@@ -41,7 +41,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&display=swap"></noscript>
-<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateInit" async defer></script>
+<!-- Google Translate widget script αφαιρέθηκε: η μετάφραση γίνεται πλέον αθόρυβα μέσω δικού μας μηχανισμού, χωρίς κανένα δικό της popup/banner -->
 <!-- Το API key ΔΕΝ ζει πλέον εδώ. Ζει κρυφό στο Cloudflare (functions/api/chat.js) -->
 <style>
 *, body, select, button, h1, p { font-family:'Cinzel',Georgia,serif !important; }
@@ -1038,7 +1038,7 @@ button, .lang-btn, .cat-btn, .menu-btn, .toc-btn, .ka-b {
 function removeAccents(str) {
   return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }
-/* googleTranslateInit defined below with full SEO support */
+/* Η μετάφραση γίνεται πλέον σιωπηλά μέσω δικού μας μηχανισμού (βλ. gtApplyLang / applyLangToContainer παρακάτω στο αρχείο) */
 </script>
 </head>
 <body>
@@ -1495,7 +1495,7 @@ function removeAccents(str) {
   </div>
   <!-- ΠΕΡΙΕΧΟΜΕΝΟ — scrollable -->
   <div id="quiz-scroll-wrap" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 16px;position:relative;z-index:1;">
-    <div id="quiz-content" style="display:flex;flex-direction:column;gap:10px;max-width:480px;margin:0 auto;"></div>
+    <div id="quiz-content" style="display:flex;flex-direction:column;gap:0px;max-width:480px;margin:0 auto;"></div>
     <div id="quiz-result" style="display:none;margin-top:14px;max-width:480px;margin-left:auto;margin-right:auto;
       background:rgba(4,8,20,0.7);border:1px solid rgba(212,175,55,0.3);
       border-radius:12px;padding:16px;text-align:center;">
@@ -1525,13 +1525,13 @@ function removeAccents(str) {
 
 <!-- ═══ ΔΙΑΛΟΓΙΣΜΟΣ ΑΝΑΠΝΟΗΣ ═══ -->
 <div id="breathing-modal" style="display:none;position:fixed;inset:0;z-index:9300;
-  background:#681eb3;flex-direction:column;align-items:center;justify-content:center;padding:20px;box-sizing:border-box;">
+  background:#3d1466;flex-direction:column;align-items:center;justify-content:center;padding:20px;box-sizing:border-box;">
   <button onclick="closeBreathing()"
     style="position:absolute;top:16px;right:18px;background:transparent;border:none;
-    color:#3a2a55;font-size:26px;cursor:pointer;z-index:2;">✕</button>
+    color:#e8ddb8;font-size:26px;cursor:pointer;z-index:2;">✕</button>
 
-  <div class="translate-me" style="color:#ffd700;font-size:18px;line-height:1.9;text-align:center;
-    max-width:320px;font-family:Georgia,serif;margin-bottom:22px;text-shadow:0 0 6px rgba(255,255,255,0.5);">
+  <div class="translate-me" style="color:#ffe9a8;font-size:18px;line-height:1.9;text-align:center;
+    max-width:320px;font-family:Georgia,serif;margin-bottom:22px;text-shadow:0 1px 3px rgba(0,0,0,0.6);font-weight:600;">
     Πάρε 3 βαθιές αναπνοές...<br>
     Μείνε ακίνητος...<br>
     Άφησε τα όλα να ηρεμήσουν.<br>
@@ -1541,14 +1541,14 @@ function removeAccents(str) {
   <div id="breathing-circle" style="width:120px;height:120px;border-radius:50%;
     background:#ffffff;
     transition:transform 4s ease-in-out;transform:scale(0.6);"></div>
-  <div id="breathing-label" style="display:none;margin-top:36px;color:#3a2a55;font-size:20px;
-    letter-spacing:0.25em;font-family:Georgia,serif;text-shadow:0 0 10px rgba(255,255,255,0.6);">
+  <div id="breathing-label" style="display:none;margin-top:36px;color:#ffe9a8;font-size:20px;
+    letter-spacing:0.25em;font-family:Georgia,serif;text-shadow:0 1px 3px rgba(0,0,0,0.6);font-weight:600;">
     ΕΙΣΠΝΟΗ
   </div>
   <audio id="breathing-audio" loop preload="none"></audio>
 
   <button onclick="closeBreathing()" class="translate-me"
-    style="margin-top:38px;background:rgba(58,42,85,0.9);color:#fff;border:1px solid rgba(255,255,255,0.6);
+    style="margin-top:38px;background:rgba(255,255,255,0.12);color:#fff;border:1px solid rgba(255,255,255,0.6);
     padding:10px 32px;border-radius:24px;font-size:13px;letter-spacing:0.12em;cursor:pointer;
     font-family:Georgia,serif;box-shadow:0 0 12px rgba(0,0,0,0.2);">ΕΞΟΔΟΣ</button>
 </div>
@@ -5188,10 +5188,6 @@ function renderDoorContent(contentList, textColor, dest, gateLabel){
     const item = contentList[idx];
     /* Αφαίρεσε παλιό περιεχόμενο */
     if(activeContentEl){ activeContentEl.remove(); activeContentEl=null; }
-    /* Σημείωσε ως ανοιγμένο -- και αποθήκευσε στη συσκευή */
-    const wasNew = !visitedItems.has(idx);
-    visitedItems.add(idx);
-    if(wasNew) persistVisited();
     toc.querySelectorAll('.toc-btn').forEach((b,i)=>{
       const isActive  = i===idx;
       const isVisited = visitedItems.has(i);
@@ -5207,6 +5203,8 @@ function renderDoorContent(contentList, textColor, dest, gateLabel){
       } else if(dot && isActive){
         /* Κρύψε dot όσο είναι ανοιχτό */
         dot.style.display = 'none';
+      } else if(dot && !isVisited){
+        dot.remove();
       }
     });
     const wrap = document.createElement('div');
@@ -5326,13 +5324,25 @@ function renderDoorContent(contentList, textColor, dest, gateLabel){
       btn.style.cssText='display:flex;align-items:center;gap:8px;width:100%;text-align:left;padding:9px 12px;background:rgba(0,0,0,0.4);color:#fffbe0;border:1px solid rgba(255,255,255,0.15);border-radius:6px;cursor:pointer;font-size:13px;font-family:Georgia,serif;margin-bottom:5px;';
       btn.innerHTML=`<span style="font-size:15px;flex-shrink:0;">${icon}</span><span style="color:#f0d060;font-size:11px;font-weight:600;margin-right:6px;min-width:28px;">${idx+1}</span><span style="flex:1;">${label}</span><span style="opacity:0.4;font-size:11px;">›</span>`;
       btn.onclick=()=>{
+        /* Toggle «διαβάστηκε» σε ΚΑΘΕ πάτημα -- εμφανίζεται/κρύβεται εναλλάξ */
+        if(visitedItems.has(idx)){ visitedItems.delete(idx); } else { visitedItems.add(idx); }
+        persistVisited();
+
         if(activeIdx===idx && activeContentEl){
           activeIdx = -1;
           activeContentEl.remove(); activeContentEl=null;
-          toc.querySelectorAll('.toc-btn').forEach(b=>{
+          toc.querySelectorAll('.toc-btn').forEach((b,i)=>{
+            const isVisited = visitedItems.has(i);
             b.style.background  = 'rgba(0,0,0,0.4)';
-            b.style.borderColor = 'rgba(255,255,255,0.15)';
+            b.style.borderColor = isVisited ? '#4a90d9' : 'rgba(255,255,255,0.15)';
             b.style.fontWeight  = '400';
+            const dot = b.querySelector('.visited-dot');
+            if(isVisited){
+              addVisitedDot(b);
+              const d2 = b.querySelector('.visited-dot'); if(d2) d2.style.display='inline-block';
+            } else if(dot){
+              dot.remove();
+            }
           });
         } else {
           showItem(idx);
@@ -5806,6 +5816,25 @@ function kaShowItem(idx){
   const cs = box.querySelectorAll('.ka-c');
   const bs = box.querySelectorAll('.ka-b');
   const same = (_kaIdx === idx);
+  /* Toggle «διαβάστηκε» σε ΚΑΘΕ πάτημα -- εμφανίζεται/κρύβεται εναλλάξ */
+  try {
+    var _kaV = new Set(JSON.parse(localStorage.getItem('innerlife_visited_kati') || '[]'));
+    if(_kaV.has(idx)){ _kaV.delete(idx); } else { _kaV.add(idx); }
+    localStorage.setItem('innerlife_visited_kati', JSON.stringify(Array.from(_kaV)));
+    if(bs[idx]){
+      var _kaDot = bs[idx].querySelector('.visited-dot');
+      if(_kaV.has(idx)){
+        if(!_kaDot){
+          _kaDot = document.createElement('span');
+          _kaDot.className = 'visited-dot';
+          _kaDot.style.cssText = 'display:inline-block;width:11px;height:11px;border-radius:50%;background:#4a90d9;margin-left:2px;flex-shrink:0;border:1.5px solid rgba(255,255,255,0.6);box-shadow:0 0 9px rgba(74,144,217,1);';
+          bs[idx].insertBefore(_kaDot, bs[idx].lastElementChild);
+        }
+      } else if(_kaDot){
+        _kaDot.remove();
+      }
+    }
+  } catch(e){}
   /* Κλείνουμε όλα */
   _kaIdx = -1;
   cs.forEach(c=>c.style.display='none');
@@ -5816,20 +5845,6 @@ function kaShowItem(idx){
   const el = document.getElementById('ka-c-'+idx);
   if(el) el.style.display='block';
   if(bs[idx]){ bs[idx].style.background='rgba(255,255,200,0.2)'; bs[idx].style.borderColor='#ffe060'; bs[idx].style.fontWeight='700'; }
-  /* Σημείωσε ως ανοιγμένο -- και αποθήκευσε στη συσκευή */
-  try {
-    var _kaV = new Set(JSON.parse(localStorage.getItem('innerlife_visited_kati') || '[]'));
-    if(!_kaV.has(idx)){
-      _kaV.add(idx);
-      localStorage.setItem('innerlife_visited_kati', JSON.stringify(Array.from(_kaV)));
-      if(bs[idx] && !bs[idx].querySelector('.visited-dot')){
-        var _kaDot = document.createElement('span');
-        _kaDot.className = 'visited-dot';
-        _kaDot.style.cssText = 'display:inline-block;width:11px;height:11px;border-radius:50%;background:#4a90d9;margin-left:2px;flex-shrink:0;border:1.5px solid rgba(255,255,255,0.6);box-shadow:0 0 9px rgba(74,144,217,1);';
-        bs[idx].insertBefore(_kaDot, bs[idx].lastElementChild);
-      }
-    }
-  } catch(e){}
   setTimeout(()=>{ if(bs[idx]) bs[idx].scrollIntoView({behavior:'smooth',block:'start'}); },50);
 }
 
@@ -6312,14 +6327,9 @@ if('serviceWorker' in navigator){
   });
 }
 
-function googleTranslateInit(){
-  new google.translate.TranslateElement({
-    pageLanguage: 'el',
-    /* Χωρίς includedLanguages = υποστήριξη ΟΛΩΝ των γλωσσών (~130+) */
-    layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-    autoDisplay: false
-  }, 'google_translate_element');
-
+/* Οι παρακάτω συναρτήσεις έτρεχαν πριν μέσα στο callback της Google (googleTranslateInit).
+   Τώρα τρέχουν απευθείας, χωρίς να χρειάζονται καθόλου το script της Google. */
+(function(){
   /* ════ SEO META TAGS — ενημερώνονται με την αλλαγή γλώσσας ════ */
   const _seoData = {
     el: {
@@ -6344,41 +6354,15 @@ function googleTranslateInit(){
     }
   };
 
-  function _updateSEO(lang){
+  window._updateSEO = function(lang){
     const d = _seoData[lang] || _seoData.el;
     document.title = d.title;
     const dm = document.querySelector('meta[name="description"]');
     if(dm) dm.setAttribute('content', d.description);
     const km = document.querySelector('meta[name="keywords"]');
     if(km) km.setAttribute('content', d.keywords);
-  }
-
-  /* Ανίχνευση αλλαγής γλώσσας μέσω Google Translate select + cookie */
-  function _startLangWatch(){
-    const sel = document.querySelector('.goog-te-combo');
-    if(sel){
-      sel.addEventListener('change', function(){
-        const v = (this.value||'').substring(0,2);
-        _updateSEO(v||'el');
-        /* Συγχρονισμός με το custom select μας */
-        const cs = document.getElementById('gt-custom-select');
-        if(cs) cs.value = this.value || 'el';
-      });
-    }
-    /* Backup: έλεγχος cookie κάθε 2 δευτερόλεπτα */
-    let _lastLang = 'el';
-    setInterval(function(){
-      const c = document.cookie.split('; ').find(function(r){ return r.startsWith('googtrans='); });
-      if(c){
-        const v = (c.split('=')[1]||'').replace(/\//g,'').substring(0,2);
-        if(v && v !== _lastLang){ _lastLang = v; _updateSEO(v); }
-      }
-    }, 2000);
-  }
-
-  /* Περιμένω το Google Translate να φορτώσει */
-  setTimeout(_startLangWatch, 1500);
-}
+  };
+})();
 (function(){
   const s=document.createElement('style');
   s.textContent = '.goog-te-banner-frame{display:none!important;visibility:hidden!important;height:0!important}'
@@ -6535,13 +6519,25 @@ function _saveOriginalTexts(){
   };
 }
 
+/* Backend μετάφρασης: το δωρεάν endpoint της Google (χωρίς το πολύ μικρό ημερήσιο
+   όριο του MyMemory, που εξαντλήθηκε αμέσως). ΠΟΤΕ δεν επιστρέφει μήνυμα σφάλματος
+   σαν να ήταν μετάφραση -- αν κάτι πάει στραβά, επιστρέφει το πρωτότυπο κείμενο. */
 async function _myMemoryTranslate(text, langPair){
   if(!text || !text.trim()) return text;
+  var parts = (langPair||'el|en').split('|');
+  var sl = parts[0] || 'el';
+  var tl = parts[1] || 'en';
   try{
-    var url = 'https://api.mymemory.translated.net/get?q='+encodeURIComponent(text)+'&langpair='+langPair;
+    var url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl='+encodeURIComponent(sl)+'&tl='+encodeURIComponent(tl)+'&dt=t&q='+encodeURIComponent(text);
     var r = await fetch(url);
+    if(!r.ok) return text;
     var d = await r.json();
-    return (d.responseData && d.responseData.translatedText) ? d.responseData.translatedText : text;
+    if(!d || !d[0] || !Array.isArray(d[0])) return text;
+    var out = d[0].map(function(seg){ return seg && seg[0] ? seg[0] : ''; }).join('');
+    /* Ασφαλιστική δικλείδα: αν κάτι δεν βγήκε σωστό (κενό ή ύποπτο μήνυμα σφάλματος), κράτα το πρωτότυπο */
+    if(!out || !out.trim()) return text;
+    if(/WARNING|LIMIT EXCEEDED|MYMEMORY/i.test(out)) return text;
+    return out;
   }catch(e){ return text; }
 }
 
@@ -6564,15 +6560,13 @@ async function _translateDynamicContent(lang){
     return;
   }
   var lp = 'el|'+lang;
-  /* ── Παράλληλα fetch — όλα μαζί αντί σειριακά ── */
+  /* ── Όλα μαζί, σε ΕΝΑ αίτημα, αντί για 10 ξεχωριστά ── */
   var textsToTranslate = [
     _originalTexts.al1, _originalTexts.al2, _originalTexts.al3,
     _originalTexts.al4, _originalTexts.al5, _originalTexts.al6, _originalTexts.al7,
     _originalTexts.dtText, _originalTexts.dtAuthor, _originalTexts.subtitle
   ];
-  var results = await Promise.all(textsToTranslate.map(function(t){
-    return t ? _myMemoryTranslate(t, lp) : Promise.resolve('');
-  }));
+  var results = await _batchTranslateRaw(textsToTranslate.map(function(t){ return t||''; }), lang);
   /* Εφαρμογή αποτελεσμάτων */
   for(var i=0;i<ids.length;i++){
     var el = document.getElementById(ids[i]);
@@ -6596,7 +6590,196 @@ async function _translateDynamicContent(lang){
 }
 
 /* Εφαρμογή γλώσσας μέσω Google Translate select — ΧΩΡΙΣ reload */
-function gtApplyLang(lang){
+/* ════ ΓΕΝΙΚΟΣ ΜΗΧΑΝΙΣΜΟΣ ΣΙΩΠΗΛΗΣ ΜΕΤΑΦΡΑΣΗΣ (χωρίς Google widget/popup) ════
+   Μεταφράζει ΟΠΟΙΟΔΗΠΟΤΕ κείμενο εμφανίζεται στη σελίδα -- πύλες, κείμενα, quiz,
+   Κάτι Άλλο, αγαπημένα, αναζήτηση -- αποθηκεύοντας ό,τι μεταφράζεται στη συσκευή
+   για να μην ξαναμεταφράζεται. */
+var _tCache = {};
+try { _tCache = JSON.parse(localStorage.getItem('innerlife_tcache') || '{}'); } catch(e){ _tCache = {}; }
+/* Καθαρισμός -- αν στη συσκευή έχει αποθηκευτεί κατά λάθος μήνυμα σφάλματος
+   (π.χ. από το παλιό, εξαντλημένο όριο του MyMemory) αντί για πραγματική μετάφραση,
+   το πετάμε, ώστε να ξαναζητηθεί σωστά. */
+(function(){
+  var cleaned = false;
+  Object.keys(_tCache).forEach(function(k){
+    var v = _tCache[k];
+    if(typeof v === 'string' && /WARNING|LIMIT EXCEEDED|MYMEMORY/i.test(v)){
+      delete _tCache[k];
+      cleaned = true;
+    }
+  });
+  if(cleaned){
+    try { localStorage.setItem('innerlife_tcache', JSON.stringify(_tCache)); } catch(e){}
+  }
+})();
+function _saveTCache(){
+  try {
+    var keys = Object.keys(_tCache);
+    if(keys.length > 3000){
+      var trimmed = {}; keys.slice(-2000).forEach(function(k){ trimmed[k] = _tCache[k]; });
+      _tCache = trimmed;
+    }
+    localStorage.setItem('innerlife_tcache', JSON.stringify(_tCache));
+  } catch(e){}
+}
+/* Μεταφράζει ΠΟΛΛΑ σύντομα κείμενα με ΕΝΑ μόνο αίτημα δικτύου (πολύ πιο γρήγορο
+   από ένα-ένα). Αν για οποιονδήποτε λόγο η απάντηση δεν βγει όπως αναμένεται,
+   επιστρέφει αυτόματα στην πιο αργή αλλά σίγουρη μέθοδο (ένα-ένα), ώστε να μην
+   εμφανιστεί ποτέ λάθος/σκουπίδι στη σελίδα. */
+async function _batchTranslateRaw(texts, lang){
+  if(!texts.length) return [];
+  try{
+    var params = texts.map(function(t){ return 'q='+encodeURIComponent(t); }).join('&');
+    var url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=el&tl='+encodeURIComponent(lang)+'&dt=t&'+params;
+    var r = await fetch(url);
+    if(!r.ok) throw new Error('bad status');
+    var d = await r.json();
+    if(!Array.isArray(d) || !Array.isArray(d[0]) || d[0].length !== texts.length){
+      throw new Error('unexpected shape');
+    }
+    var out = d[0].map(function(seg, i){
+      var val = '';
+      if(Array.isArray(seg)){
+        if(Array.isArray(seg[0])) val = seg.map(function(s){ return s && s[0] ? s[0] : ''; }).join('');
+        else if(typeof seg[0] === 'string') val = seg[0];
+      }
+      if(!val || !val.trim() || /WARNING|LIMIT EXCEEDED|MYMEMORY/i.test(val)) val = texts[i];
+      return val;
+    });
+    return out;
+  } catch(e){
+    /* Ασφαλές fallback -- μεμονωμένες κλήσεις, σίγουρα σωστές */
+    return await _mapLimit(texts, 8, function(t){ return _myMemoryTranslate(t, 'el|'+lang); });
+  }
+}
+
+async function _myMemoryTranslateLong(text, langPair){
+  if(!text || !text.trim()) return text;
+  if(text.length <= 1800) return await _myMemoryTranslate(text, langPair);
+  /* Σπάει πολύ μεγάλα κείμενα σε κομμάτια <1800 χαρακτήρων (πολύ πιο άνετο όριο απ' ό,τι πριν) */
+  var sentences = text.match(/[^.!;\n]+[.!;\n]*/g) || [text];
+  var chunks = []; var cur = '';
+  sentences.forEach(function(s){
+    if((cur+s).length > 1800){ if(cur) chunks.push(cur); cur = s; } else { cur += s; }
+  });
+  if(cur) chunks.push(cur);
+  var results = await Promise.all(chunks.map(function(c){ return _myMemoryTranslate(c, langPair); }));
+  return results.join('');
+}
+async function _translateCached(text, lang){
+  if(!text || !text.trim()) return text;
+  var ck = lang + '::' + text;
+  if(_tCache[ck] !== undefined) return _tCache[ck];
+  var out = await _myMemoryTranslateLong(text, 'el|'+lang);
+  _tCache[ck] = out;
+  _saveTCache();
+  return out;
+}
+function _collectTextNodes(root){
+  var nodes = [];
+  var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode: function(node){
+      if(!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+      var p = node.parentElement;
+      if(!p) return NodeFilter.FILTER_REJECT;
+      var tag = p.tagName;
+      if(tag==='SCRIPT' || tag==='STYLE' || tag==='NOSCRIPT') return NodeFilter.FILTER_REJECT;
+      if(p.closest && p.closest('[data-no-translate]')) return NodeFilter.FILTER_REJECT;
+      /* Παράλειψε ό,τι δεν είναι πραγματικά ορατό στην οθόνη αυτή τη στιγμή
+         (π.χ. κλειστές/κρυμμένες οθόνες, modal που δεν είναι ανοιχτά) --
+         αυτό είναι που έκανε τη μετάφραση αργή: μετέφραζε ΟΛΗ τη σελίδα, ακόμα
+         και κομμάτια που δεν βλέπει καν ο επισκέπτης. */
+      if(p.getClientRects().length === 0) return NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT;
+    }
+  });
+  var n; while(n = walker.nextNode()) nodes.push(n);
+  return nodes;
+}
+/* Μεταφράζει έως 8 κείμενα ταυτόχρονα */
+async function _mapLimit(items, limit, fn){
+  var results = new Array(items.length);
+  var idx = 0;
+  async function worker(){
+    while(idx < items.length){
+      var i = idx++;
+      results[i] = await fn(items[i], i);
+    }
+  }
+  var workers = [];
+  for(var w=0; w<Math.min(limit, items.length); w++) workers.push(worker());
+  await Promise.all(workers);
+  return results;
+}
+var _mainTObserver = null;
+async function applyLangToContainer(root){
+  var lang = window._gtCurrentLang || 'el';
+  var nodes = _collectTextNodes(root);
+  if(!nodes.length) return;
+  nodes.forEach(function(node){ if(node._elOriginal === undefined) node._elOriginal = node.nodeValue; });
+  var newValues;
+  if(lang === 'el'){
+    newValues = nodes.map(function(node){ return node._elOriginal; });
+  } else {
+    var texts = nodes.map(function(node){ return node._elOriginal; });
+    newValues = new Array(texts.length);
+    var shortTexts = [], shortIdx = [], longIdx = [];
+    texts.forEach(function(t, i){
+      var ck = lang + '::' + t;
+      if(_tCache[ck] !== undefined){ newValues[i] = _tCache[ck]; return; }
+      if(t.length > 300){ longIdx.push(i); } else { shortIdx.push(i); shortTexts.push(t); }
+    });
+    /* Μεγάλα κείμενα (κείμενα πύλης) -- ένα-ένα, ήδη σπάνε σε προτάσεις μέσα τους */
+    await Promise.all(longIdx.map(async function(i){
+      var t = texts[i];
+      var out = await _myMemoryTranslateLong(t, 'el|'+lang);
+      newValues[i] = out;
+      _tCache[lang+'::'+t] = out;
+    }));
+    /* Μικρά κείμενα (τίτλοι, ετικέτες) -- ΟΛΑ μαζί, σε ομάδες των 25, ΕΝΑ αίτημα ανά ομάδα */
+    var CHUNK = 25;
+    for(var start=0; start<shortTexts.length; start+=CHUNK){
+      var chunkTexts = shortTexts.slice(start, start+CHUNK);
+      var chunkIdx = shortIdx.slice(start, start+CHUNK);
+      var translated = await _batchTranslateRaw(chunkTexts, lang);
+      translated.forEach(function(val, ci){
+        newValues[chunkIdx[ci]] = val;
+        _tCache[lang+'::'+chunkTexts[ci]] = val;
+      });
+    }
+    _saveTCache();
+  }
+  /* Αποσυνδέω προσωρινά τον παρατηρητή όσο γράφω τις τιμές, ώστε να μην ξαναπροκαλέσω εαυτόν μου */
+  if(_mainTObserver) _mainTObserver.disconnect();
+  nodes.forEach(function(node,i){ if(newValues[i] !== undefined) node.nodeValue = newValues[i]; });
+  if(_mainTObserver){
+    _mainTObserver.observe(document.body, { childList:true, subtree:true, characterData:true });
+  }
+}
+(function(){
+  var _pendingRoots = new Set();
+  _mainTObserver = new MutationObserver(function(mutations){
+    if((window._gtCurrentLang||'el') === 'el') return;
+    mutations.forEach(function(m){
+      /* Μεταφράζουμε μόνο το συγκεκριμένο κομμάτι που άλλαξε, όχι όλη τη σελίδα κάθε φορά */
+      if(m.target && m.target.nodeType === 1) _pendingRoots.add(m.target);
+    });
+    clearTimeout(window._tDebounce);
+    window._tDebounce = setTimeout(function(){
+      var roots = Array.from(_pendingRoots);
+      _pendingRoots.clear();
+      /* Αν κάποιο root είναι απόγονος άλλου που ήδη θα μεταφραστεί, το προσπερνάμε (γλιτώνει διπλή δουλειά) */
+      var filtered = roots.filter(function(r){
+        return !roots.some(function(other){ return other !== r && other.contains(r); });
+      });
+      filtered.forEach(function(r){ applyLangToContainer(r); });
+    }, 200);
+  });
+  _mainTObserver.observe(document.body, { childList:true, subtree:true, characterData:true });
+})();
+
+/* Εφαρμογή γλώσσας -- αθόρυβα, χωρίς Google widget, ΧΩΡΙΣ reload, χωρίς να αλλάζει οθόνη */
+async function gtApplyLang(lang){
   document.getElementById('gt-menu').style.display = 'none';
   document.getElementById('gt-menu-2').style.display = 'none';
   _gtSetWrapZ('gt-wrap-1', false);
@@ -6604,69 +6787,34 @@ function gtApplyLang(lang){
   if(!lang) return;
   _saveOriginalTexts();
   _gtCurrentLang = lang;
-  /* Αλλάζω το lang attribute του <html> ώστε ο Chrome να μην επεμβαίνει */
+  window._gtCurrentLang = lang;
   document.documentElement.lang = lang;
-  /* Το Google Translate χειρίζεται τη μετάφραση της σελίδας */
-  if(lang === 'el'){
-    var expired = 'expires=Thu, 01 Jan 1970 00:00:00 GMT';
-    document.cookie = 'googtrans=/el/el; '+expired+'; path=/';
-    document.cookie = 'googtrans=/el/el; '+expired+'; path=/; domain=.'+window.location.hostname;
-    var iframe = document.querySelector('.goog-te-menu-frame');
-    if(iframe){
-      try{
-        var inner = iframe.contentWindow || iframe.contentDocument;
-        if(inner && inner.document){
-          var restoreLink = inner.document.querySelector('a[onclick*="restore"]');
-          if(restoreLink){ restoreLink.click(); return; }
-        }
-      }catch(e){}
-    }
-    var banner = document.querySelector('.goog-te-banner-frame');
-    if(banner){
-      try{
-        var bd = banner.contentDocument || banner.contentWindow.document;
-        var restoreBtn = bd && bd.querySelector('a,button');
-        if(restoreBtn){ restoreBtn.click(); return; }
-      }catch(e){}
-    }
-    window.location.reload();
-    return;
-  }
-  function _doTranslate(){
-    var sel = document.querySelector('.goog-te-combo');
-    if(sel){
+  try { localStorage.setItem('innerlife_lang', lang); } catch(e){}
+  /* Ενημέρωση των δύο κουμπιών/επιλογών γλώσσας */
+  [['gt-btn','gt-custom-select'], ['gt-btn-2','gt-custom-select-2']].forEach(function(pair){
+    var btn = document.getElementById(pair[0]);
+    var sel = document.getElementById(pair[1]);
+    if(btn && sel){
+      var opt = sel.querySelector('option[value="'+lang+'"]');
+      btn.textContent = opt ? opt.textContent.split(' ').slice(0,2).join(' ') : '🌐 Translate';
       sel.value = lang;
-      var ev = document.createEvent('HTMLEvents');
-      ev.initEvent('change', true, true);
-      sel.dispatchEvent(ev);
-      [['gt-btn','gt-custom-select'], ['gt-btn-2','gt-custom-select-2']].forEach(function(pair){
-        var btn = document.getElementById(pair[0]);
-        var flag = document.getElementById(pair[1]);
-        if(btn && flag){
-          var opt = flag.querySelector('option[value="'+lang+'"]');
-          btn.textContent = opt ? opt.textContent.split(' ').slice(0,2).join(' ') : '🌐 Translate';
-          flag.value = lang;
-        }
-      });
-    } else {
-      document.cookie = 'googtrans=/el/'+lang+'; path=/';
-      document.cookie = 'googtrans=/el/'+lang+'; path=/; domain=.'+window.location.hostname;
-      window.location.reload();
     }
-  }
-  if(!document.querySelector('.goog-te-combo')){
-    var tries = 0;
-    var interval = setInterval(function(){
-      tries++;
-      if(document.querySelector('.goog-te-combo') || tries > 20){
-        clearInterval(interval);
-        _doTranslate();
-      }
-    }, 200);
-  } else {
-    _doTranslate();
-  }
+  });
+  if(window._updateSEO) window._updateSEO(lang);
+  /* Τίτλοι/ρητό εισόδου (ήδη υπήρχε αυτό το κομμάτι) */
+  await _translateDynamicContent(lang);
+  /* Γενική μετάφραση όλης της ορατής σελίδας -- πύλες, κείμενα, quiz, Κάτι Άλλο κ.λπ. */
+  await applyLangToContainer(document.body);
 }
+
+/* Αν ο επισκέπτης είχε ξαναδιαλέξει γλώσσα σε προηγούμενη επίσκεψη, την εφαρμόζουμε αυτόματα */
+(function(){
+  var saved = null;
+  try { saved = localStorage.getItem('innerlife_lang'); } catch(e){}
+  if(saved && saved !== 'el'){
+    window.addEventListener('load', function(){ setTimeout(function(){ gtApplyLang(saved); }, 600); });
+  }
+})();
 
 </script>
 
