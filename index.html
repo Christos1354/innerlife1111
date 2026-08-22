@@ -400,13 +400,16 @@ html, body {
     position:fixed; inset:0; z-index:9000;
     background:#060c1a;
     display:flex; flex-direction:column; align-items:center; justify-content:center;
-    overflow:hidden;
+    overflow-y:auto; overflow-x:hidden;
+    -webkit-overflow-scrolling:touch;
 }
 #ep-door {
     display:flex; flex-direction:column; align-items:center;
     width:100%; gap:0;
     position:relative; z-index:10;
-    max-height:100vh;
+    max-height:none;
+    padding:6px 0 14px 0;
+    box-sizing:border-box;
 }
 #ep-bg-photo { position:absolute; inset:0; background-size:cover; background-position:center; opacity:0; transition:opacity 1s; }
 #ep-bg-overlay { position:absolute; inset:0; background:rgba(2,5,14,0.38); }
@@ -422,7 +425,9 @@ html, body {
     background:rgba(200,168,74,0.28); color:#ffe060; border-color:rgba(220,180,80,0.9);
 }
 
-/* ═══ ΚΟΥΜΠΙ ΕΙΣΟΔΟΣ — κάτω-κέντρο, σταθερό ═══ */
+/* ═══ ΚΟΥΜΠΙ ΕΙΣΟΔΟΣ — μπαίνει ΜΕΤΑ τα υπόλοιπα πλαίσια στη ροή της σελίδας
+   (όχι πια position:absolute) ώστε να ΜΗΝ επικαλύπτει ΠΟΤΕ κανένα πλαίσιο
+   από πάνω του, όσα κουτιά κι αν προστεθούν/αφαιρεθούν στο μέλλον ═══ */
 .ep-enter-btn {
     background: rgba(4,10,20,0.75);
     color: #d4b84a;
@@ -432,16 +437,15 @@ html, body {
     font-weight: 600;
     letter-spacing: 0.25em;
     cursor: pointer;
-    border-radius: 2px;
+    border-radius: 24px;
     transition: all 0.32s;
     animation: shimmer 3s infinite;
     z-index: 10;
     display: inline-block;
     min-height: 44px; /* iOS minimum touch target */
-    position: absolute;
-    bottom: 0px;
-    left: 51%;
-    transform: translateX(-50%);
+    position: static;
+    margin: 4px auto 4px auto;
+    flex-shrink: 0;
 }
 .ep-enter-btn:hover { background:rgba(212,184,74,0.2); border-color:#f0d060; color:#f8e870; animation:none; }
 .ep-enter-btn:focus-visible { outline: 2px solid #f0d060; outline-offset: 3px; }
@@ -457,7 +461,7 @@ button, .lang-btn, .cat-btn, .menu-btn, .toc-btn, .ka-b {
   outline-offset: 2px !important;
 }
 /* Κείμενο αρκετά μεγάλο για ηλικιωμένους */
-#dt-text { font-size: 14px !important; line-height: 1.6 !important; }
+#dt-text { font-size: 14px !important; line-height: 1.6 !important; display:-webkit-box !important; -webkit-line-clamp:3 !important; -webkit-box-orient:vertical !important; overflow:hidden !important; max-height:4.8em !important; }
 .toc-text { font-size: 14px !important; line-height: 1.65 !important; }
 /* Υψηλότερη αντίθεση για secondary text */
 .ep-menu-subtitle { color: #ffe080 !important; }
@@ -498,7 +502,7 @@ button, .lang-btn, .cat-btn, .menu-btn, .toc-btn, .ka-b {
 }
 .arch-row {
   display:flex;
-  justify-content:center;
+  justify-content:space-between;
   gap:5px;
   width:100%;
   flex:1;
@@ -858,9 +862,18 @@ button, .lang-btn, .cat-btn, .menu-btn, .toc-btn, .ka-b {
   #back-to-entrance { top: 4px; bottom: auto !important; font-size: 8px; padding: 3px 6px; }
   #now-playing { font-size: 8px; }
   #daily-thought-box { padding: 7px 10px 6px; margin-bottom: 7px; }
-  #dt-text   { font-size: 11px !important; line-height: 1.45; }
+  #dt-text   { font-size: 11px !important; line-height: 1.45 !important; -webkit-line-clamp:3 !important; max-height:3.9em !important; }
   #dt-author { font-size: 9px  !important; }
   #dt-label  { font-size: 8px  !important; }
+
+  /* ═══ Είσοδος (αρχική) πλαίσια — ώστε να χωράνε όλα χωρίς επικάλυψη ═══ */
+  #ep-door { padding: 4px 0 10px 0 !important; }
+  #gt-wrap-1 { margin-top: 3px !important; margin-bottom: 2px !important; }
+  #gt-wrap-1 button { padding: 4px 10px !important; font-size: 9.5px !important; }
+  #weekly-theme-box { padding: 6px 10px 5px !important; margin: 0 auto 6px auto !important; }
+  #wt-title { font-size: 12px !important; }
+  #wt-desc  { font-size: 10px !important; }
+  .ep-enter-btn { padding: 10px 28px !important; font-size: 12px !important; margin: 4px auto !important; }
 }
 
 /* ── Landscape κινητό (ύψος ≤ 500px) ── */
@@ -916,8 +929,19 @@ button, .lang-btn, .cat-btn, .menu-btn, .toc-btn, .ka-b {
   .double-block select   { font-size: 6px !important; height: 22px !important; }
   .cat-nav button        { font-size: 6px !important; padding: 2px 0 !important; }
 
-  #ep-door svg  { max-height: 45vh !important; width: auto !important; }
-  .ep-enter-btn { bottom: 4px; font-size: 10px; padding: 5px 18px; }
+  #ep-door { padding: 3px 0 8px 0 !important; }
+  #ep-door-scene { width: min(100%, calc(30vh * 700 / 415)) !important; }
+  .ep-enter-btn { font-size: 10px !important; padding: 6px 18px !important; min-height: 34px !important; margin: 2px auto !important; }
+  #gt-wrap-1 { margin-top: 2px !important; margin-bottom: 1px !important; }
+  #gt-wrap-1 button { padding: 3px 9px !important; font-size: 9px !important; }
+  #daily-thought-box { padding: 4px 10px 3px !important; margin: 0 auto 3px auto !important; }
+  #dt-text  { font-size: 10px !important; line-height: 1.3 !important; -webkit-line-clamp: 2 !important; display:-webkit-box !important; -webkit-box-orient:vertical !important; overflow:hidden !important; max-height: 2.6em !important; }
+  #dt-label { font-size: 7px !important; margin-bottom: 2px !important; }
+  #dt-author{ font-size: 8px !important; margin-top: 2px !important; }
+  #weekly-theme-box { padding: 4px 10px 3px !important; margin: 0 auto 3px auto !important; }
+  #wt-title { font-size: 11px !important; }
+  #wt-desc  { font-size: 9px !important; -webkit-line-clamp: 1 !important; max-height: 1.5em !important; }
+  #ep-candle-teaser-wrap { width: 32px !important; height: 32px !important; bottom: 10% !important; }
   #back-to-entrance { top: 2px; bottom: auto !important; font-size: 7px; padding: 2px 5px; }
   #now-playing  { bottom: 68px; font-size: 7px; }
 
@@ -971,11 +995,17 @@ button, .lang-btn, .cat-btn, .menu-btn, .toc-btn, .ka-b {
   display:flex;
   flex-direction:column;
   align-items:center;
-  justify-content:center;
+  justify-content:flex-end;
   gap:2px;
   flex:0 0 auto;
   min-height:0;
 }
+/* Η ετικέτα πάει ΜΕΤΑ το κουμπί (κάτω), ίδια σειρά με τις υπόλοιπες Πύλες
+   (εικονίδιο πάνω, ετικέτα κάτω) -- ώστε σε στενό ύψος (landscape κινητό) οι
+   δύο σειρές να συμπιέζονται με τον ίδιο ρυθμό και να ΜΗΝ επικαλύπτονται οι
+   ετικέτες "ΑΥΤΟΓΝΩΣΙΑ"/"ΑΥΤΟΕΞΕΛΙΞΗ" με τις ετικέτες της 1ης σειράς. */
+.gold-circle-label { order:2; }
+.gold-circle-btn   { order:1; }
 .gold-circle-label {
   font-family:Georgia,serif;
   font-size:clamp(7px,1.8vw,11px);
@@ -1049,12 +1079,12 @@ function removeAccents(str) {
   <div id="ep-bgstars" style="position:absolute;inset:0;pointer-events:none;z-index:1;"></div>
 
     <div id="ep-door">
-    <!-- 🌐 Translate κουμπί — κάτω από lang buttons, κεντραρισμένο -->
-    <div id="gt-wrap-1" style="display:flex;justify-content:center;margin-top:5px;margin-bottom:2px;position:relative;z-index:10;">
+    <!-- 🌐 Translate κουμπί + 🧭 Mini quiz — δίπλα-δίπλα, ώστε να μην κρύβονται από το Είσοδος -->
+    <div id="gt-wrap-1" style="display:flex;justify-content:center;align-items:center;gap:6px;row-gap:4px;flex-wrap:wrap;margin-top:5px;margin-bottom:2px;position:relative;z-index:10;">
       <div style="position:relative;">
         <button id="gt-btn"
             style="background:rgba(4,8,20,0.88);color:#d4af37;border:1px solid rgba(212,175,55,0.5);
-            padding:5px 16px;border-radius:20px;font-size:11px;cursor:pointer;white-space:nowrap;">
+            padding:5px 13px;border-radius:20px;font-size:10.5px;cursor:pointer;white-space:nowrap;">
             🌐 Translate</button>
         <div id="gt-menu" style="display:none;position:absolute;left:50%;transform:translateX(-50%);top:34px;
           background:rgba(4,8,20,0.97);border:1px solid rgba(212,175,55,0.5);border-radius:10px;
@@ -1129,9 +1159,17 @@ function removeAccents(str) {
           </div>
         </div>
       </div>
+      <!-- ═══ ΜΙΝΙ QUIZ ΚΑΘΟΔΗΓΗΣΗΣ — δίπλα στη μετάφραση, ώστε να μην κρύβεται από το Είσοδος ═══ -->
+      <button onclick="openPathQuiz()" class="translate-me"
+        style="background:rgba(212,175,55,0.08);
+        color:#d4af37;border:1px solid rgba(212,175,55,0.4);padding:5px 12px;border-radius:20px;
+        font-size:10.5px;letter-spacing:0.03em;cursor:pointer;font-family:Georgia,serif;white-space:nowrap;">
+        🧭 Δεν ξέρω από πού να αρχίσω:
+      </button>
     </div>
 
-    <svg width="100%" viewBox="0 0 700 415" xmlns="http://www.w3.org/2000/svg" style="max-height:min(415px,55vh);overflow:visible;position:relative;z-index:2;">
+    <div id="ep-door-scene" style="position:relative;width:min(100%, calc(min(415px, 55vh) * 700 / 415));aspect-ratio:700/415;margin:0 auto;">
+    <svg width="100%" height="100%" viewBox="0 0 700 415" xmlns="http://www.w3.org/2000/svg" style="display:block;overflow:visible;position:relative;z-index:2;">
     <defs>
       <linearGradient id="epSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0a1428"/><stop offset="40%" stop-color="#122040"/><stop offset="78%" stop-color="#1a2e50"/><stop offset="100%" stop-color="#142238"/></linearGradient>
       <linearGradient id="epWater" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a4060" stop-opacity="0.9"/><stop offset="100%" stop-color="#08182a"/></linearGradient>
@@ -1227,20 +1265,47 @@ function removeAccents(str) {
     </g>
     <line x1="266" y1="98" x2="266" y2="258" stroke="#c8a840" stroke-width="0.6" opacity="0.3"/>
     </svg>
+    <!-- Μικρό κουμπί-γωνία κεριών, ΕΚΤΟΣ της κάθετης στοίβας — δεν επηρεάζεται ποτέ από το ύψος των άλλων πλαισίων -->
+    <button onclick="epGoTo('church')" id="ep-candle-teaser-wrap" class="translate-me" title="Πύλη Προσευχής" style="
+      position:absolute;bottom:18%;right:7%;z-index:15;
+      display:flex;flex-direction:column;align-items:center;gap:1px;
+      background:rgba(4,8,20,0.7);border:1px solid rgba(255,180,60,0.4);
+      border-radius:50%;width:40px;height:40px;cursor:pointer;
+      box-shadow:0 0 10px rgba(255,180,60,0.35);">
+      <span style="font-size:16px;filter:drop-shadow(0 0 4px rgba(255,180,60,0.8));">🕯️</span>
+      <span id="ep-candle-teaser" style="font-size:7px;color:#e0b060;font-family:Georgia,serif;line-height:1;">...</span>
+    </button>
+    </div>
     <!-- ═══ ΣΚΕΨΗ ΤΗΣ ΗΜΕΡΑΣ ═══ -->
     <div id="daily-thought-box" style="
       position:relative; z-index:10;
       width:90%; max-width:480px;
-      margin:0 auto 27px auto;
-      padding:10px 16px 8px 16px;
+      margin:0 auto 6px auto;
+      padding:7px 16px 5px 16px;
       background:rgba(0,0,20,0.60);
       border:1px solid rgba(212,175,55,0.45);
-      border-radius:4px;
+      border-radius:16px;
       text-align:center;
     ">
       <div id="dt-label" style="font-size:9px;letter-spacing:0.18em;color:#a08030;margin-bottom:5px;font-family:Georgia,serif;">✦ ΣΚΕΨΗ ΤΗΣ ΗΜΕΡΑΣ ✦</div>
       <div id="dt-text" style="font-size:13px;line-height:1.55;color:#ffd700;font-family:Georgia,serif;font-style:italic;"></div>
       <div id="dt-author" style="font-size:10px;color:#ffd700;opacity:0.75;margin-top:5px;font-family:Georgia,serif;"></div>
+    </div>
+    <!-- ═══ ΘΕΜΑ ΤΗΣ ΕΒΔΟΜΑΔΑΣ (ανεξάρτητο από τη σκέψη της ημέρας) ═══ -->
+    <div id="weekly-theme-box" style="
+      position:relative; z-index:10;
+      width:90%; max-width:480px;
+      margin:0 auto 6px auto;
+      padding:7px 16px 6px 16px;
+      background:rgba(20,0,30,0.45);
+      border:1px solid rgba(200,140,220,0.35);
+      border-radius:16px;
+      text-align:center;
+      display:none;
+    ">
+      <div style="font-size:8px;letter-spacing:0.18em;color:#c898dc;margin-bottom:4px;font-family:Georgia,serif;">🌙 ΘΕΜΑ ΤΗΣ ΕΒΔΟΜΑΔΑΣ 🌙</div>
+      <div id="wt-title" class="translate-me" style="font-size:13px;color:#f0d0ff;font-family:Georgia,serif;font-weight:700;letter-spacing:0.04em;"></div>
+      <div id="wt-desc" class="translate-me" style="font-size:11px;color:#e8c8f8;font-weight:700;font-family:Georgia,serif;margin-top:3px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;max-height:3em;"></div>
     </div>
     <button class="ep-enter-btn" id="ep-enter-btn" onclick="epOpenMenu()" aria-label="Είσοδος στον χώρο">Είσοδος</button>
   </div>
@@ -1266,6 +1331,9 @@ function removeAccents(str) {
         padding:0 6px;flex-shrink:0;display:flex;align-items:center;gap:4px;white-space:nowrap;">
         <span style="font-size:16px;">❤️</span><span style="font-size:10px;color:#d4af37;letter-spacing:0.03em;font-family:Georgia,serif;">Αγαπημένα</span>
       </button>
+      <button onclick="openJourney()" title="Η Πορεία μου"
+        style="background:transparent;border:none;cursor:pointer;
+        padding:0 4px;flex-shrink:0;font-size:22px;">📊</button>
       <!-- ⏸ Pause δίπλα στο search — κρυφό αρχικά -->
       <button id="arch-pause-btn" onclick="toggleGlobalMusic()"
         title="Παύση / Συνέχεια"
@@ -2171,6 +2239,35 @@ const DAILY_THOUGHTS = [
   dtText.innerHTML = '<span translate="yes">«' + t.q + '»</span>';
   dtAuth.innerHTML = t.a ? '<span translate="yes">— ' + t.a + '</span>' : '';
 })();
+
+/* ════ ΘΕΜΑ ΤΗΣ ΕΒΔΟΜΑΔΑΣ — εντελώς ανεξάρτητο από τη σκέψη της ημέρας ════ */
+const WEEKLY_THEMES = [
+  { title:"Συγχώρεση", desc:"Αυτή την εβδομάδα, άφησε κάτι που σε βαραίνει." },
+  { title:"Υπομονή", desc:"Ό,τι χρειάζεται χρόνο, αξίζει την αναμονή του." },
+  { title:"Ευγνωμοσύνη", desc:"Κοίτα γύρω σου — τι σου δόθηκε σήμερα;" },
+  { title:"Σιωπή", desc:"Δώσε στον εαυτό σου λίγα λεπτά χωρίς λόγια." },
+  { title:"Παρουσία", desc:"Μείνε εδώ, τώρα — όχι στο χθες, όχι στο αύριο." },
+  { title:"Απλότητα", desc:"Λιγότερα πράγματα, περισσότερη γαλήνη." },
+  { title:"Αποδοχή", desc:"Ό,τι δεν αλλάζει, μπορείς να το αγκαλιάσεις." },
+  { title:"Θάρρος", desc:"Ένα μικρό βήμα σήμερα είναι αρκετό." },
+  { title:"Ευγένεια", desc:"Μια καλή λέξη μπορεί να αλλάξει μια μέρα." },
+  { title:"Ελευθερία", desc:"Άσε κάτι που σε κρατά δεμένο." },
+  { title:"Ισορροπία", desc:"Ανάμεσα στη δράση και την ανάπαυση." },
+  { title:"Πίστη", desc:"Ακόμα κι όταν δεν βλέπεις τον δρόμο, προχώρα." }
+];
+(function initWeeklyTheme(){
+  const box = document.getElementById('weekly-theme-box');
+  const tEl = document.getElementById('wt-title');
+  const dEl = document.getElementById('wt-desc');
+  if(!box || !tEl || !dEl) return;
+  const weekIdx = Math.floor(Date.now() / (86400000*7)) % WEEKLY_THEMES.length;
+  const w = WEEKLY_THEMES[weekIdx];
+  tEl.textContent = w.title;
+  dEl.textContent = w.desc;
+  box.style.display = 'block';
+})();
+/* Δείχνει τον μετρητή κεριών στην είσοδο, χωρίς να χρειάζεται να μπει κανείς στην Πύλη Προσευχής */
+window.addEventListener('load', function(){ setTimeout(fetchGlobalCandleCount, 400); });
 
 /* ================================================================
    ▌▌▌  Π Ε Ρ Ι Ε Χ Ο Μ Ε Ν Α  —  ΜΟΝΟ ΕΔΩ ΚΑΝΕΙΣ ΑΛΛΑΓΕΣ  ▐▐▐
@@ -3783,6 +3880,20 @@ const HEALTH_CONTENT = [
 { type:'text', title:'Το Ρόλο της Σταθερής Ρουτίνας στη Διαχείριση του Άγχους σε Παιδιά και Ενήλικες', body:`Η προβλεψιμότητα μιας ρουτίνας μειώνει το άγχος σε όλες τις ηλικίες, όχι μόνο σε παιδιά. Σταθερές ώρες φαγητού, ύπνου, και εργασίας δημιουργούν αίσθηση ασφάλειας που το νευρικό σύστημα εκτιμά, ακόμα κι αν δεν το συνειδητοποιούμε.` },
 { type:'text', title:'Η Σημασία της Ενυδάτωσης του Δέρματος από Μέσα', body:`Η ενυδάτωση του δέρματος δεν εξαρτάται μόνο από κρέμες — η επαρκής πρόσληψη νερού και υγιεινών λιπαρών (όπως ωμέγα-3) συμβάλλει σημαντικά στην ελαστικότητα και υγεία του δέρματος από μέσα προς τα έξω.` },
 { type:'text', title:'Το Ρόλο της Κοινωνικής Σύνδεσης στη Μείωση του Χρόνιου Στρες', body:`Η ποιότητα των κοινωνικών μας σχέσεων επηρεάζει άμεσα τα επίπεδα κορτιζόλης στο σώμα. Ένα σύντομο, ουσιαστικό τηλεφώνημα με φίλο μπορεί να έχει μετρήσιμη επίδραση στη μείωση του στρες, εξίσου σημαντική με πρακτικές χαλάρωσης.` },
+{ type:'text', title:'Η Αξία της Τακτικής Έκθεσης σε Φυσικό Ήχο', body:`Ο ήχος του νερού, των πουλιών, ακόμα και της βροχής, έχει ήπια ρυθμιστική επίδραση στο νευρικό σύστημα, μειώνοντας μετρήσιμα το στρες σε σχέση με τον αστικό θόρυβο.` },
+{ type:'text', title:'Το Ρόλο της Καλής Στάσης στην Αναπνευστική Χωρητικότητα', body:`Ένα λεπτό, σκυμμένο πάνω από το κινητό, δεν φαίνεται να έχει σημασία — αλλά επαναλαμβανόμενο εκατοντάδες φορές τη μέρα, επιβαρύνει σταδιακά τον αυχένα και την αναπνοή.` },
+{ type:'text', title:'Η Σημασία της Τακτικής Παύσης στην Οθόνη', body:`Ο κανόνας «20-20-20» —κάθε 20 λεπτά, κοίτα κάτι 20 πόδια μακριά για 20 δευτερόλεπτα— μειώνει σημαντικά την κόπωση των ματιών από παρατεταμένη χρήση οθόνης.` },
+{ type:'text', title:'Το Ρόλο του Πρωινού Νερού στην Ενυδάτωση', body:`Μετά από οκτώ ώρες ύπνου χωρίς πρόσληψη υγρών, το σώμα ξεκινά ήπια αφυδατωμένο. Ένα ποτήρι νερό πριν από οτιδήποτε άλλο το πρωί βοηθά να ξεκινήσει η μέρα σωστά.` },
+{ type:'text', title:'Η Αξία της Ελαφριάς Κίνησης μετά το Φαγητό', body:`Ένας ήρεμος περίπατος δέκα λεπτών μετά το γεύμα βοηθά την πέψη και σταθεροποιεί το σάκχαρο του αίματος περισσότερο απ' όσο η άμεση καθιστική ανάπαυση.` },
+{ type:'text', title:'Το Ρόλο του Ύπνου στην Επεξεργασία Συναισθημάτων', body:`Κατά τη διάρκεια του ύπνου, ειδικά στη φάση REM, ο εγκέφαλος επεξεργάζεται συναισθηματικές εμπειρίες της μέρας. Η έλλειψη ύπνου αφήνει αυτά τα συναισθήματα ανεπεξέργαστα.` },
+{ type:'text', title:'Η Σημασία της Έκφρασης του Πόνου, όχι μόνο της Καταστολής του', body:`Τα παυσίπονα ανακουφίζουν το σύμπτωμα, αλλά η κατανόηση της αιτίας —σωματικής ή συναισθηματικής— είναι απαραίτητη για μακροπρόθεσμη ανακούφιση.` },
+{ type:'text', title:'Το Ρόλο της Θερμοκρασίας Δωματίου στην Ποιότητα Ύπνου', body:`Ένα δωμάτιο ελαφρώς δροσερό (γύρω στους 18-19 βαθμούς) ευνοεί βαθύτερο ύπνο απ' ό,τι ένα ζεστό δωμάτιο, σύμφωνα με μελέτες ύπνου.` },
+{ type:'text', title:'Η Αξία της Συνειδητής Μάσησης', body:`Το να μασάς αργά όχι μόνο βοηθά την πέψη — δίνει επίσης στον εγκέφαλο τον χρόνο να καταγράψει κορεσμό, μειώνοντας φυσικά τις ποσότητες που τρως.` },
+{ type:'text', title:'Το Ρόλο της Κίνησης στην Απελευθέρωση Έντασης', body:`Η σωματική κίνηση —ακόμα και ένα σύντομο τρέξιμο επιτόπου, ή δυνατό τίναγμα των χεριών— βοηθά το νευρικό σύστημα να «ολοκληρώσει» την αντίδραση στρες, κάτι που η ακινησία δεν επιτρέπει.` },
+{ type:'text', title:'Η Σημασία της Τακτικής Επικοινωνίας με τον Γιατρό σου', body:`Η σχέση με τον γιατρό σου δεν χρειάζεται να περιορίζεται σε στιγμές κρίσης. Τακτικός, ανοιχτός διάλογος βοηθά στην έγκαιρη αναγνώριση προβλημάτων.` },
+{ type:'text', title:'Το Ρόλο του Χιούμορ στη Σωματική Υγεία', body:`Το γέλιο ενεργοποιεί μετρήσιμα το ανοσοποιητικό σύστημα και μειώνει την κορτιζόλη. Δεν είναι μόνο ψυχολογικό όφελος — είναι και βιολογικό.` },
+{ type:'text', title:'Η Αξία της Καθιστικής Στάσης με Υποστήριξη στη Μέση', body:`Μια μικρή αλλαγή —ένα μαξιλάρι στη μέση σου όταν κάθεσαι πολλές ώρες— μπορεί να προλάβει σημαντικό πόνο στη σπονδυλική στήλη μακροπρόθεσμα.` },
+{ type:'text', title:'Το Ρόλο της Καθημερινής Δομής στη Διαχείριση Άγχους', body:`Ένα ελαφρύ, προβλέψιμο πρόγραμμα ημέρας —ώρες φαγητού, ύπνου, εργασίας— μειώνει το άγχος περισσότερο απ' όσο νομίζουμε, δίνοντας στο νευρικό σύστημα σημεία αναφοράς.` },
 ];
 
 /* ── ΠΥΛΗ 4Β: ΚΑΘΗΜΕΡΙΝΟΤΗΤΑ (μέρος της "Υγεία & Καθημερινότητα") ── */
@@ -4080,6 +4191,18 @@ const FAITH_CONTENT = [
 { type:'text', title:'Το Θάρρος να Συνεχίσεις Χωρίς να Ξέρεις το Αποτέλεσμα', body:`Η πίστη συχνά σημαίνει να προχωράς χωρίς εγγύηση αποτελέσματος, εμπιστευόμενος πως η προσπάθεια από μόνη της έχει αξία, ανεξάρτητα από το πώς θα καταλήξει.` },
 { type:'text', title:'Η Ελπίδα που Ανανεώνεται με Κάθε Νέα Μέρα', body:`Κάθε πρωί προσφέρει, με έναν τρόπο, νέα ευκαιρία για ελπίδα, ανεξάρτητα από το πόσο δύσκολη ήταν η προηγούμενη μέρα. Αυτή η καθημερινή ανανέωση δεν χρειάζεται μεγάλη τελετή — μόνο την επιλογή να την αναγνωρίσεις.` },
 { type:'text', title:'Το Νόημα της Ελπίδας μέσα από την Αποδοχή του Μυστηρίου', body:`Δεν χρειάζεται να καταλαβαίνεις γιατί συμβαίνουν όλα όσα συμβαίνουν για να διατηρήσεις πίστη. Η αποδοχή πως κάποια πράγματα παραμένουν μυστήριο, χωρίς αυτό να καταστρέφει την εμπιστοσύνη σου, είναι ώριμη πνευματική στάση.` },
+{ type:'text', title:'Η Ελπίδα που Δεν Χρειάζεται να Φωνάζει', body:`Δεν χρειάζεται η ελπίδα σου να είναι θορυβώδης ή εντυπωσιακή για να είναι πραγματική. Μπορεί να είναι ήσυχη, σχεδόν αθόρυβη, και παρ' όλα αυτά να σε κρατά όρθιο.` },
+{ type:'text', title:'Το Νόημα της Πίστης που Δεν Χρειάζεται Απόδειξη Κάθε Μέρα', body:`Δεν χρειάζεται να νιώθεις έντονα την παρουσία του Θεού κάθε μέρα για να παραμείνει η πίστη σου αληθινή. Υπάρχουν εποχές πιο σιωπηλές, χωρίς αυτό να σημαίνει απουσία.` },
+{ type:'text', title:'Η Δύναμη της Ελπίδας που Δανείζεσαι από Άλλους', body:`Δεν χρειάζεται να έχεις πάντα δική σου ελπίδα έτοιμη. Μπορείς να δανειστείς προσωρινά την ελπίδα κάποιου άλλου —φίλου, κοινότητας, ακόμα και ενός βιβλίου— μέχρι να ξαναβρείς τη δική σου.` },
+{ type:'text', title:'Το Θάρρος να Ζητήσεις Κάτι που Φαίνεται Απίθανο', body:`Η προσευχή δεν χρειάζεται να περιορίζεται σε ρεαλιστικά αιτήματα. Μπορείς να ζητήσεις και το απίθανο, εμπιστευόμενος πως η ίδια η πράξη της ζήτησης έχει αξία.` },
+{ type:'text', title:'Η Ελπίδα Μέσα στην Επανάληψη μιας Δύσκολης Μέρας', body:`Όταν κάθε μέρα μοιάζει ίδια με τη δύσκολη προηγούμενη, η ελπίδα δεν είναι να περιμένεις ξαφνική αλλαγή — είναι να πιστεύεις πως η σταθερή επιμονή, μέρα με τη μέρα, τελικά φέρνει διαφορά.` },
+{ type:'text', title:'Το Νόημα της Ευγνωμοσύνης σε Στιγμές Φόβου', body:`Ακόμα και μέσα στον φόβο, μπορείς να βρεις κάτι μικρό για το οποίο να είσαι ευγνώμων — μια ανάσα, μια παρουσία δίπλα σου. Αυτό δεν εξαφανίζει τον φόβο, αλλά τον συνοδεύει με κάτι φωτεινό.` },
+{ type:'text', title:'Η Ελπίδα ως Απόφαση να Ξαναδοκιμάσεις', body:`Μετά από μια αποτυχημένη προσπάθεια, η ελπίδα δεν είναι σιγουριά για επιτυχία τη δεύτερη φορά — είναι απλώς η απόφαση να δοκιμάσεις ξανά, παρά την αβεβαιότητα.` },
+{ type:'text', title:'Το Θάρρος να Πιστέψεις σε Αλλαγή που Δεν Έχεις Δει Ακόμα', body:`Δεν χρειάζεται να έχεις δει ήδη σημάδια αλλαγής για να πιστέψεις πως έρχεται. Η πίστη, εξ ορισμού, προηγείται συχνά της απόδειξης.` },
+{ type:'text', title:'Η Ελπίδα που Ζει Μέσα στην Καθημερινή Φροντίδα', body:`Το να φτιάχνεις το κρεβάτι σου, να μαγειρεύεις ένα γεύμα, να φροντίζεις μια μικρή λεπτομέρεια της μέρας σου — αυτές οι πράξεις, φαινομενικά ασήμαντες, είναι κι αυτές μορφές ελπίδας, γιατί υποθέτουν πως το αύριο αξίζει προετοιμασία.` },
+{ type:'text', title:'Το Νόημα της Ελπίδας που Δεν Χρειάζεται να Εξηγηθεί σε Κανέναν', body:`Δεν χρειάζεται να δικαιολογήσεις σε κανέναν γιατί ελπίζεις, ακόμα κι αν η κατάστασή σου φαίνεται απελπιστική σε άλλους. Η ελπίδα σου είναι δική σου, και δεν χρειάζεται εξωτερική έγκριση.` },
+{ type:'text', title:'Η Δύναμη μιας Μικρής, Σταθερής Πίστης', body:`Δεν χρειάζεσαι τεράστια, ακλόνητη πίστη για να προχωρήσεις — μια μικρή, σταθερή πίστη, αρκετή για το επόμενο βήμα, είναι ήδη αρκετή.` },
+{ type:'text', title:'Το Νόημα της Ελπίδας που Επιστρέφει μετά την Απώλειά της', body:`Ακόμα κι αν ένιωσες πως έχασες εντελώς την ελπίδα σου κάποια στιγμή, αυτό δεν σημαίνει πως χάθηκε για πάντα. Η ελπίδα μπορεί να επιστρέψει, απροειδοποίητα, όταν δεν το περιμένεις.` },
 ];
 
 /* ── ΠΥΛΗ 5Β: ΕΠΙΣΤΗΜΗ (μέρος της "Ελπίδα & Επιστήμη") ── */
@@ -4461,6 +4584,19 @@ const KATI_ALLO_CONTENT = [
 { type:'text', title:'Η Πραγματικότητα Πίσω από τη Μόνιμη Απασχόληση με τους Άλλους', body:`Αν ξοδεύεις περισσότερο χρόνο σκεπτόμενος τι κάνουν, τι σκέφτονται, τι θα πουν οι άλλοι, παρά τι θέλεις εσύ ο ίδιος, ίσως έχεις χάσει επαφή με τη δική σου ζωή, μέσα στην παρακολούθηση των ζωών των άλλων.` },
 { type:'text', title:'Το Κόστος της Αδράνειας που Ονομάζεις «Υπομονή»', body:`Υπάρχει διαφορά ανάμεσα στην υπομονή —ενεργή αναμονή με σχέδιο— και την αδράνεια που ντύνεται ως υπομονή, ενώ στην πραγματικότητα είναι φόβος δράσης. Ρώτα ειλικρινά: περιμένεις τη σωστή στιγμή, ή απλώς αποφεύγεις να κινηθείς;` },
 { type:'text', title:'Η Αλήθεια Πίσω από την Ανάγκη να Ελέγχεις την Εικόνα σου Ακόμα και με Κοντινούς Ανθρώπους', body:`Αν προσέχεις πώς παρουσιάζεσαι ακόμα και σε ανθρώπους που σε αγαπούν πλήρως, ίσως δεν έχεις ακόμα πιστέψει πραγματικά πως σε αγαπούν όπως είσαι, χωρίς επιμέλεια.` },
+{ type:'text', title:'Το Πρόσωπο που Δείχνεις Μόνο σε Άγνωστους', body:`Μερικές φορές είμαστε πιο ειλικρινείς με αγνώστους —σε ένα ταξίδι, σε μια τυχαία συνομιλία— απ' ό,τι με ανθρώπους που ξέρουμε χρόνια. Τι σου λέει αυτό για το τι φοβάσαι να δείξεις στους κοντινούς σου;` },
+{ type:'text', title:'Η Αλήθεια Πίσω από τις «Λογικές» σου Δικαιολογίες', body:`Οι πιο πειστικές δικαιολογίες είναι αυτές που πιστεύουμε κι εμείς οι ίδιοι. Αυτό δεν τις κάνει λιγότερο δικαιολογίες — απλώς πιο δύσκολο να τις αναγνωρίσεις ως τέτοιες.` },
+{ type:'text', title:'Το Κόστος της Μόνιμης Ετοιμότητας για Απολογία', body:`Αν ζεις σε μόνιμη κατάσταση ετοιμότητας να ζητήσεις συγγνώμη —για τον χώρο σου, τη γνώμη σου, την ύπαρξή σου— ίσως έχεις μάθει πως η παρουσία σου χρειάζεται δικαιολογία. Δεν χρειάζεται.` },
+{ type:'text', title:'Ο Λόγος που Αναβάλλεις τις Δύσκολες Συνομιλίες', body:`Κάθε δύσκολη συνομιλία που αναβάλλεις δεν εξαφανίζεται — απλώς μεγαλώνει σιωπηλά. Η στιγμιαία δυσφορία μιας ειλικρινούς κουβέντας είναι σχεδόν πάντα μικρότερη απ' όσο τη φαντάζεσαι.` },
+{ type:'text', title:'Η Πραγματικότητα Πίσω από τη Μόνιμη Σύγκριση με τα Επιτεύγματα Άλλων στα Social Media', body:`Κάθε φορά που συγκρίνεσαι με εικόνες επιμελημένης ζωής άλλων, συγκρίνεις τα δικά σου παρασκήνια με τη δική τους σκηνή. Καμία σύγκριση δεν είναι δίκαιη κάτω από αυτούς τους όρους.` },
+{ type:'text', title:'Το Ερώτημα Πίσω από την Ανάγκη Άμεσης Απάντησης σε Μηνύματα', body:`Αν νιώθεις άγχος όταν δεν απαντάς αμέσως σε ένα μήνυμα, ρώτα: τι φοβάσαι πως θα συμβεί; Συνήθως τίποτα σοβαρό — απλώς μάθαμε πως η αργοπορία σημαίνει απόρριψη, κάτι που σπάνια ισχύει.` },
+{ type:'text', title:'Η Αλήθεια για τα «Δεν Έχω Χρόνο» που Λες σε Ανθρώπους', body:`Το «δεν έχω χρόνο» για κάποιον άνθρωπο συνήθως σημαίνει «δεν τον βάζω αρκετά ψηλά στις προτεραιότητές μου». Δεν χρειάζεται να το πεις έτσι δυνατά — αλλά αξίζει να το ξέρεις μέσα σου.` },
+{ type:'text', title:'Το Κόστος της Σιωπηρής Αγανάκτησης', body:`Η αγανάκτηση που κρατάς μέσα σου, χωρίς να την εκφράζεις ποτέ, δεν εξαφανίζεται — γίνεται απόσταση, ψυχρότητα, αντιδράσεις που ο άλλος δεν καταλαβαίνει από πού έρχονται.` },
+{ type:'text', title:'Ο Φόβος Πίσω από την Τελειομανία στην Εμφάνισή σου', body:`Αν ξοδεύεις υπερβολικό χρόνο ελέγχοντας πώς φαίνεσαι, ίσως πιστεύεις πως η αξία σου εξαρτάται από αυτό. Δεν εξαρτάται.` },
+{ type:'text', title:'Η Πραγματικότητα Πίσω από τη Φράση «Δεν Είμαι Δημιουργικός»', body:`Κανείς δεν γεννιέται χωρίς φαντασία — απλώς κάποιοι έμαθαν νωρίς πως οι ιδέες τους κρίνονταν αυστηρά, και σταμάτησαν να τις μοιράζονται. Η δημιουργικότητα δεν χάθηκε — απλώς κρύφτηκε.` },
+{ type:'text', title:'Το Ερώτημα Πίσω από την Ανάγκη να Έχεις το Τελευταίο Λόγο', body:`Η ανάγκη να έχεις πάντα τον τελευταίο λόγο σε μια διαφωνία σπάνια αφορά το ίδιο το θέμα — αφορά τον φόβο πως αν σταματήσεις να μιλάς πρώτος, θα φανεί πως έχασες.` },
+{ type:'text', title:'Η Αλήθεια Πίσω από τη Μόνιμη Ανάγκη Επιβεβαίωσης πως Είσαι Καλός Άνθρωπος', body:`Αν χρειάζεσαι συνεχή επιβεβαίωση πως είσαι καλός άνθρωπος, ίσως βαθιά φοβάσαι το αντίθετο. Οι πραγματικά καλοί άνθρωποι σπάνια χρειάζονται να το αποδεικνύουν συνέχεια.` },
+{ type:'text', title:'Το Κόστος του Να Μη Δίνεις Ποτέ στον Εαυτό σου Άδεια να Ξεκουραστεί', body:`Αν νιώθεις πως πρέπει να «κερδίσεις» την ξεκούρασή σου με αρκετή δουλειά πρώτα, ίσως έχεις μάθει πως η αξία σου εξαρτάται από την παραγωγικότητα. Δεν εξαρτάται.` },
 ];
 
 
@@ -4810,6 +4946,8 @@ function updateCandleDisplay(n){
   if(n===undefined) n=loadCandleCount();
   const el=document.getElementById('candle-count-display');
   if(el) el.textContent='🕯️ '+n.toLocaleString();
+  const teaser=document.getElementById('ep-candle-teaser');
+  if(teaser) teaser.textContent = n.toLocaleString() + ' κεριά έχουν ανάψει εδώ';
 }
 
 function dedicateWhatsApp(){
@@ -6675,7 +6813,7 @@ async function _translateCached(text, lang){
   _saveTCache();
   return out;
 }
-function _collectTextNodes(root){
+function _collectTextNodes(root, includeHidden){
   var nodes = [];
   var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
     acceptNode: function(node){
@@ -6688,8 +6826,12 @@ function _collectTextNodes(root){
       /* Παράλειψε ό,τι δεν είναι πραγματικά ορατό στην οθόνη αυτή τη στιγμή
          (π.χ. κλειστές/κρυμμένες οθόνες, modal που δεν είναι ανοιχτά) --
          αυτό είναι που έκανε τη μετάφραση αργή: μετέφραζε ΟΛΗ τη σελίδα, ακόμα
-         και κομμάτια που δεν βλέπει καν ο επισκέπτης. */
-      if(p.getClientRects().length === 0) return NodeFilter.FILTER_REJECT;
+         και κομμάτια που δεν βλέπει καν ο επισκέπτης.
+         ΕΞΑΙΡΕΣΗ: όταν επιστρέφουμε στα Ελληνικά (includeHidden=true) δεν κοστίζει
+         τίποτα να τα συμπεριλάβουμε όλα -- δεν χρειάζεται δίκτυο, είναι απλή
+         επαναφορά του αποθηκευμένου πρωτότυπου κειμένου -- ώστε ΤΙΠΟΤΑ να μη μείνει
+         "κολλημένο" σε ξένη γλώσσα επειδή έτυχε να είναι κρυμμένο εκείνη τη στιγμή. */
+      if(!includeHidden && p.getClientRects().length === 0) return NodeFilter.FILTER_REJECT;
       return NodeFilter.FILTER_ACCEPT;
     }
   });
@@ -6714,7 +6856,8 @@ async function _mapLimit(items, limit, fn){
 var _mainTObserver = null;
 async function applyLangToContainer(root){
   var lang = window._gtCurrentLang || 'el';
-  var nodes = _collectTextNodes(root);
+  var includeHidden = (lang === 'el');
+  var nodes = _collectTextNodes(root, includeHidden);
   if(!nodes.length) return;
   nodes.forEach(function(node){ if(node._elOriginal === undefined) node._elOriginal = node.nodeValue; });
   var newValues;
@@ -6729,31 +6872,41 @@ async function applyLangToContainer(root){
       if(_tCache[ck] !== undefined){ newValues[i] = _tCache[ck]; return; }
       if(t.length > 300){ longIdx.push(i); } else { shortIdx.push(i); shortTexts.push(t); }
     });
-    /* Μεγάλα κείμενα (κείμενα πύλης) -- ένα-ένα, ήδη σπάνε σε προτάσεις μέσα τους */
-    await Promise.all(longIdx.map(async function(i){
-      var t = texts[i];
-      var out = await _myMemoryTranslateLong(t, 'el|'+lang);
-      newValues[i] = out;
-      _tCache[lang+'::'+t] = out;
-    }));
-    /* Μικρά κείμενα (τίτλοι, ετικέτες) -- ΟΛΑ μαζί, σε ομάδες των 25, ΕΝΑ αίτημα ανά ομάδα */
+    /* Μεγάλα κείμενα (κείμενα πύλης) ΚΑΙ μικρά κείμενα (τίτλοι/ετικέτες, σε ομάδες
+       των 25) -- όλα ΠΑΡΑΛΛΗΛΑ αντί σειριακά, ώστε να μην περιμένει το ένα το άλλο
+       και η μετάφραση να είναι πολύ πιο γρήγορη. */
     var CHUNK = 25;
+    var chunkJobs = [];
     for(var start=0; start<shortTexts.length; start+=CHUNK){
-      var chunkTexts = shortTexts.slice(start, start+CHUNK);
-      var chunkIdx = shortIdx.slice(start, start+CHUNK);
-      var translated = await _batchTranslateRaw(chunkTexts, lang);
-      translated.forEach(function(val, ci){
-        newValues[chunkIdx[ci]] = val;
-        _tCache[lang+'::'+chunkTexts[ci]] = val;
-      });
+      (function(start){
+        var chunkTexts = shortTexts.slice(start, start+CHUNK);
+        var chunkIdx = shortIdx.slice(start, start+CHUNK);
+        chunkJobs.push(async function(){
+          var translated = await _batchTranslateRaw(chunkTexts, lang);
+          translated.forEach(function(val, ci){
+            newValues[chunkIdx[ci]] = val;
+            _tCache[lang+'::'+chunkTexts[ci]] = val;
+          });
+        });
+      })(start);
     }
+    var longJobs = longIdx.map(function(i){
+      return async function(){
+        var t = texts[i];
+        var out = await _myMemoryTranslateLong(t, 'el|'+lang);
+        newValues[i] = out;
+        _tCache[lang+'::'+t] = out;
+      };
+    });
+    /* Έως 4 ταυτόχρονα αιτήματα δικτύου, ώστε να μη στραγγαλίζουμε το endpoint */
+    await _mapLimit(chunkJobs.concat(longJobs), 4, function(job){ return job(); });
     _saveTCache();
   }
   /* Αποσυνδέω προσωρινά τον παρατηρητή όσο γράφω τις τιμές, ώστε να μην ξαναπροκαλέσω εαυτόν μου */
   if(_mainTObserver) _mainTObserver.disconnect();
   nodes.forEach(function(node,i){ if(newValues[i] !== undefined) node.nodeValue = newValues[i]; });
   if(_mainTObserver){
-    _mainTObserver.observe(document.body, { childList:true, subtree:true, characterData:true });
+    _mainTObserver.observe(document.body, { childList:true, subtree:true, characterData:true, attributes:true, attributeFilter:['style','class'] });
   }
 }
 (function(){
@@ -6761,7 +6914,12 @@ async function applyLangToContainer(root){
   _mainTObserver = new MutationObserver(function(mutations){
     if((window._gtCurrentLang||'el') === 'el') return;
     mutations.forEach(function(m){
-      /* Μεταφράζουμε μόνο το συγκεκριμένο κομμάτι που άλλαξε, όχι όλη τη σελίδα κάθε φορά */
+      /* Μεταφράζουμε μόνο το συγκεκριμένο κομμάτι που άλλαξε, όχι όλη τη σελίδα κάθε φορά.
+         Παρακολουθούμε ΚΑΙ αλλαγές σε style/class -- αυτό πιάνει στοιχεία που ήταν κρυμμένα
+         (display:none ή class "open") τη στιγμή που μεταφράστηκε η σελίδα και μόλις τώρα
+         εμφανίζονται (π.χ. κουμπί "ΠΟΡΤΕΣ", "💬 Πες το ανώνυμα", περιεχόμενο μιας Πύλης
+         που μόλις ανοίγει) -- ώστε να μεταφράζονται αυτόματα μόλις γίνουν ορατά, χωρίς να
+         χρειάζεται να τα ξέρουμε εκ των προτέρων. */
       if(m.target && m.target.nodeType === 1) _pendingRoots.add(m.target);
     });
     clearTimeout(window._tDebounce);
@@ -6775,7 +6933,7 @@ async function applyLangToContainer(root){
       filtered.forEach(function(r){ applyLangToContainer(r); });
     }, 200);
   });
-  _mainTObserver.observe(document.body, { childList:true, subtree:true, characterData:true });
+  _mainTObserver.observe(document.body, { childList:true, subtree:true, characterData:true, attributes:true, attributeFilter:['style','class'] });
 })();
 
 /* Εφαρμογή γλώσσας -- αθόρυβα, χωρίς Google widget, ΧΩΡΙΣ reload, χωρίς να αλλάζει οθόνη */
@@ -6785,12 +6943,16 @@ async function gtApplyLang(lang){
   _gtSetWrapZ('gt-wrap-1', false);
   _gtSetWrapZ('gt-wrap-2', false);
   if(!lang) return;
-  _saveOriginalTexts();
+  /* Αποθηκεύουμε το «πρωτότυπο ελληνικό» ΜΟΝΟ όταν βρισκόμαστε ήδη σε Ελληνικά --
+     αλλιώς (π.χ. επιστροφή από Αγγλικά σε Ελληνικά) θα αποθηκεύαμε κατά λάθος
+     το ήδη μεταφρασμένο κείμενο σαν να ήταν το πρωτότυπο. */
+  if((window._gtCurrentLang||'el') === 'el'){ _saveOriginalTexts(); }
   _gtCurrentLang = lang;
   window._gtCurrentLang = lang;
   document.documentElement.lang = lang;
   try { localStorage.setItem('innerlife_lang', lang); } catch(e){}
   /* Ενημέρωση των δύο κουμπιών/επιλογών γλώσσας */
+  var busyBtns = [document.getElementById('gt-btn'), document.getElementById('gt-btn-2')];
   [['gt-btn','gt-custom-select'], ['gt-btn-2','gt-custom-select-2']].forEach(function(pair){
     var btn = document.getElementById(pair[0]);
     var sel = document.getElementById(pair[1]);
@@ -6801,10 +6963,20 @@ async function gtApplyLang(lang){
     }
   });
   if(window._updateSEO) window._updateSEO(lang);
-  /* Τίτλοι/ρητό εισόδου (ήδη υπήρχε αυτό το κομμάτι) */
-  await _translateDynamicContent(lang);
-  /* Γενική μετάφραση όλης της ορατής σελίδας -- πύλες, κείμενα, quiz, Κάτι Άλλο κ.λπ. */
-  await applyLangToContainer(document.body);
+  /* Οπτική ένδειξη "δουλεύει" -- ώστε να μη φαίνεται παγωμένο όσο περιμένουμε
+     την απάντηση από το δίκτυο (ειδικά σε αργή σύνδεση). Μόνο όταν πάμε ΠΡΟΣ
+     ξένη γλώσσα -- η επιστροφή στα Ελληνικά είναι άμεση, χωρίς δίκτυο. */
+  if(lang !== 'el'){
+    busyBtns.forEach(function(b){ if(b){ b.dataset.prevLabel = b.textContent; b.textContent += ' ⏳'; b.style.opacity = '0.7'; } });
+  }
+  try{
+    /* Τίτλοι/ρητό εισόδου (ήδη υπήρχε αυτό το κομμάτι) */
+    await _translateDynamicContent(lang);
+    /* Γενική μετάφραση όλης της ορατής σελίδας -- πύλες, κείμενα, quiz, Κάτι Άλλο κ.λπ. */
+    await applyLangToContainer(document.body);
+  } finally {
+    busyBtns.forEach(function(b){ if(b && b.dataset.prevLabel !== undefined){ b.textContent = b.dataset.prevLabel; b.style.opacity = ''; delete b.dataset.prevLabel; } });
+  }
 }
 
 /* Αν ο επισκέπτης είχε ξαναδιαλέξει γλώσσα σε προηγούμενη επίσκεψη, την εφαρμόζουμε αυτόματα */
@@ -8493,7 +8665,90 @@ function showPathDay(idx){
   if(sw) sw.scrollTop=0;
 }
 
-function shareContent(title, text){
+/* ════ ΑΥΤΟΜΑΤΗ ΚΑΡΤΑ-ΕΙΚΟΝΑ ΓΙΑ ΚΟΙΝΟΠΟΙΗΣΗ ════
+   Φτιάχνει μόνη της μια όμορφη εικόνα με το κείμενο, στο στυλ του site,
+   και την προσφέρει για κοινοποίηση/λήψη -- τίποτα χειροκίνητο. */
+function _wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight){
+  var words = String(text).split(' ');
+  var line = '';
+  var lines = [];
+  words.forEach(function(word){
+    var testLine = line + word + ' ';
+    if(ctx.measureText(testLine).width > maxWidth && line !== ''){
+      lines.push(line.trim());
+      line = word + ' ';
+    } else {
+      line = testLine;
+    }
+  });
+  if(line.trim()) lines.push(line.trim());
+  lines.forEach(function(l, i){ ctx.fillText(l, x, y + i*lineHeight); });
+  return lines.length;
+}
+function _generateShareCardBlob(title, text){
+  return new Promise(function(resolve){
+    try{
+      var W = 1080, H = 1080;
+      var canvas = document.createElement('canvas');
+      canvas.width = W; canvas.height = H;
+      var ctx = canvas.getContext('2d');
+      var grad = ctx.createLinearGradient(0,0,W,H);
+      grad.addColorStop(0, '#0a0618');
+      grad.addColorStop(1, '#1c0f38');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0,0,W,H);
+      ctx.strokeStyle = 'rgba(212,175,55,0.5)';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(40,40,W-80,H-80);
+      ctx.fillStyle = '#d4af37';
+      ctx.font = '60px Georgia, serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('✦', W/2, 170);
+      var cursorY = 280;
+      if(title){
+        ctx.fillStyle = '#f0d060';
+        ctx.font = 'bold 34px Georgia, serif';
+        ctx.textAlign = 'center';
+        var tLines = _wrapCanvasText(ctx, title, W/2, cursorY, W-200, 46);
+        cursorY += tLines*46 + 50;
+      }
+      var excerpt = (text||'').trim();
+      if(excerpt.length > 260) excerpt = excerpt.substring(0,257).replace(/\s+\S*$/, '') + '…';
+      ctx.fillStyle = '#fffbe8';
+      ctx.font = 'italic 30px Georgia, serif';
+      ctx.textAlign = 'center';
+      _wrapCanvasText(ctx, '«'+excerpt+'»', W/2, cursorY, W-220, 44);
+      ctx.fillStyle = 'rgba(212,175,55,0.75)';
+      ctx.font = '22px Georgia, serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('✦ ΕΣΩΤΕΡΙΚΗ ΑΝΑΖΗΤΗΣΗ ✦', W/2, H-92);
+      ctx.font = '17px Georgia, serif';
+      ctx.fillStyle = 'rgba(212,175,55,0.5)';
+      ctx.fillText(window.location.hostname, W/2, H-58);
+      canvas.toBlob(function(blob){ resolve(blob); }, 'image/png');
+    } catch(e){ resolve(null); }
+  });
+}
+async function shareContent(title, text){
+  try{
+    var blob = await _generateShareCardBlob(title, text);
+    if(blob){
+      var file = new File([blob], 'innerlife-quote.png', { type:'image/png' });
+      if(navigator.canShare && navigator.canShare({ files:[file] })){
+        await navigator.share({ files:[file], title: title||'Innerlife', text: title||'' });
+        return;
+      }
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url; a.download = 'innerlife-quote.png';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 5000);
+      return;
+    }
+  } catch(e){ console.warn('Δεν δημιουργήθηκε κάρτα-εικόνα, fallback σε απλό κείμενο.', e); }
+  _shareContentTextFallback(title, text);
+}
+function _shareContentTextFallback(title, text){
   const shareText = (title||'') + '\n\n' + (text||'').substring(0,200) + '...\n\n' + window.location.href;
   if(navigator.share){
     navigator.share({ title: title||'Innerlife', text: shareText, url: window.location.href }).catch(()=>{});
@@ -8525,6 +8780,165 @@ window.addEventListener('load', function(){
   updateFloatCircles();
 });
 
+</script>
+
+<!-- ═══ MINI QUIZ ΚΑΘΟΔΗΓΗΣΗΣ — βοηθά νέους επισκέπτες να βρουν από πού να ξεκινήσουν ═══ -->
+<div id="path-quiz-modal" style="display:none;position:fixed;inset:0;z-index:9400;
+  background:rgba(4,8,20,0.97);flex-direction:column;align-items:center;justify-content:center;
+  padding:24px;box-sizing:border-box;">
+  <button onclick="closePathQuiz()" style="position:absolute;top:16px;right:18px;
+    background:transparent;border:none;color:#d4af37;font-size:26px;cursor:pointer;">✕</button>
+  <div id="pq-body" style="max-width:420px;width:100%;text-align:center;"></div>
+</div>
+
+<script>
+/* ════ MINI QUIZ ΚΑΘΟΔΗΓΗΣΗΣ ════ */
+const PATH_QUIZ = [
+  {
+    q: "Πώς νιώθεις αυτή τη στιγμή;",
+    options: [
+      { t:"Ανήσυχος/η, γεμάτος/η σκέψεις", cat:"meditation" },
+      { t:"Περίεργος/η, θέλω να καταλάβω βαθύτερα", cat:"wisdom-philosophy" },
+      { t:"Κουρασμένος/η, χρειάζομαι φροντίδα", cat:"photos-daily" },
+      { t:"Χαμένος/η, χωρίς πολλή ελπίδα", cat:"wisdom2-science" },
+      { t:"Θέλω βαθύτερη σύνδεση με τους άλλους", cat:"mystery-relations" }
+    ]
+  },
+  {
+    q: "Τι ψάχνεις περισσότερο αυτή την περίοδο;",
+    options: [
+      { t:"Ηρεμία και σιωπή", cat:"meditation" },
+      { t:"Απαντήσεις και νόημα", cat:"wisdom-philosophy" },
+      { t:"Ισορροπία στην καθημερινότητα", cat:"photos-daily" },
+      { t:"Ελπίδα και κίνητρο", cat:"wisdom2-science" },
+      { t:"Βαθύτερη επαφή με τον εαυτό & τους άλλους", cat:"mystery-relations" }
+    ]
+  },
+  {
+    q: "Αν είχες 5 ελεύθερα λεπτά τώρα, τι θα διάλεγες;",
+    options: [
+      { t:"Λίγες βαθιές αναπνοές, σιωπή", cat:"meditation" },
+      { t:"Να διαβάσω κάτι βαθύ", cat:"wisdom-philosophy" },
+      { t:"Μια μικρή φροντίδα για μένα", cat:"photos-daily" },
+      { t:"Κάτι που θα μου δώσει δύναμη", cat:"wisdom2-science" },
+      { t:"Μια σκέψη για τις σχέσεις μου", cat:"mystery-relations" }
+    ]
+  }
+];
+const PATH_QUIZ_RESULTS = {
+  'meditation':        { label:"Νους & Ειρήνη",        msg:"Μοιάζει να χρειάζεσαι λίγη ηρεμία αυτή τη στιγμή." },
+  'wisdom-philosophy': { label:"Γνώση & Φιλοσοφία",     msg:"Μοιάζει να ψάχνεις απαντήσεις και βαθύτερο νόημα." },
+  'photos-daily':      { label:"Υγεία & Καθημερινότητα", msg:"Μοιάζει να χρειάζεσαι λίγη φροντίδα για τον εαυτό σου." },
+  'wisdom2-science':   { label:"Ελπίδα & Επιστήμη",     msg:"Μοιάζει να χρειάζεσαι λίγη ελπίδα και δύναμη." },
+  'mystery-relations': { label:"Γαλήνη & Σχέσεις",      msg:"Μοιάζει να χρειάζεσαι βαθύτερη σύνδεση." }
+};
+let _pqAnswers = [];
+function openPathQuiz(){
+  _pqAnswers = [];
+  document.getElementById('path-quiz-modal').style.display = 'flex';
+  _pqRenderQuestion(0);
+}
+function closePathQuiz(){
+  document.getElementById('path-quiz-modal').style.display = 'none';
+}
+function _pqRenderQuestion(idx){
+  const body = document.getElementById('pq-body');
+  if(idx >= PATH_QUIZ.length){ _pqRenderResult(); return; }
+  const q = PATH_QUIZ[idx];
+  let h = '<div class="translate-me" style="color:#8a7040;font-size:11px;letter-spacing:0.1em;margin-bottom:18px;">ΕΡΩΤΗΣΗ '+(idx+1)+' / '+PATH_QUIZ.length+'</div>';
+  h += '<div class="translate-me" style="color:#fffbe0;font-size:17px;font-family:Georgia,serif;margin-bottom:22px;line-height:1.5;">'+q.q+'</div>';
+  q.options.forEach(function(opt, oi){
+    h += '<button class="translate-me" onclick="_pqAnswer('+idx+','+oi+')" style="display:block;width:100%;text-align:left;'
+      + 'background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.3);color:#e8d8a8;'
+      + 'padding:11px 16px;border-radius:8px;margin-bottom:8px;cursor:pointer;font-size:13px;'
+      + 'font-family:Georgia,serif;">'+opt.t+'</button>';
+  });
+  body.innerHTML = h;
+}
+function _pqAnswer(qIdx, optIdx){
+  _pqAnswers[qIdx] = PATH_QUIZ[qIdx].options[optIdx].cat;
+  _pqRenderQuestion(qIdx+1);
+}
+function _pqRenderResult(){
+  const tally = {};
+  _pqAnswers.forEach(function(cat){ tally[cat] = (tally[cat]||0)+1; });
+  let best = _pqAnswers[0], bestScore = 0;
+  Object.keys(tally).forEach(function(cat){
+    if(tally[cat] > bestScore){ bestScore = tally[cat]; best = cat; }
+  });
+  const r = PATH_QUIZ_RESULTS[best] || PATH_QUIZ_RESULTS['meditation'];
+  const body = document.getElementById('pq-body');
+  body.innerHTML =
+    '<div style="font-size:34px;margin-bottom:16px;">✦</div>'
+    + '<div class="translate-me" style="color:#8a7040;font-size:11px;letter-spacing:0.1em;margin-bottom:10px;">Η ΠΥΛΗ ΣΟΥ</div>'
+    + '<div class="translate-me" style="color:#f0d060;font-size:22px;font-family:Georgia,serif;font-weight:700;margin-bottom:14px;text-shadow:0 0 12px rgba(240,200,60,0.6);">'+r.label+'</div>'
+    + '<div class="translate-me" style="color:#e8d8a8;font-size:14px;font-family:Georgia,serif;line-height:1.7;margin-bottom:26px;">'+r.msg+'</div>'
+    + '<button class="translate-me" onclick="closePathQuiz();epGoTo(\''+best+'\')" style="background:rgba(212,175,55,0.15);'
+    + 'color:#f0d060;border:2px solid #f0d060;padding:11px 28px;border-radius:24px;font-size:14px;font-weight:700;'
+    + 'cursor:pointer;font-family:Georgia,serif;letter-spacing:0.05em;">Ξεκίνα εδώ ✦</button>'
+    + '<div style="margin-top:14px;"><button class="translate-me" onclick="closePathQuiz()" style="background:none;border:none;'
+    + 'color:#8a7040;font-size:12px;cursor:pointer;text-decoration:underline;">Ίσως αργότερα</button></div>';
+}
+</script>
+
+<!-- ═══ Η ΠΟΡΕΙΑ ΜΟΥ — προσωπική πρόοδος, αποθηκευμένη στη συσκευή ═══ -->
+<div id="journey-modal" style="display:none;position:fixed;inset:0;z-index:9400;
+  background:rgba(4,8,20,0.97);flex-direction:column;align-items:center;justify-content:center;
+  padding:24px;box-sizing:border-box;">
+  <div id="journey-body" style="max-width:420px;width:100%;text-align:center;"></div>
+</div>
+
+<script>
+/* ════ Η ΠΟΡΕΙΑ ΜΟΥ ════ */
+function _getFirstVisitDate(){
+  try {
+    var v = localStorage.getItem('innerlife_first_visit');
+    if(!v){ v = String(Date.now()); localStorage.setItem('innerlife_first_visit', v); }
+    return parseInt(v,10);
+  } catch(e){ return Date.now(); }
+}
+function _countVisitedItems(){
+  var total = 0;
+  try {
+    for(var i=0;i<localStorage.length;i++){
+      var k = localStorage.key(i);
+      if(k && k.indexOf('innerlife_visited_')===0){
+        var arr = JSON.parse(localStorage.getItem(k)||'[]');
+        total += arr.length;
+      }
+    }
+  } catch(e){}
+  return total;
+}
+function openJourney(){
+  const modal = document.getElementById('journey-modal');
+  const body  = document.getElementById('journey-body');
+  const favCount    = getFavorites().length;
+  const visitCount  = _countVisitedItems();
+  const firstVisit  = _getFirstVisitDate();
+  const days        = Math.max(1, Math.floor((Date.now()-firstVisit)/86400000)+1);
+  let h = '<div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:22px;">'
+    + '<div style="font-size:34px;">📊</div>'
+    + '<div class="translate-me" style="color:#f0d060;font-size:20px;font-family:Georgia,serif;font-weight:700;text-shadow:0 0 12px rgba(240,200,60,0.5);">Η Πορεία μου</div>'
+    + '<button onclick="closeJourney()" style="background:transparent;border:none;color:#d4af37;font-size:24px;cursor:pointer;line-height:1;">✕</button>'
+    + '</div>';
+  h += _journeyStatRow('📖', visitCount, 'Κείμενα που διάβασες');
+  h += _journeyStatRow('❤️', favCount, 'Αγαπημένα κείμενα');
+  h += _journeyStatRow('🕊️', days, days===1 ? 'Μέρα στο ταξίδι σου' : 'Μέρες στο ταξίδι σου');
+  h += '<div class="translate-me" style="color:#f0d060;font-weight:700;font-size:11px;margin-top:18px;line-height:1.6;">Η πρόοδος αποθηκεύεται μόνο στη δική σου συσκευή.</div>';
+  body.innerHTML = h;
+  modal.style.display = 'flex';
+}
+function _journeyStatRow(icon, num, label){
+  return '<div style="display:flex;align-items:center;gap:14px;background:rgba(212,175,55,0.08);'
+    + 'border:1px solid rgba(212,175,55,0.25);border-radius:10px;padding:14px 18px;margin-bottom:10px;text-align:left;">'
+    + '<div style="font-size:26px;flex-shrink:0;">'+icon+'</div>'
+    + '<div style="flex:1;"><div style="color:#f0d060;font-size:22px;font-weight:700;font-family:Georgia,serif;">'+num+'</div>'
+    + '<div class="translate-me" style="color:#f0d060;font-weight:700;font-size:11px;letter-spacing:0.03em;">'+label+'</div></div></div>';
+}
+function closeJourney(){
+  document.getElementById('journey-modal').style.display = 'none';
+}
 </script>
 
 </body>
