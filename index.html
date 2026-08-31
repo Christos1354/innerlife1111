@@ -6687,7 +6687,7 @@ async function _myMemoryTranslate(text, langPair, _isRetry){
   var sl = parts[0] || 'el';
   var tl = parts[1] || 'en';
   try{
-    var url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl='+encodeURIComponent(sl)+'&tl='+encodeURIComponent(tl)+'&dt=t&q='+encodeURIComponent(text);
+    var url = '/api/translate?sl='+encodeURIComponent(sl)+'&tl='+encodeURIComponent(tl)+'&q='+encodeURIComponent(text);
     var r = await _fetchWithTimeout(url, 8000);
     if(!r.ok){
       console.warn('[translate] HTTP '+r.status+' για: "'+text.slice(0,40)+'..."');
@@ -6799,7 +6799,7 @@ async function _batchTranslateRaw(texts, lang){
   if(!texts.length) return [];
   try{
     var params = texts.map(function(t){ return 'q='+encodeURIComponent(t); }).join('&');
-    var url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=el&tl='+encodeURIComponent(lang)+'&dt=t&'+params;
+    var url = '/api/translate?sl=el&tl='+encodeURIComponent(lang)+'&'+params;
     var r = await _fetchWithTimeout(url, 10000);
     if(!r.ok){
       console.warn('[translate] Αποτυχία αιτήματος (HTTP '+r.status+') για ομάδα '+texts.length+' κειμένων -- πέφτω σε μεμονωμένες κλήσεις.');
@@ -6937,7 +6937,7 @@ async function _translateTextList(texts, lang){
     };
   });
   /* Έως 4 ταυτόχρονα αιτήματα δικτύου, ώστε να μη στραγγαλίζουμε το endpoint */
-  await _mapLimit(chunkJobs.concat(longJobs), 3, function(job){ return job(); });
+  await _mapLimit(chunkJobs.concat(longJobs), 5, function(job){ return job(); });
   return newValues;
 }
 async function applyLangToContainer(root){
