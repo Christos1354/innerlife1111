@@ -1095,78 +1095,7 @@ function removeAccents(str) {
 }
 /* Η μετάφραση γίνεται πλέον σιωπηλά μέσω δικού μας μηχανισμού (βλ. gtApplyLang / applyLangToContainer παρακάτω στο αρχείο) */
 </script>
-<!-- ═══ ΜΕΤΑΦΡΑΣΗ — ΕΠΙΣΗΜΟ GOOGLE TRANSLATE WIDGET (αόρατο) ═══
-     Αντικαθιστά το παλιό, ασταθές σύστημα ζωντανής μετάφρασης με το επίσημο,
-     αξιόπιστο εργαλείο της ίδιας της Google -- υποστηρίζει αυτόματα 100+
-     γλώσσες, μεταφράζει ΟΛΟ το ορατό κείμενο της σελίδας (τίτλους ΚΑΙ πλήρες
-     κείμενο άρθρων), χωρίς τα προβλήματα αναξιοπιστίας του παλιού συστήματος. -->
-<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateInit" async defer></script>
-<script>
-function googleTranslateInit() {
-    new google.translate.TranslateElement({
-        pageLanguage: 'el',
-        /* Χωρίς includedLanguages = υποστήριξη ΟΛΩΝ των γλωσσών (~130+) */
-        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-        autoDisplay: false
-    }, 'google_translate_element');
-    window._gtWidgetReady = true;
-    /* Αν ο επισκέπτης είχε ξαναδιαλέξει γλώσσα σε προηγούμενη επίσκεψη, την εφαρμόζουμε αυτόματα μόλις είναι έτοιμο το widget */
-    try {
-        var saved = localStorage.getItem('innerlife_lang');
-        if (saved && saved !== 'el') { setTimeout(function(){ translatePage(saved); }, 400); }
-    } catch(e){}
-}
-/* Απόκρυψη του Google Translate banner/popup, ώστε να μη φαίνεται καθόλου το εργαλείο -- μόνο το αποτέλεσμα */
-(function() {
-    var style = document.createElement('style');
-    style.textContent = `
-        /* Απόκρυψη του μπλε banner της Google */
-        .goog-te-banner-frame { display: none !important; }
-        body { top: 0 !important; }
-        /* Απόκρυψη του "Powered by Google" και άλλων περιττών στοιχείων */
-        .skiptranslate.goog-te-gadget span a { display: none !important; }
-        .skiptranslate.goog-te-gadget span:last-child { display: none !important; }
-        /* Το widget να μην φαίνεται (αλλά να υπάρχει) */
-        #google_translate_element { display: none !important; }
-        /* Η μπάρα εργαλείων μετάφρασης πάνω-πάνω που μερικές φορές προσθέτει η Google */
-        .goog-te-banner-frame.skiptranslate { display: none !important; }
-        iframe.goog-te-banner-frame { display: none !important; }
-    `;
-    document.head.appendChild(style);
-})();
-/* ═══ ΜΕΤΑΦΡΑΣΗ ΜΕ ΔΙΚΑ ΜΑΣ ΚΟΥΜΠΙΑ ═══
-   Ενεργοποιεί το Google Translate μέσω του δικού του (κρυφού) dropdown.
-   Λειτουργεί σε ΟΛΗ τη σελίδα -- τίτλους, πλήρες κείμενο άρθρων, μενού,
-   ό,τι υπάρχει στην οθόνη εκείνη τη στιγμή -- και συνεχίζει να μεταφράζει
-   αυτόματα καθώς ανοίγεις νέες Πύλες/άρθρα, αφού μία φορά έχει ενεργοποιηθεί. */
-function translatePage(lang) {
-    var select = document.querySelector('.goog-te-combo');
-    if (select) {
-        select.value = lang;
-        select.dispatchEvent(new Event('change'));
-        window._gtCurrentLang = lang;
-        document.documentElement.lang = lang;
-        try { localStorage.setItem('innerlife_lang', lang); } catch(e){}
-        if (window._updateSEO) window._updateSEO(lang);
-        _updateTranslateButtonsUI(lang);
-    } else {
-        /* Αν δεν έχει φορτώσει ακόμα το widget, περιμένουμε λίγο και ξαναδοκιμάζουμε */
-        setTimeout(function() { translatePage(lang); }, 400);
-    }
-}
-/* Ενημερώνει τα δικά μας κουμπιά/μενού γλώσσας (ίδια εμφάνιση με πριν) ώστε να δείχνουν την τρέχουσα επιλεγμένη γλώσσα */
-function _updateTranslateButtonsUI(lang){
-  [['gt-btn','gt-custom-select'], ['gt-btn-2','gt-custom-select-2']].forEach(function(pair){
-    var btn = document.getElementById(pair[0]);
-    var sel = document.getElementById(pair[1]);
-    if(btn && sel){
-      var opt = sel.querySelector('option[value="'+lang+'"]');
-      btn.textContent = opt ? opt.textContent.split(' ').slice(0,2).join(' ') : '🌐 Translate';
-      sel.value = lang;
-    }
-  });
-}
-</script>
+
 </head>
 <body>
 
@@ -1191,7 +1120,7 @@ function _updateTranslateButtonsUI(lang){
           <div id="google_translate_element" style="display:none;"></div>
           <div style="position:relative;">
             <select id="gt-custom-select"
-              onchange="translatePage(this.value)"
+              onchange="gtApplyLang(this.value)"
               style="width:100%;padding:8px 30px 8px 10px;background:rgba(10,20,40,0.9);
                 color:#fffbe0;border:1px solid rgba(212,175,55,0.4);border-radius:6px;
                 font-size:12px;font-family:Georgia,serif;cursor:pointer;
@@ -1458,7 +1387,7 @@ function _updateTranslateButtonsUI(lang){
           <div style="color:#a08030;font-size:9px;letter-spacing:0.12em;padding:4px 8px 6px;border-bottom:1px solid rgba(212,175,55,0.2);margin-bottom:6px;">🌐 ΕΠΙΛΕΞΕ ΓΛΩΣΣΑ</div>
           <div style="position:relative;">
             <select id="gt-custom-select-2"
-              onchange="translatePage(this.value)"
+              onchange="gtApplyLang(this.value)"
               style="width:100%;padding:8px 30px 8px 10px;background:rgba(10,20,40,0.9);
                 color:#fffbe0;border:1px solid rgba(212,175,55,0.4);border-radius:6px;
                 font-size:12px;font-family:Georgia,serif;cursor:pointer;
@@ -1985,12 +1914,6 @@ function _updateTranslateButtonsUI(lang){
 
     <div class="menu-group">
     <div class="double-block">
-      <select onchange="changeLangFull(this.value)" id="lang-sel-menu" style="margin-bottom:2px;">
-        <option value="el">ΕΛΛΗΝΙΚΑ</option>
-        <option value="en">ENGLISH</option>
-        <option value="ru">РУССКИЙ</option>
-        <option value="ro">ROMÂNĂ</option>
-      </select>
       <button class="bot-btn" id="btn-music" onclick="toggleCat('music')">ΜΟΥΣΙΚΗ</button>
       <div class="cat-nav" id="nav-music">
         <button class="cat-prev" onclick="stepAudio('music',-1)">‹</button>
@@ -5298,133 +5221,11 @@ function toggleCat(cat){
   }
 }
 
-const MENU_T = {
-  el:{ prayer:"ΠΡΟΣΕΥΧΕΣ", psalm:"ΨΑΛΜΟΙ", music:"ΜΟΥΣΙΚΗ", icons:"ΕΙΚΟΝΕΣ", naoi:"ΚΑΤΙ ΑΛΛΟ", mute:"ΣΙΓΑΣΗ", reset:"RESET", back:"← ΑΡΧΙΚΗ", doorBack:"← ΠΟΡΤΕΣ", share:"🔗 ΜΟΙΡΑΣΟΥ", namePh:"Όνομα / Για χάρη...", nameSave:"Αποθήκευση", pencil:"✏️ Γράψε\nπαράκληση", candleLabel:"κεριά έχουν ανάψει", dedTitle:"ΑΦΙΕΡΩΣΕ ΕΝΑ ΚΕΡΙ", shareTitle:"ΜΟΙΡΑΣΟΥ ΜΕ ΦΙΛΟΥΣ",
-    donateTitle:"ΣΥΝΕΙΣΦΟΡΑ", donateThanks:"Ευχαριστούμε από καρδιάς 💛",
-    donateText:"Αν αυτός ο χώρος σας άρεσε και θέλετε να συνεχίσει να υπάρχει και για άλλες ψυχές που αναζητούν — <em style='color:#d4af37;'>μια μικρή συνεισφορά βοηθά να παραμείνει ενεργός.</em>",
-    guideTitle:"🕯️ ΠΩΣ ΝΑ ΧΡΗΣΙΜΟΠΟΙΗΣΕΤΕ ΤΗΝ ΕΚΚΛΗΣΙΑ",
-    guideClick:"— με κλικ —",
-    guideClose:"[ πάτα για να κλείσεις ]",
-    guideSteps:"✏️ <b style='color:#f0d060;'>Γράψε</b> ένα όνομα ή μια ευχή &nbsp; 🕯️ <b style='color:#f0d060;'>Πάρε κερί</b> από το παγκάρι &nbsp; 🔥 <b style='color:#f0d060;'>Άναψέ το</b> από το καντήλι &nbsp; 🙏 <b style='color:#f0d060;'>Τοποθέτησέ το</b> στην άμμο &nbsp; 🎵 <b style='color:#f0d060;'>Επίλεξε</b> Προσευχές ή Ψαλμούς &nbsp; 🤫 <b style='color:#f0d060;'>Παράμεινε</b> σιωπηλός για λίγο" },
-  en:{ prayer:"PRAYERS",   psalm:"PSALMS",  music:"MUSIC",   icons:"ICONS",   naoi:"SOMETHING ELSE", mute:"MUTE", reset:"RESET", back:"← HOME",    doorBack:"← DOORS",  share:"🔗 SHARE",    namePh:"Name / For...",    nameSave:"Save",      pencil:"✏️ Write\na prayer",   candleLabel:"candles have been lit", dedTitle:"DEDICATE A CANDLE", shareTitle:"SHARE WITH FRIENDS",
-    donateTitle:"SUPPORT US", donateThanks:"Thank you from the heart 💛",
-    donateText:"If this space touched you and you'd like it to continue existing for other souls seeking — <em style='color:#d4af37;'>a small contribution helps keep it alive.</em>",
-    guideTitle:"🕯️ HOW TO USE THE CHURCH",
-    guideClick:"— click —",
-    guideClose:"[ tap to close ]",
-    guideSteps:"✏️ <b style='color:#f0d060;'>Write</b> a name or a wish &nbsp; 🕯️ <b style='color:#f0d060;'>Take a candle</b> from the stand &nbsp; 🔥 <b style='color:#f0d060;'>Light it</b> from the oil lamp &nbsp; 🙏 <b style='color:#f0d060;'>Place it</b> in the sand &nbsp; 🎵 <b style='color:#f0d060;'>Choose</b> Prayers or Psalms &nbsp; 🤫 <b style='color:#f0d060;'>Stay still</b> in silence for a moment" },
-  ru:{ prayer:"МОЛИТВЫ",   psalm:"ПСАЛМЫ",  music:"МУЗЫКА",  icons:"ИКОНЫ",   naoi:"КОЕ-ЧТО ЕЩЁ",    mute:"ТИХО", reset:"СБРОС", back:"← ГЛАВНАЯ", doorBack:"← ДВЕРИ",  share:"🔗 ПОДЕЛИТЬСЯ", namePh:"Имя / За...",    nameSave:"Сохранить", pencil:"✏️ Написать\nмолитву", candleLabel:"свечей зажжено",   dedTitle:"ПОСВЯТИТЬ СВЕЧУ",   shareTitle:"ПОДЕЛИТЬСЯ С ДРУЗЬЯМИ",
-    donateTitle:"ПОДДЕРЖКА", donateThanks:"Спасибо от всего сердца 💛",
-    donateText:"Если это место тронуло вас — <em style='color:#d4af37;'>небольшой вклад помогает сохранить его для других.</em>",
-    guideTitle:"🕯️ КАК ПОЛЬЗОВАТЬСЯ ЦЕРКОВЬЮ",
-    guideClick:"— нажмите —",
-    guideClose:"[ нажмите для закрытия ]",
-    guideSteps:"✏️ <b style='color:#f0d060;'>Напишите</b> имя или пожелание &nbsp; 🕯️ <b style='color:#f0d060;'>Возьмите свечу</b> со стенда &nbsp; 🔥 <b style='color:#f0d060;'>Зажгите её</b> от лампады &nbsp; 🙏 <b style='color:#f0d060;'>Поставьте</b> в песок &nbsp; 🎵 <b style='color:#f0d060;'>Выберите</b> Молитвы или Псалмы &nbsp; 🤫 <b style='color:#f0d060;'>Побудьте</b> в тишине" },
-  ro:{ prayer:"RUGĂCIUNI", psalm:"PSALMI",  music:"MUZICĂ",  icons:"ICOANE",  naoi:"ALTCEVA", mute:"MUT",  reset:"RESET", back:"← ACASĂ",   doorBack:"← UȘI",    share:"🔗 DISTRIBUIE", namePh:"Nume / Pentru...", nameSave:"Salvează",  pencil:"✏️ Scrie\nrugăciune", candleLabel:"lumânări aprinse", dedTitle:"DEDICĂ O LUMÂNARE", shareTitle:"DISTRIBUIE CU PRIETENII",
-    donateTitle:"CONTRIBUȚIE", donateThanks:"Mulțumim din inimă 💛",
-    donateText:"Dacă acest spațiu v-a plăcut — <em style='color:#d4af37;'>o mică contribuție ajută să rămână activ pentru alte suflete.</em>",
-    guideTitle:"🕯️ CUM SĂ FOLOSIȚI BISERICA",
-    guideClick:"— click —",
-    guideClose:"[ apasă pentru a închide ]",
-    guideSteps:"✏️ <b style='color:#f0d060;'>Scrie</b> un nume sau o dorință &nbsp; 🕯️ <b style='color:#f0d060;'>Ia o lumânare</b> de la suport &nbsp; 🔥 <b style='color:#f0d060;'>Aprinde-o</b> de la candelă &nbsp; 🙏 <b style='color:#f0d060;'>Pune-o</b> în nisip &nbsp; 🎵 <b style='color:#f0d060;'>Alege</b> Rugăciuni sau Psalmi &nbsp; 🤫 <b style='color:#f0d060;'>Rămâi</b> în liniște pentru un moment" }
-};
+/* Το παλιό, ξεχωριστό σύστημα μετάφρασης της Πύλης Προσευχής (MENU_T, EP_T,
+   changeLangFull, epSetLang) αφαιρέθηκε -- η μετάφραση γίνεται πλέον ενιαία
+   από το γενικό σύστημα (gtApplyLang), το οποίο καλύπτει αυτόματα και το
+   περιεχόμενο της Πύλης Προσευχής, όπως κάθε άλλη Πύλη του site. */
 
-function changeLangFull(lang){
-
-  epSetLang(lang, null);
-  document.querySelectorAll('.lang-btn').forEach(b=>{
-    b.classList.toggle('active-lang', b.getAttribute('onclick')===`epSetLang('${lang}',this)`);
-  });
-  const sel=document.getElementById('lang-sel-menu');
-  if(sel) sel.value=lang;
-
-  const t=MENU_T[lang]||MENU_T.el;
-  const bp=document.getElementById('btn-prayer'); if(bp) bp.textContent=t.prayer;
-  const bs=document.getElementById('btn-psalm');  if(bs) bs.textContent=t.psalm;
-  const bm=document.getElementById('btn-music');  if(bm) bm.textContent=t.music;
-  const bi=document.getElementById('btn-icons');  if(bi) bi.textContent=t.icons;
-  const bn=document.getElementById('btn-naoi');   if(bn) bn.textContent=t.naoi;
-  const bmBtn=document.getElementById('mBtn');    if(bmBtn) bmBtn.textContent=t.mute;
-
-  const bots=document.querySelectorAll('.bot-btn');
-  bots.forEach(b=>{ if(b.getAttribute('onclick')==='location.reload()') b.textContent=t.reset; });
-  const backBtn=document.getElementById('back-to-entrance');
-  if(backBtn) backBtn.textContent=t.back;
-  const doorBackBtn=document.getElementById('door-back-btn');
-  if(doorBackBtn) doorBackBtn.textContent=t.doorBack;
-  document.querySelectorAll('.share-menu-btn').forEach(b=>b.textContent=t.share);
-  const cl=document.getElementById('candle-count-label'); if(cl) cl.textContent=t.candleLabel;
-  const dt=document.getElementById('ded-title'); if(dt) dt.textContent=t.dedTitle;
-  const st=document.getElementById('share-title-text'); if(st) st.textContent=t.shareTitle;
-  const nameInput=document.getElementById('prayer-name');
-  if(nameInput) nameInput.placeholder=t.namePh;
-  /* Μεταφράσεις popup συνεισφοράς */
-  const dtitle=document.getElementById('donate-title'); if(dtitle) dtitle.textContent=t.donateTitle||'ΣΥΝΕΙΣΦΟΡΑ';
-  const dtext=document.getElementById('donate-text');
-  if(dtext) dtext.innerHTML=(t.donateText||'Αν αυτός ο χώρος σας άρεσε και θέλετε να συνεχίσει να υπάρχει και για άλλες ψυχές που αναζητούν — <em style="color:#d4af37;">μια μικρή συνεισφορά βοηθά να παραμείνει ενεργός.</em>');
-  const dthanks=document.getElementById('donate-thanks'); if(dthanks) dthanks.textContent=t.donateThanks||'Ευχαριστούμε από καρδιάς 💛';
-  /* Μεταφράσεις οδηγιών εκκλησίας */
-  const gtitle=document.getElementById('guide-title'); if(gtitle && t.guideTitle) gtitle.textContent=t.guideTitle;
-  const gclick=document.getElementById('guide-click'); if(gclick && t.guideClick) gclick.textContent=t.guideClick;
-  const gsteps=document.getElementById('guide-steps'); if(gsteps && t.guideSteps) gsteps.innerHTML=t.guideSteps;
-  const gclose=document.getElementById('guide-close'); if(gclose && t.guideClose) gclose.textContent=t.guideClose;
-  const nameSaveBtn=document.getElementById('save-prayer-name');
-  if(nameSaveBtn) nameSaveBtn.textContent=t.nameSave;
-
-  const plbl=document.getElementById('pencil-label');
-  if(plbl && t.pencil) plbl.innerHTML=t.pencil.replace('\n','<br>');
-  /* Μετάφραση placeholder αναζήτησης */
-  const si=document.getElementById('search-input');
-  const ep_t = (typeof EP_T !== 'undefined') ? (EP_T[lang]||EP_T.el) : {};
-  if(si) si.placeholder = t.searchPh || ep_t.searchPh || '🔍 Αναζήτηση...';
-  /* Μετάφραση τίτλου ΚΑΤΙ ΑΛΛΟ */
-  const kh=document.getElementById('kati-header-title');
-  if(kh) kh.textContent = t.katiTitle || ep_t.katiTitle || '✦ ΚΑΤΙ ΑΛΛΟ';
-  /* Μετάφραση κουμπιού ← ΠΟΡΤΕΣ σε όλες τις πύλες */
-  const dbBtn=document.getElementById('door-back-btn');
-  if(dbBtn) dbBtn.textContent = t.doorBack || '← ΠΟΡΤΕΣ';
-}
-
-const EP_T = {
-  el:{ enter:"Είσοδος", sub:"Ένας χώρος ηρεμίας, διαλογισμού και εσωτερικής ειρήνης", searchPh:"🔍 Αναζήτηση...", katiTitle:"✦ ΚΑΤΙ ΑΛΛΟ",
-       l1:"Πύλη της Γνώσης",     l2:"Πύλη του Νου & της Ειρήνης", l3:"Πύλη της Ελπιδας",     l4:"Πύλη της Υγείας",  l5:"Πύλη της Μουσικής",    l6:"Πύλη Εσωτερικής Γαλήνης",  l7:"Πύλη Προσευχής & Ελπίδας",
-       a1:"ΓΝΩΣΗ",                a2:"ΝΟΥ & ΕΙΡΗΝΗ",                a3:"ΕΛΠΙΔΑ",                a4:"ΥΓΕΙΑ",            a5:"ΜΟΥΣΙΚΗ",               a6:"ΓΑΛΗΝΗ",             a7:"ΠΡΟΣΕΥΧΗ",
-       back:"← ΕΠΙΣΤΡΟΦΗ" },
-  en:{ enter:"Enter", sub:"A space of peace, meditation and inner serenity", searchPh:"🔍 Search...", katiTitle:"✦ SOMETHING ELSE",
-       l1:"Gate of Knowledge",    l2:"Gate of Mind & Peace",        l3:"Gate of Hope",        l4:"Gate of Health", l5:"Gate of Music",     l6:"Gate of Inner Peace",   l7:"Gate of Prayer & Hope",
-       a1:"KNOWLEDGE",            a2:"MIND & PEACE",                a3:"HOPE",                a4:"HEALTH",         a5:"MUSIC",             a6:"INNER PEACE",           a7:"PRAYER",
-       back:"← BACK" },
-  ru:{ enter:"Войти", sub:"Пространство покоя, медитации и внутреннего мира", searchPh:"🔍 Поиск...", katiTitle:"✦ КОЕ-ЧТО ЕЩЁ",
-       l1:"Врата Знания",         l2:"Врата Разума и Покоя",        l3:"Врата Надежды",           l4:"Врата Здоровья",    l5:"Врата Музыки",      l6:"Врата Внутреннего Покоя",      l7:"Врата Молитвы и Надежды",
-       a1:"ЗНАНИЕ",               a2:"РАЗУМ & ПОКОЙ",               a3:"НАДЕЖДА",                 a4:"ЗДОРОВЬЕ",          a5:"МУЗЫКА",            a6:"ВНУТРЕННИЙ СПОКОЙСТВИЕ",            a7:"МОЛИТВА",
-       back:"← НАЗАД" },
-  ro:{ enter:"Intrare", sub:"Un spațiu de liniște, meditație și pace interioară", searchPh:"🔍 Căutare...", katiTitle:"✦ ALTCEVA",
-       l1:"Poarta Cunoașterii",   l2:"Poarta Minții & Păcii",       l3:"Poarta Speranței",     l4:"Poarta Sănătății",  l5:"Poarta Muzicii",    l6:"Poarta Păcii Interioare",   l7:"Poarta Rugăciunii & Speranței",
-       a1:"CUNOAȘTERE",           a2:"MINTE & PACE",                a3:"SPERANȚĂ",             a4:"SĂNĂTATE",            a5:"MUZICĂ",            a6:"PACE INTERIOARĂ",           a7:"RUGĂCIUNE",
-       back:"← ÎNAPOI" }
-};
-
-function epSetLang(lang, btn){
-  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active-lang'));
-  if(btn) btn.classList.add('active-lang');
-  document.querySelectorAll('.verse').forEach(v=>v.classList.remove('active'));
-  document.getElementById('ep-v-'+lang).classList.add('active');
-  const t=EP_T[lang];
-  document.getElementById('ep-enter-btn').textContent=t.enter;
-  document.getElementById('ep-subtitle').textContent=t.sub;
-  for(let i=1;i<=7;i++){ const el=document.getElementById('al-'+i); if(el) el.innerHTML = t['l'+i]||''; }
-  for(let i=1;i<=7;i++){
-    const el=document.getElementById('at-'+i);
-    if(el) el.textContent = t['a'+i]||'';
-  }
-  document.getElementById('ep-back-btn').textContent=t.back;
-  /* Ενημερώνω τη γλώσσα για TTS και αλλάζω lang attribute */
-  window._gtCurrentLang = lang;
-  document.documentElement.lang = lang;
-  _translateDynamicContent(lang);
-  retranslatePrayerScroll(lang);
-  retranslateGateUI(lang);
-}
 
 function epOpenMenu(){
   document.getElementById('ep-door').style.display='none';
@@ -5893,33 +5694,13 @@ function initChurch(){
       </div>
     </div>`;
   renderCandleWall();
-  retranslateGateUI(_getPrayerLang());
   document.getElementById('light-candle-btn').addEventListener('click', lightCandle);
 }
 
-/* Μεταφράζει το κουμπί και το placeholder της Πύλης Προσευχής —
-   δουλεύει ανεξάρτητα από το Google Translate, ώστε να ισχύει
-   πάντα, ακόμη και μετά από reset() που ξαναφτιάχνει τη σκηνή */
-const GATE_UI_EL = {
-  btn: '🕯️ Άναψε ένα κερί',
-  ph:  'Γράψτε την προσευχή σας και ακολούθως ανάψτε ένα κερί'
-};
-async function retranslateGateUI(lang){
-  const btn = document.getElementById('light-candle-btn');
-  const ta  = document.getElementById('dedication-text');
-  if(!btn || !ta) return;
-  if(!lang || lang === 'el'){
-    btn.textContent = GATE_UI_EL.btn;
-    ta.placeholder  = GATE_UI_EL.ph;
-    return;
-  }
-  const [tBtn, tPh] = await Promise.all([
-    _myMemoryTranslate('Άναψε ένα κερί', 'el|'+lang),
-    _myMemoryTranslate(GATE_UI_EL.ph, 'el|'+lang)
-  ]);
-  btn.textContent = '🕯️ ' + tBtn;
-  ta.placeholder  = tPh;
-}
+/* Το ξεχωριστό μίνι-σύστημα μετάφρασης του κουμπιού/placeholder της Πύλης
+   Προσευχής (GATE_UI_EL, retranslateGateUI) αφαιρέθηκε -- καλύπτεται πλέον
+   από το γενικό σύστημα (gtApplyLang), το οποίο πλέον μεταφράζει σωστά και
+   τα placeholders, ό,τι κι αν συμβεί (reset, νέο περιεχόμενο, κ.λπ.). */
 
 function loadCandleWall(){
   try{ return JSON.parse(localStorage.getItem('proseyxitari-wall')||'[]'); }
@@ -5972,23 +5753,8 @@ function _appendPrayerEntry(text, animate){
   scroll.appendChild(entry);
   /* Κρατάμε μόνο τις τελευταίες 8 ορατές — οι παλιές "εκτοπίζονται" */
   while(scroll.children.length > 8){ scroll.removeChild(scroll.firstChild); }
-  const lang = _getPrayerLang();
-  if(lang !== 'el') _translatePrayerEntry(entry, lang);
-}
-function _getPrayerLang(){
-  return (window._gtCurrentLang || document.documentElement.lang || 'el').slice(0,2);
-}
-async function _translatePrayerEntry(entry, lang){
-  const original = entry.dataset.original;
-  const translated = await _myMemoryTranslate(original, 'el|'+lang);
-  if(translated) entry.textContent = translated;
-}
-/* Καλείται όταν ο επισκέπτης αλλάζει γλώσσα, ώστε να μεταφραστούν και οι προσευχές */
-function retranslatePrayerScroll(lang){
-  document.querySelectorAll('#prayer-scroll .prayer-entry').forEach(entry=>{
-    if(lang === 'el'){ entry.textContent = entry.dataset.original; }
-    else { _translatePrayerEntry(entry, lang); }
-  });
+  /* Η μετάφραση της νέας εγγραφής γίνεται αυτόματα από το γενικό σύστημα
+     (παρατηρεί ότι προστέθηκε νέο κείμενο στη σελίδα και το μεταφράζει). */
 }
 
 function lightCandle(){
@@ -6707,8 +6473,8 @@ if('serviceWorker' in navigator){
   });
 }
 
-/* Οι παρακάτω συναρτήσεις έτρεχαν πριν μέσα στο callback της Google (googleTranslateInit).
-   Τώρα τρέχουν απευθείας, χωρίς να χρειάζονται καθόλου το script της Google. */
+/* Οι παρακάτω συναρτήσεις τρέχουν απευθείας, χωρίς να χρειάζονται κανένα
+   εξωτερικό script μετάφρασης της Google. */
 (function(){
   /* ════ SEO META TAGS — ενημερώνονται με την αλλαγή γλώσσας ════ */
   const _seoData = {
@@ -6923,7 +6689,10 @@ async function _myMemoryTranslate(text, langPair, _isRetry){
   try{
     var url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl='+encodeURIComponent(sl)+'&tl='+encodeURIComponent(tl)+'&dt=t&q='+encodeURIComponent(text);
     var r = await _fetchWithTimeout(url, 8000);
-    if(!r.ok) throw new Error('bad status');
+    if(!r.ok){
+      console.warn('[translate] HTTP '+r.status+' για: "'+text.slice(0,40)+'..."');
+      throw new Error('bad status ' + r.status);
+    }
     var d = await r.json();
     if(!d || !d[0] || !Array.isArray(d[0])) throw new Error('bad shape');
     var out = d[0].map(function(seg){ return seg && seg[0] ? seg[0] : ''; }).join('');
@@ -6932,8 +6701,11 @@ async function _myMemoryTranslate(text, langPair, _isRetry){
     if(/WARNING|LIMIT EXCEEDED|MYMEMORY/i.test(out)) throw new Error('rate limited');
     return out;
   }catch(e){
-    /* Μία επανάληψη σε περίπτωση παροδικού προβλήματος δικτύου, πριν τα παρατήσουμε */
-    if(!_isRetry) return await _myMemoryTranslate(text, langPair, true);
+    if(!_isRetry){
+      /* Μία επανάληψη σε περίπτωση παροδικού προβλήματος δικτύου, πριν τα παρατήσουμε */
+      return await _myMemoryTranslate(text, langPair, true);
+    }
+    console.warn('[translate] Οριστική αποτυχία μετά από επανάληψη:', e && e.message ? e.message : e, '| κείμενο:', text.slice(0,40));
     return text;
   }
 }
@@ -7029,9 +6801,13 @@ async function _batchTranslateRaw(texts, lang){
     var params = texts.map(function(t){ return 'q='+encodeURIComponent(t); }).join('&');
     var url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=el&tl='+encodeURIComponent(lang)+'&dt=t&'+params;
     var r = await _fetchWithTimeout(url, 10000);
-    if(!r.ok) throw new Error('bad status');
+    if(!r.ok){
+      console.warn('[translate] Αποτυχία αιτήματος (HTTP '+r.status+') για ομάδα '+texts.length+' κειμένων -- πέφτω σε μεμονωμένες κλήσεις.');
+      throw new Error('bad status ' + r.status);
+    }
     var d = await r.json();
     if(!Array.isArray(d) || !Array.isArray(d[0]) || d[0].length !== texts.length){
+      console.warn('[translate] Μη αναμενόμενη μορφή απάντησης για ομάδα '+texts.length+' κειμένων -- πέφτω σε μεμονωμένες κλήσεις.');
       throw new Error('unexpected shape');
     }
     var out = d[0].map(function(seg, i){
@@ -7045,8 +6821,9 @@ async function _batchTranslateRaw(texts, lang){
     });
     return out;
   } catch(e){
+    console.warn('[translate] Batch αποτυχία:', e && e.message ? e.message : e);
     /* Ασφαλές fallback -- μεμονωμένες κλήσεις, σίγουρα σωστές */
-    return await _mapLimit(texts, 8, function(t){ return _myMemoryTranslate(t, 'el|'+lang); });
+    return await _mapLimit(texts, 4, function(t){ return _myMemoryTranslate(t, 'el|'+lang); });
   }
 }
 
@@ -7062,15 +6839,6 @@ async function _myMemoryTranslateLong(text, langPair){
   if(cur) chunks.push(cur);
   var results = await Promise.all(chunks.map(function(c){ return _myMemoryTranslate(c, langPair); }));
   return results.join('');
-}
-async function _translateCached(text, lang){
-  if(!text || !text.trim()) return text;
-  var ck = lang + '::' + text;
-  if(_tCache[ck] !== undefined) return _tCache[ck];
-  var out = await _myMemoryTranslateLong(text, 'el|'+lang);
-  _tCache[ck] = out;
-  _saveTCache();
-  return out;
 }
 function _collectAttrTargets(root, includeHidden){
   /* Μεταφράζουμε ΚΑΙ κείμενα μέσα σε attributes (π.χ. placeholder μέσα σε πεδία
@@ -7169,7 +6937,7 @@ async function _translateTextList(texts, lang){
     };
   });
   /* Έως 4 ταυτόχρονα αιτήματα δικτύου, ώστε να μη στραγγαλίζουμε το endpoint */
-  await _mapLimit(chunkJobs.concat(longJobs), 6, function(job){ return job(); });
+  await _mapLimit(chunkJobs.concat(longJobs), 3, function(job){ return job(); });
   return newValues;
 }
 async function applyLangToContainer(root){
@@ -7205,11 +6973,9 @@ async function applyLangToContainer(root){
   }
 }
 (function(){
-  /* ΑΠΕΝΕΡΓΟΠΟΙΗΜΕΝΟ -- η μετάφραση γίνεται πλέον από το επίσημο Google Translate
-     widget (βλ. <head>), το οποίο μεταφράζει αυτόματα και το νέο περιεχόμενο που
-     εμφανίζεται (νέες Πύλες, άρθρα, κ.λπ.) μόνο του, χωρίς να χρειάζεται αυτός ο
-     παλιός παρατηρητής. Τον αφήνουμε ανενεργό (χωρίς .observe) αντί να τον σβήσουμε
-     εντελώς, ώστε να μην σπάσει κάποια άλλη αναφορά στο _mainTObserver πιο κάτω. */
+  /* Παρακολουθεί αλλαγές στη σελίδα (νέες Πύλες, άρθρα που ανοίγουν, κ.λπ.) και
+     μεταφράζει αυτόματα ό,τι μόλις εμφανίστηκε, χωρίς να χρειάζεται να ξέρουμε
+     εκ των προτέρων ποια στοιχεία θα χρειαστούν μετάφραση. */
   var _pendingRoots = new Set();
   _mainTObserver = new MutationObserver(function(mutations){
     if((window._gtCurrentLang||'el') === 'el') return;
@@ -7226,7 +6992,16 @@ async function applyLangToContainer(root){
       filtered.forEach(function(r){ applyLangToContainer(r); });
     }, 200);
   });
-  /* _mainTObserver.observe(...) -- ΣΚΟΠΙΜΑ ΑΠΕΝΕΡΓΟΠΟΙΗΜΕΝΟ, βλ. σχόλιο πάνω */
+  _mainTObserver.observe(document.body, { childList:true, subtree:true, characterData:true, attributes:true, attributeFilter:['style','class'] });
+})();
+
+/* Αν ο επισκέπτης είχε ξαναδιαλέξει γλώσσα σε προηγούμενη επίσκεψη, την εφαρμόζουμε αυτόματα */
+(function(){
+  var saved = null;
+  try { saved = localStorage.getItem('innerlife_lang'); } catch(e){}
+  if(saved && saved !== 'el'){
+    window.addEventListener('load', function(){ setTimeout(function(){ gtApplyLang(saved); }, 600); });
+  }
 })();
 
 /* Εφαρμογή γλώσσας -- αθόρυβα, χωρίς Google widget, ΧΩΡΙΣ reload, χωρίς να αλλάζει οθόνη */
@@ -7326,9 +7101,6 @@ async function gtApplyLang(lang){
     _hideTranslatingBanner();
   }
 }
-
-/* Η αυτόματη επαναφορά της αποθηκευμένης γλώσσας γίνεται πλέον μέσα στο
-   googleTranslateInit() (στο <head>), αφού είναι έτοιμο το widget της Google. */
 
 </script>
 
