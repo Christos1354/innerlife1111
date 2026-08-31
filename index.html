@@ -6687,18 +6687,21 @@ async function _myMemoryTranslate(text, langPair, _isRetry){
   var sl = parts[0] || 'el';
   var tl = parts[1] || 'en';
   try{
-    var url = '/api/translate?sl='+encodeURIComponent(sl)+'&tl='+encodeURIComponent(tl)+'&q='+encodeURIComponent(text);
+    /* ΠΡΑΓΜΑΤΙΚΟ MyMemory API -- ΟΧΙ το translate.googleapis.com (αυτό είναι
+       ξεχωριστός πάροχος, ώστε όταν το Google μπλοκάρει μια ριπή αιτημάτων,
+       να υπάρχει όντως δεύτερη, ανεξάρτητη πηγή να δοκιμάσει). Ανώνυμο όριο
+       MyMemory: ~500 χαρακτήρες/αίτημα, ~5000 λέξεις/ημέρα ανά IP επισκέπτη. */
+    var url = 'https://api.mymemory.translated.net/get?q='+encodeURIComponent(text)+'&langpair='+encodeURIComponent(sl)+'|'+encodeURIComponent(tl);
     var r = await _fetchWithTimeout(url, 8000);
     if(!r.ok){
-      console.warn('[translate] HTTP '+r.status+' για: "'+text.slice(0,40)+'..."');
+      console.warn('[translate] MyMemory HTTP '+r.status+' για: "'+text.slice(0,40)+'..."');
       throw new Error('bad status ' + r.status);
     }
     var d = await r.json();
-    if(!d || !d[0] || !Array.isArray(d[0])) throw new Error('bad shape');
-    var out = d[0].map(function(seg){ return seg && seg[0] ? seg[0] : ''; }).join('');
-    /* Ασφαλιστική δικλείδα: αν κάτι δεν βγήκε σωστό (κενό ή ύποπτο μήνυμα σφάλματος), κράτα το πρωτότυπο */
+    var out = d && d.responseData && d.responseData.translatedText;
+    /* Ασφαλιστική δικλείδα: αν κάτι δεν βγήκε σωστό (κενό ή ύποπτο μήνυμα σφάλματος/όριο), κράτα το πρωτότυπο */
     if(!out || !out.trim()) throw new Error('empty result');
-    if(/WARNING|LIMIT EXCEEDED|MYMEMORY/i.test(out)) throw new Error('rate limited');
+    if(/WARNING|LIMIT EXCEEDED|MYMEMORY|QUERY LENGTH LIMIT/i.test(out)) throw new Error('rate limited');
     return out;
   }catch(e){
     if(!_isRetry){
@@ -6799,7 +6802,7 @@ async function _batchTranslateRaw(texts, lang){
   if(!texts.length) return [];
   try{
     var params = texts.map(function(t){ return 'q='+encodeURIComponent(t); }).join('&');
-    var url = '/api/translate?sl=el&tl='+encodeURIComponent(lang)+'&'+params;
+    var url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=el&tl='+encodeURIComponent(lang)+'&dt=t&'+params;
     var r = await _fetchWithTimeout(url, 10000);
     if(!r.ok){
       console.warn('[translate] Αποτυχία αιτήματος (HTTP '+r.status+') για ομάδα '+texts.length+' κειμένων -- πέφτω σε μεμονωμένες κλήσεις.');
@@ -6822,22 +6825,26 @@ async function _batchTranslateRaw(texts, lang){
     return out;
   } catch(e){
     console.warn('[translate] Batch αποτυχία:', e && e.message ? e.message : e);
-    /* Ασφαλές fallback -- μεμονωμένες κλήσεις, σίγουρα σωστές */
-    return await _mapLimit(texts, 4, function(t){ return _myMemoryTranslate(t, 'el|'+lang); });
+    /* Ασφαλές fallback -- μεμονωμένες κλήσεις σε ΔΙΑΦΟΡΕΤΙΚΟ πάροχο (MyMemory),
+       χαμηλή ταυτόχρονη ζήτηση ώστε να μην πυροδοτήσουμε κι εκεί περιορισμό ρυθμού */
+    return await _mapLimit(texts, 2, function(t){ return _myMemoryTranslate(t, 'el|'+lang); });
   }
 }
 
 async function _myMemoryTranslateLong(text, langPair){
   if(!text || !text.trim()) return text;
-  if(text.length <= 1800) return await _myMemoryTranslate(text, langPair);
-  /* Σπάει πολύ μεγάλα κείμενα σε κομμάτια <1800 χαρακτήρων (πολύ πιο άνετο όριο απ' ό,τι πριν) */
+  /* Το πραγματικό MyMemory API δέχεται μόνο ~500 χαρακτήρες ανά αίτημα (πολύ
+     μικρότερο απ' όσο επέτρεπε το παλιό, ανεπίσημο Google endpoint) */
+  if(text.length <= 480) return await _myMemoryTranslate(text, langPair);
   var sentences = text.match(/[^.!;\n]+[.!;\n]*/g) || [text];
   var chunks = []; var cur = '';
   sentences.forEach(function(s){
-    if((cur+s).length > 1800){ if(cur) chunks.push(cur); cur = s; } else { cur += s; }
+    if((cur+s).length > 480){ if(cur) chunks.push(cur); cur = s; } else { cur += s; }
   });
   if(cur) chunks.push(cur);
-  var results = await Promise.all(chunks.map(function(c){ return _myMemoryTranslate(c, langPair); }));
+  /* Κομμάτια ένα-ένα (χαμηλή ταυτόχρονη ζήτηση) αντί όλα μαζί, ώστε να μη
+     φορτώνουμε το MyMemory με ριπή αιτημάτων για ένα μόνο κείμενο */
+  var results = await _mapLimit(chunks, 2, function(c){ return _myMemoryTranslate(c, langPair); });
   return results.join('');
 }
 function _collectAttrTargets(root, includeHidden){
@@ -6936,8 +6943,8 @@ async function _translateTextList(texts, lang){
       _tCache[lang+'::'+t] = out;
     };
   });
-  /* Έως 4 ταυτόχρονα αιτήματα δικτύου, ώστε να μη στραγγαλίζουμε το endpoint */
-  await _mapLimit(chunkJobs.concat(longJobs), 5, function(job){ return job(); });
+  /* Έως 2 ταυτόχρονα αιτήματα δικτύου, ώστε να μη στραγγαλίζουμε το endpoint */
+  await _mapLimit(chunkJobs.concat(longJobs), 2, function(job){ return job(); });
   return newValues;
 }
 async function applyLangToContainer(root){
