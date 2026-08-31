@@ -7,17 +7,11 @@
 // απευθείας το translate.googleapis.com, το μπλοκάρει το CORS policy του
 // browser (θέμα ασφάλειας — καμία σχέση με εμάς, ισχύει για όλα τα sites).
 // Όταν όμως το ΔΙΚΟ ΜΑΣ site (μέσω αυτής της Function, που τρέχει σε
-// server, όχι σε browser) κάνει την ίδια κλήση, το CORS δεν ισχύει καθόλου
-// — οι server-to-server κλήσεις δεν έχουν αυτόν τον περιορισμό.
+// server, όχι σε browser) κάνει την ίδια κλήση, το CORS δεν ισχύει καθόλου.
 //
-// Ο browser του επισκέπτη λοιπόν μιλάει ΜΟΝΟ με το innerlife1111.pages.dev
-// (ίδιο domain, κανένα πρόβλημα), και το site μας μιλάει με τη Google.
-//
-// ΤΟΠΟΘΕΤΗΣΗ: αυτό το αρχείο πρέπει να μπει στον φάκελο
-//   functions/api/translate.js
-// μέσα στο repository σου (δίπλα στο ήδη υπάρχον functions/api/candles.js
-// ή όπου κι αν βρίσκεται εκείνο) — το Cloudflare Pages το αναγνωρίζει
-// αυτόματα και δημιουργεί το endpoint /api/translate χωρίς άλλη ρύθμιση.
+// ΔΟΚΙΜΗ: επισκέψου απευθείας στον browser:
+//   https://innerlife1111.pages.dev/api/translate?sl=el&tl=en&q=Καλημέρα
+// για να δεις ακριβώς τι απαντάει, χωρίς dev tools.
 
 export async function onRequestGet(context) {
   const { request } = context;
@@ -26,6 +20,7 @@ export async function onRequestGet(context) {
   const sl = url.searchParams.get('sl') || 'el';
   const tl = url.searchParams.get('tl') || 'en';
   const qParams = url.searchParams.getAll('q');
+  const debug = url.searchParams.has('debug');
 
   if (!qParams.length) {
     return new Response(
@@ -34,8 +29,6 @@ export async function onRequestGet(context) {
     );
   }
 
-  // Χτίζουμε το ίδιο URL που χρησιμοποιούσαμε πριν απευθείας από τον browser,
-  // αλλά τώρα η κλήση γίνεται από εδώ (server-side στο Cloudflare) -- χωρίς CORS.
   const googleUrl = new URL('https://translate.googleapis.com/translate_a/single');
   googleUrl.searchParams.set('client', 'gtx');
   googleUrl.searchParams.set('sl', sl);
@@ -46,32 +39,40 @@ export async function onRequestGet(context) {
   try {
     const upstream = await fetch(googleUrl.toString(), {
       headers: {
-        // Μερικές φορές η Google θέλει να μοιάζει η κλήση με πραγματικό browser
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+        'Accept': '*/*',
+        'Accept-Language': 'el-GR,el;q=0.9,en;q=0.8',
+        'Referer': 'https://translate.google.com/'
       }
     });
 
+    const bodyText = await upstream.text();
+
     if (!upstream.ok) {
+      // Σε λειτουργία debug (?debug στο τέλος του URL), δείχνουμε ΑΚΡΙΒΩΣ τι
+      // απάντησε η Google, ώστε να καταλάβουμε τι ακριβώς φταίει.
       return new Response(
-        JSON.stringify({ error: 'Η Google επέστρεψε σφάλμα', status: upstream.status }),
+        JSON.stringify({
+          error: 'Η Google επέστρεψε σφάλμα',
+          status: upstream.status,
+          statusText: upstream.statusText,
+          googleResponseBody: debug ? bodyText.slice(0, 1000) : undefined
+        }),
         { status: 502, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
-    const data = await upstream.text();
-    return new Response(data, {
+    return new Response(bodyText, {
       status: 200,
       headers: {
         'Content-Type': 'application/json',
-        // Επιτρέπουμε στο ίδιο μας το site να το ξαναχρησιμοποιήσει από cache
-        // για λίγη ώρα, ώστε να μη ρωτάμε τη Google το ίδιο ξανά και ξανά.
         'Cache-Control': 'public, max-age=3600',
         'Access-Control-Allow-Origin': '*'
       }
     });
   } catch (e) {
     return new Response(
-      JSON.stringify({ error: 'Αποτυχία σύνδεσης με τη Google', details: String(e) }),
+      JSON.stringify({ error: 'Αποτυχία σύνδεσης με τη Google', details: String(e && e.message ? e.message : e) }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
     );
   }
