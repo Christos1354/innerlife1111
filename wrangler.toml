@@ -5,3 +5,7 @@ pages_build_output_dir = "."
 [[kv_namespaces]]
 binding = "CANDLES_KV"
 id = "087fa065a234497e8c8cc561464e6c22"
+
+[[kv_namespaces]]
+binding = "TRANSLATE_KV"
+id = "cd597cfdf66d4b919c5bdc2e087af55e"
