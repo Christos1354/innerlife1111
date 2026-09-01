@@ -2,6 +2,7 @@
 <html lang="el">
 <head>
 <meta charset="UTF-8">
+<meta name="google" content="notranslate">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
 <title>Innerlife | Εσωτερική Αναζήτηση | Άναψε Κερί Online | Spiritual Awakening</title>
 <meta name="description" content="Innerlife — Ένας χώρος εσωτερικής ανάπτυξης, φιλοσοφίας, ψυχικής υγείας και πνευματικής αναζήτησης. Βρες γαλήνη, σοφία και νόημα.">
@@ -6621,8 +6622,6 @@ document.getElementById('gt-btn-2').addEventListener('click', function(e){
   var dst = document.getElementById('gt-custom-select-2');
   if(src && dst){ dst.innerHTML = src.innerHTML; }
 })();
-/* Αποθηκεύω πρωτότυπα κείμενα μόλις φορτώσει η σελίδα */
-window.addEventListener('load', function(){ setTimeout(_saveOriginalTexts, 300); });
 document.addEventListener('click', function(e){
   var btn = document.getElementById('gt-btn');
   var menu = document.getElementById('gt-menu');
@@ -6638,127 +6637,23 @@ document.addEventListener('click', function(e){
   }
 });
 
-/* ════ MyMemory: μεταφράζει δυναμικό κείμενο (Πύλες + Ρητά) ════ */
 var _gtCurrentLang = 'el';
-var _originalTexts = null;
 
-function _saveOriginalTexts(){
-  /* Αποθηκεύω ΠΑΝΤΑ — ακόμα και αν έχουν αλλάξει (π.χ. νέο ρητό) */
-  var dtEl = document.getElementById('dt-text');
-  var dtSpan = dtEl ? dtEl.querySelector('span') : null;
-  var daEl = document.getElementById('dt-author');
-  var daSpan = daEl ? daEl.querySelector('span') : null;
-  var dtText   = dtSpan ? dtSpan.innerText : (dtEl ? dtEl.innerText : '');
-  var dtAuthor = daSpan ? daSpan.innerText : (daEl ? daEl.innerText : '');
-  /* Μόνο αν τα κείμενα δεν είναι κενά */
-  _originalTexts = {
-    al1: document.getElementById('al-1') ? document.getElementById('al-1').innerText.trim() : '',
-    al2: document.getElementById('al-2') ? document.getElementById('al-2').innerText.trim() : '',
-    al3: document.getElementById('al-3') ? document.getElementById('al-3').innerText.trim() : '',
-    al4: document.getElementById('al-4') ? document.getElementById('al-4').innerText.trim() : '',
-    al5: document.getElementById('al-5') ? document.getElementById('al-5').innerText.trim() : '',
-    al6: document.getElementById('al-6') ? document.getElementById('al-6').innerText.trim() : '',
-    al7: document.getElementById('al-7') ? document.getElementById('al-7').innerText.trim() : '',
-    dtText:   dtText.trim(),
-    dtAuthor: dtAuthor.trim(),
-    subtitle: document.getElementById('ep-subtitle') ? document.getElementById('ep-subtitle').innerText.trim() : ''
-  };
-}
 
-/* Backend μετάφρασης: το δωρεάν endpoint της Google (χωρίς το πολύ μικρό ημερήσιο
-   όριο του MyMemory, που εξαντλήθηκε αμέσως). ΠΟΤΕ δεν επιστρέφει μήνυμα σφάλματος
-   σαν να ήταν μετάφραση -- αν κάτι πάει στραβά, επιστρέφει το πρωτότυπο κείμενο. */
-/* Βοηθητική: fetch με χρονικό όριο -- αν το δίκτυο "κολλήσει" ή το Google
-   endpoint αργήσει υπερβολικά, ΔΕΝ περιμένουμε επ' άπειρον· εγκαταλείπουμε
-   γρήγορα και πέφτουμε στο επόμενο ασφαλές βήμα (fallback), ώστε η μετάφραση
-   να ολοκληρώνεται πάντα μέσα σε λογικό χρόνο. */
-async function _fetchWithTimeout(url, ms){
+/* Backend μετάφρασης: το δικό μας Cloudflare Function (/api/translate), το
+   οποίο καλεί το επίσημο, πληρωμένο Google Cloud Translation API και κρατάει
+   μόνιμη cache στον server (Cloudflare KV) -- ΚΟΙΝΗ για όλους τους επισκέπτες,
+   όχι μόνο για τη μία συσκευή. Κάθε κείμενο μεταφράζεται ΜΙΑ φορά συνολικά,
+   ποτέ ξανά, από κανέναν επισκέπτη. ΠΟΤΕ δεν επιστρέφει μήνυμα σφάλματος σαν
+   να ήταν μετάφραση -- αν κάτι πάει στραβά, επιστρέφει το πρωτότυπο κείμενο. */
+async function _fetchWithTimeout(url, ms, options){
   var ctrl = new AbortController();
   var timer = setTimeout(function(){ ctrl.abort(); }, ms || 8000);
   try{
-    return await fetch(url, { signal: ctrl.signal });
+    return await fetch(url, Object.assign({ signal: ctrl.signal }, options||{}));
   } finally {
     clearTimeout(timer);
   }
-}
-async function _myMemoryTranslate(text, langPair, _isRetry){
-  if(!text || !text.trim()) return text;
-  var parts = (langPair||'el|en').split('|');
-  var sl = parts[0] || 'el';
-  var tl = parts[1] || 'en';
-  try{
-    /* ΠΡΑΓΜΑΤΙΚΟ MyMemory API -- ΟΧΙ το translate.googleapis.com (αυτό είναι
-       ξεχωριστός πάροχος, ώστε όταν το Google μπλοκάρει μια ριπή αιτημάτων,
-       να υπάρχει όντως δεύτερη, ανεξάρτητη πηγή να δοκιμάσει). Ανώνυμο όριο
-       MyMemory: ~500 χαρακτήρες/αίτημα, ~5000 λέξεις/ημέρα ανά IP επισκέπτη. */
-    var url = 'https://api.mymemory.translated.net/get?q='+encodeURIComponent(text)+'&langpair='+encodeURIComponent(sl)+'|'+encodeURIComponent(tl);
-    var r = await _fetchWithTimeout(url, 8000);
-    if(!r.ok){
-      console.warn('[translate] MyMemory HTTP '+r.status+' για: "'+text.slice(0,40)+'..."');
-      throw new Error('bad status ' + r.status);
-    }
-    var d = await r.json();
-    var out = d && d.responseData && d.responseData.translatedText;
-    /* Ασφαλιστική δικλείδα: αν κάτι δεν βγήκε σωστό (κενό ή ύποπτο μήνυμα σφάλματος/όριο), κράτα το πρωτότυπο */
-    if(!out || !out.trim()) throw new Error('empty result');
-    if(/WARNING|LIMIT EXCEEDED|MYMEMORY|QUERY LENGTH LIMIT/i.test(out)) throw new Error('rate limited');
-    return out;
-  }catch(e){
-    if(!_isRetry){
-      /* Μία επανάληψη σε περίπτωση παροδικού προβλήματος δικτύου, πριν τα παρατήσουμε */
-      return await _myMemoryTranslate(text, langPair, true);
-    }
-    console.warn('[translate] Οριστική αποτυχία μετά από επανάληψη:', e && e.message ? e.message : e, '| κείμενο:', text.slice(0,40));
-    return text;
-  }
-}
-
-async function _translateDynamicContent(lang){
-  if(!_originalTexts) return;
-  var ids   = ['al-1','al-2','al-3','al-4','al-5','al-6','al-7'];
-  var oKeys = ['al1','al2','al3','al4','al5','al6','al7'];
-  if(lang === 'el'){
-    /* Άμεση επαναφορά — χωρίς API */
-    for(var i=0;i<ids.length;i++){
-      var el = document.getElementById(ids[i]);
-      if(el && el.childNodes[0]) el.childNodes[0].textContent = _originalTexts[oKeys[i]];
-    }
-    var dtEl2 = document.getElementById('dt-text');
-    if(dtEl2){ var sp2=dtEl2.querySelector('span'); if(sp2) sp2.innerText=_originalTexts.dtText; else dtEl2.innerText=_originalTexts.dtText; }
-    var daEl2 = document.getElementById('dt-author');
-    if(daEl2){ var sp3=daEl2.querySelector('span'); if(sp3) sp3.innerText=_originalTexts.dtAuthor; else daEl2.innerText=_originalTexts.dtAuthor; }
-    var sbEl = document.getElementById('ep-subtitle');
-    if(sbEl) sbEl.innerText = _originalTexts.subtitle;
-    return;
-  }
-  var lp = 'el|'+lang;
-  /* ── Όλα μαζί, σε ΕΝΑ αίτημα, αντί για 10 ξεχωριστά ── */
-  var textsToTranslate = [
-    _originalTexts.al1, _originalTexts.al2, _originalTexts.al3,
-    _originalTexts.al4, _originalTexts.al5, _originalTexts.al6, _originalTexts.al7,
-    _originalTexts.dtText, _originalTexts.dtAuthor, _originalTexts.subtitle
-  ];
-  var results = await _batchTranslateRaw(textsToTranslate.map(function(t){ return t||''; }), lang);
-  /* Εφαρμογή αποτελεσμάτων */
-  for(var i=0;i<ids.length;i++){
-    var el = document.getElementById(ids[i]);
-    if(el && results[i]){
-      if(el.childNodes[0]) el.childNodes[0].textContent = results[i];
-      else el.textContent = results[i];
-    }
-  }
-  /* Ρητό */
-  var dtEl3 = document.getElementById('dt-text');
-  if(dtEl3 && results[7]){
-    var sp4=dtEl3.querySelector('span'); if(sp4) sp4.innerText=results[7]; else dtEl3.innerText=results[7];
-  }
-  var daEl3 = document.getElementById('dt-author');
-  if(daEl3 && results[8]){
-    var sp5=daEl3.querySelector('span'); if(sp5) sp5.innerText=results[8]; else daEl3.innerText=results[8];
-  }
-  /* Subtitle */
-  var sbEl2 = document.getElementById('ep-subtitle');
-  if(sbEl2 && results[9]) sbEl2.innerText = results[9];
 }
 
 /* Εφαρμογή γλώσσας μέσω Google Translate select — ΧΩΡΙΣ reload */
@@ -6768,9 +6663,8 @@ async function _translateDynamicContent(lang){
    για να μην ξαναμεταφράζεται. */
 var _tCache = {};
 try { _tCache = JSON.parse(localStorage.getItem('innerlife_tcache') || '{}'); } catch(e){ _tCache = {}; }
-/* Καθαρισμός -- αν στη συσκευή έχει αποθηκευτεί κατά λάθος μήνυμα σφάλματος
-   (π.χ. από το παλιό, εξαντλημένο όριο του MyMemory) αντί για πραγματική μετάφραση,
-   το πετάμε, ώστε να ξαναζητηθεί σωστά. */
+/* Καθαρισμός -- πετάει τυχόν παλιά, λανθασμένα αποθηκευμένα μηνύματα σφάλματος
+   (κατάλοιπο από το παλιό, πλέον αχρησιμοποίητο MyMemory/Google σύστημα) */
 (function(){
   var cleaned = false;
   Object.keys(_tCache).forEach(function(k){
@@ -6794,58 +6688,34 @@ function _saveTCache(){
     localStorage.setItem('innerlife_tcache', JSON.stringify(_tCache));
   } catch(e){}
 }
-/* Μεταφράζει ΠΟΛΛΑ σύντομα κείμενα με ΕΝΑ μόνο αίτημα δικτύου (πολύ πιο γρήγορο
-   από ένα-ένα). Αν για οποιονδήποτε λόγο η απάντηση δεν βγει όπως αναμένεται,
-   επιστρέφει αυτόματα στην πιο αργή αλλά σίγουρη μέθοδο (ένα-ένα), ώστε να μην
-   εμφανιστεί ποτέ λάθος/σκουπίδι στη σελίδα. */
-async function _batchTranslateRaw(texts, lang){
+/* Στέλνει ΟΛΑ τα κείμενα που δεν βρέθηκαν στην τοπική (συσκευής) cache σε ΕΝΑ
+   αίτημα προς το δικό μας backend· το backend κοιτάζει πρώτα τη ΔΙΚΗ ΤΟΥ,
+   κοινή cache πριν καλέσει καν το Google. Δεν χρειάζεται πια χειροκίνητο
+   σπάσιμο σε κομμάτια των 480 χαρακτήρων ούτε δεύτερος πάροχος fallback --
+   το Google Cloud API είναι αξιόπιστο και δέχεται μεγάλα κείμενα. Αν το
+   αίτημα αποτύχει ολόκληρο, επιστρέφουμε τα πρωτότυπα κείμενα αμετάφραστα. */
+async function _translateViaBackend(texts, lang){
   if(!texts.length) return [];
   try{
-    var params = texts.map(function(t){ return 'q='+encodeURIComponent(t); }).join('&');
-    var url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=el&tl='+encodeURIComponent(lang)+'&dt=t&'+params;
-    var r = await _fetchWithTimeout(url, 10000);
+    var r = await _fetchWithTimeout('/api/translate', 20000, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ texts: texts, targetLang: lang })
+    });
     if(!r.ok){
-      console.warn('[translate] Αποτυχία αιτήματος (HTTP '+r.status+') για ομάδα '+texts.length+' κειμένων -- πέφτω σε μεμονωμένες κλήσεις.');
+      console.warn('[translate] Backend HTTP '+r.status+' για ομάδα '+texts.length+' κειμένων.');
       throw new Error('bad status ' + r.status);
     }
     var d = await r.json();
-    if(!Array.isArray(d) || !Array.isArray(d[0]) || d[0].length !== texts.length){
-      console.warn('[translate] Μη αναμενόμενη μορφή απάντησης για ομάδα '+texts.length+' κειμένων -- πέφτω σε μεμονωμένες κλήσεις.');
+    if(!d || !Array.isArray(d.translations) || d.translations.length !== texts.length){
+      console.warn('[translate] Μη αναμενόμενη απάντηση backend.');
       throw new Error('unexpected shape');
     }
-    var out = d[0].map(function(seg, i){
-      var val = '';
-      if(Array.isArray(seg)){
-        if(Array.isArray(seg[0])) val = seg.map(function(s){ return s && s[0] ? s[0] : ''; }).join('');
-        else if(typeof seg[0] === 'string') val = seg[0];
-      }
-      if(!val || !val.trim() || /WARNING|LIMIT EXCEEDED|MYMEMORY/i.test(val)) val = texts[i];
-      return val;
-    });
-    return out;
+    return d.translations.map(function(val, i){ return (val && val.trim()) ? val : texts[i]; });
   } catch(e){
-    console.warn('[translate] Batch αποτυχία:', e && e.message ? e.message : e);
-    /* Ασφαλές fallback -- μεμονωμένες κλήσεις σε ΔΙΑΦΟΡΕΤΙΚΟ πάροχο (MyMemory),
-       χαμηλή ταυτόχρονη ζήτηση ώστε να μην πυροδοτήσουμε κι εκεί περιορισμό ρυθμού */
-    return await _mapLimit(texts, 2, function(t){ return _myMemoryTranslate(t, 'el|'+lang); });
+    console.warn('[translate] Αποτυχία backend:', e && e.message ? e.message : e);
+    return texts.slice();
   }
-}
-
-async function _myMemoryTranslateLong(text, langPair){
-  if(!text || !text.trim()) return text;
-  /* Το πραγματικό MyMemory API δέχεται μόνο ~500 χαρακτήρες ανά αίτημα (πολύ
-     μικρότερο απ' όσο επέτρεπε το παλιό, ανεπίσημο Google endpoint) */
-  if(text.length <= 480) return await _myMemoryTranslate(text, langPair);
-  var sentences = text.match(/[^.!;\n]+[.!;\n]*/g) || [text];
-  var chunks = []; var cur = '';
-  sentences.forEach(function(s){
-    if((cur+s).length > 480){ if(cur) chunks.push(cur); cur = s; } else { cur += s; }
-  });
-  if(cur) chunks.push(cur);
-  /* Κομμάτια ένα-ένα (χαμηλή ταυτόχρονη ζήτηση) αντί όλα μαζί, ώστε να μη
-     φορτώνουμε το MyMemory με ριπή αιτημάτων για ένα μόνο κείμενο */
-  var results = await _mapLimit(chunks, 2, function(c){ return _myMemoryTranslate(c, langPair); });
-  return results.join('');
 }
 function _collectAttrTargets(root, includeHidden){
   /* Μεταφράζουμε ΚΑΙ κείμενα μέσα σε attributes (π.χ. placeholder μέσα σε πεδία
@@ -6892,60 +6762,51 @@ function _collectTextNodes(root, includeHidden){
   var n; while(n = walker.nextNode()) nodes.push(n);
   return nodes;
 }
-/* Μεταφράζει έως 8 κείμενα ταυτόχρονα */
-async function _mapLimit(items, limit, fn){
-  var results = new Array(items.length);
-  var idx = 0;
-  async function worker(){
-    while(idx < items.length){
-      var i = idx++;
-      results[i] = await fn(items[i], i);
-    }
-  }
-  var workers = [];
-  for(var w=0; w<Math.min(limit, items.length); w++) workers.push(worker());
-  await Promise.all(workers);
-  return results;
-}
 var _mainTObserver = null;
 async function _translateTextList(texts, lang){
   /* Παίρνει μια λίστα κειμένων και επιστρέφει τις μεταφράσεις τους, με χρήση
-     της cache, ομαδοποίηση μικρών κειμένων, και χειρισμό μεγάλων κειμένων --
-     κοινή λογική, χρησιμοποιείται τόσο για κανονικά κείμενα όσο και για
-     attributes (π.χ. placeholder). */
+     της τοπικής cache πρώτα -- κοινή λογική, χρησιμοποιείται τόσο για κανονικά
+     κείμενα όσο και για attributes (π.χ. placeholder). */
   var newValues = new Array(texts.length);
-  var shortTexts = [], shortIdx = [], longIdx = [];
+  var toFetch = [], toFetchIdx = [];
   texts.forEach(function(t, i){
     var ck = lang + '::' + t;
     if(_tCache[ck] !== undefined){ newValues[i] = _tCache[ck]; return; }
-    if(t.length > 300){ longIdx.push(i); } else { shortIdx.push(i); shortTexts.push(t); }
+    toFetch.push(t); toFetchIdx.push(i);
   });
-  var CHUNK = 12; /* μικρότερες ομάδες -- πιο αξιόπιστο αίτημα, λιγότερο ρίσκο λάθους/κολλήματος */
-  var chunkJobs = [];
-  for(var start=0; start<shortTexts.length; start+=CHUNK){
-    (function(start){
-      var chunkTexts = shortTexts.slice(start, start+CHUNK);
-      var chunkIdx = shortIdx.slice(start, start+CHUNK);
-      chunkJobs.push(async function(){
-        var translated = await _batchTranslateRaw(chunkTexts, lang);
-        translated.forEach(function(val, ci){
-          newValues[chunkIdx[ci]] = val;
-          _tCache[lang+'::'+chunkTexts[ci]] = val;
+  if(toFetch.length){
+    /* Ομάδες των 100 κειμένων ανά αίτημα -- το backend τα χειρίζεται άνετα,
+       μέσα στα όρια μεγέθους του Google Cloud Translation API */
+    var CHUNK = 100;
+    var jobs = [];
+    for(var start=0; start<toFetch.length; start+=CHUNK){
+      (function(start){
+        var chunkTexts = toFetch.slice(start, start+CHUNK);
+        var chunkIdx = toFetchIdx.slice(start, start+CHUNK);
+        jobs.push(async function(){
+          var translated = await _translateViaBackend(chunkTexts, lang);
+          translated.forEach(function(val, ci){
+            newValues[chunkIdx[ci]] = val;
+            _tCache[lang+'::'+chunkTexts[ci]] = val;
+          });
         });
-      });
-    })(start);
+      })(start);
+    }
+    await Promise.all(jobs.map(function(job){ return job(); }));
   }
-  var longJobs = longIdx.map(function(i){
-    return async function(){
-      var t = texts[i];
-      var out = await _myMemoryTranslateLong(t, 'el|'+lang);
-      newValues[i] = out;
-      _tCache[lang+'::'+t] = out;
-    };
-  });
-  /* Έως 2 ταυτόχρονα αιτήματα δικτύου, ώστε να μη στραγγαλίζουμε το endpoint */
-  await _mapLimit(chunkJobs.concat(longJobs), 2, function(job){ return job(); });
   return newValues;
+}
+/* Σειροποίηση των κλήσεων applyLangToContainer -- αν δύο κλήσεις έτρεχαν
+   ταυτόχρονα (π.χ. η απευθείας κλήση από την αλλαγή γλώσσας ΚΑΙ μια δεύτερη
+   από τον MutationObserver, ενώ η πρώτη ακόμα περίμενε το δίκτυο), μια
+   αργότερη/αποτυχημένη κλήση μπορούσε να ξαναγράψει πάνω σε ένα ήδη επιτυχώς
+   μεταφρασμένο κείμενο, γυρίζοντάς το πίσω στα Ελληνικά λίγο μετά την πρώτη,
+   σωστή εμφάνιση. Τώρα τρέχουν πάντα η μία μετά την άλλη. */
+var _applyLangQueue = Promise.resolve();
+function queueApplyLang(root){
+  _applyLangQueue = _applyLangQueue.then(function(){ return applyLangToContainer(root); })
+    .catch(function(e){ console.warn('[translate] queue error', e && e.message ? e.message : e); });
+  return _applyLangQueue;
 }
 async function applyLangToContainer(root){
   var lang = window._gtCurrentLang || 'el';
@@ -6996,7 +6857,20 @@ async function applyLangToContainer(root){
       var filtered = roots.filter(function(r){
         return !roots.some(function(other){ return other !== r && other.contains(r); });
       });
-      filtered.forEach(function(r){ applyLangToContainer(r); });
+      if(!filtered.length) return;
+      /* Ίδια οπτική ένδειξη "μεταφράζεται" και όταν εμφανίζεται ΝΕΟ περιεχόμενο
+         (π.χ. άνοιγμα Πύλης/άρθρου) αφού ο επισκέπτης έχει ήδη επιλέξει ξένη
+         γλώσσα -- πριν έδειχνε μόνο κατά την αρχική αλλαγή γλώσσας. Μετρητής
+         αναφορών ώστε δύο ταυτόχρονες μεταφράσεις να μην κρύβουν τη μπάρα η
+         μία της άλλης πρόωρα. */
+      var showBanner = (window._gtCurrentLang||'el') !== 'el';
+      if(showBanner){ window._gtBannerRefs = (window._gtBannerRefs||0) + 1; _showTranslatingBanner(); }
+      Promise.all(filtered.map(function(r){ return queueApplyLang(r); })).finally(function(){
+        if(showBanner){
+          window._gtBannerRefs = Math.max(0, (window._gtBannerRefs||1) - 1);
+          if(window._gtBannerRefs === 0) _hideTranslatingBanner();
+        }
+      });
     }, 200);
   });
   _mainTObserver.observe(document.body, { childList:true, subtree:true, characterData:true, attributes:true, attributeFilter:['style','class'] });
@@ -7012,30 +6886,6 @@ async function applyLangToContainer(root){
 })();
 
 /* Εφαρμογή γλώσσας -- αθόρυβα, χωρίς Google widget, ΧΩΡΙΣ reload, χωρίς να αλλάζει οθόνη */
-/* ═══ Προ-μεταφρασμένα αρχεία γλώσσας (π.χ. locales/en.json) ═══
-   Αντί να περιμένουμε ζωντανή μετάφραση από το Google κάθε φορά, φορτώνουμε
-   ΜΙΑ φορά ανά γλώσσα ένα έτοιμο αρχείο με τις σωστές μεταφράσεις, και το
-   γεμίζουμε στην ήδη υπάρχουσα cache (_tCache) με το ίδιο κλειδί που ήδη
-   χρησιμοποιεί το σύστημα (lang+'::'+ελληνικό κείμενο). Έτσι, ό,τι υπάρχει
-   ήδη στο αρχείο εμφανίζεται ΑΜΕΣΩΣ, χωρίς δίκτυο και χωρίς λάθη -- και μόνο
-   τυχόν καινούργιο κείμενο που δεν προλάβαμε να μεταφράσουμε ακόμα πέφτει
-   αυτόματα πίσω στη ζωντανή μετάφραση Google, όπως και πριν. */
-var _localeLoaded = {};
-async function _loadLocaleFile(lang){
-  if(_localeLoaded[lang]) return;
-  _localeLoaded[lang] = true; /* σημαδεύουμε ως "δοκιμασμένο" ακόμα κι αν αποτύχει, να μην ξαναδοκιμάζουμε άσκοπα κάθε φορά */
-  try{
-    var res = await fetch('locales/' + lang + '.json', { cache: 'no-cache' });
-    if(!res.ok) return;
-    var map = await res.json();
-    var n = 0;
-    Object.keys(map).forEach(function(greekText){
-      var key = lang + '::' + greekText;
-      if(_tCache[key] === undefined){ _tCache[key] = map[greekText]; n++; }
-    });
-    console.log('[locale] Φορτώθηκαν', n, 'έτοιμες μεταφράσεις για', lang);
-  } catch(e){ console.warn('[locale] Δεν βρέθηκε ή απέτυχε το αρχείο locales/'+lang+'.json', e); }
-}
 /* ═══ Πάντα-ορατή ένδειξη "μεταφράζεται" -- εμφανίζεται πάνω-πάνω στην οθόνη,
    ανεξάρτητα από το πού βρίσκεται ο επισκέπτης (μέσα σε Πύλη, σε άρθρο, κ.λπ.),
    ώστε να ξέρει ΣΙΓΟΥΡΑ ότι κάτι δουλεύει και δεν είναι χαλασμένο το site. ═══ */
@@ -7087,11 +6937,10 @@ async function gtApplyLang(lang){
      Ελληνικά είναι άμεση, χωρίς δίκτυο. */
   if(lang !== 'el'){
     busyBtns.forEach(function(b){ if(b) b.classList.add('gt-loading'); });
+    window._gtBannerRefs = (window._gtBannerRefs||0) + 1;
     _showTranslatingBanner();
   }
   try{
-    /* Πρώτα φορτώνουμε το έτοιμο αρχείο μετάφρασης, αν υπάρχει για αυτή τη γλώσσα */
-    if(lang !== 'el') await _loadLocaleFile(lang);
     /* Γενική μετάφραση όλης της ορατής σελίδας -- πύλες, κείμενα, quiz, Κάτι Άλλο,
        ΚΑΙ τη Σκέψη της Ημέρας/υπότιτλο/placeholders -- όλα μαζί, ένα ενιαίο
        σύστημα, χωρίς το παλιό ξεχωριστό (και ασταθές) κομμάτι από πριν.
@@ -7100,12 +6949,15 @@ async function gtApplyLang(lang){
        περιμένει επ' άπειρον -- σταματάμε την κλεψύδρα μετά από 30 δευτερόλεπτα.
        Ό,τι έχει ήδη μεταφραστεί μέχρι εκείνη τη στιγμή παραμένει μεταφρασμένο. */
     await Promise.race([
-      applyLangToContainer(document.body),
+      queueApplyLang(document.body),
       new Promise(function(resolve){ setTimeout(resolve, 30000); })
     ]);
   } finally {
     busyBtns.forEach(function(b){ if(b) b.classList.remove('gt-loading'); });
-    _hideTranslatingBanner();
+    if(lang !== 'el'){
+      window._gtBannerRefs = Math.max(0, (window._gtBannerRefs||1) - 1);
+      if(window._gtBannerRefs === 0) _hideTranslatingBanner();
+    }
   }
 }
 
@@ -7309,23 +7161,13 @@ async function ttsSpeakDoorText(wrapperId, btn){
   var origText = el.getAttribute('data-orig') || '';
 
   /* Αν το κείμενο στην οθόνη είναι ίδιο με το πρωτότυπο (δεν έχει μεταφραστεί ακόμα),
-     μετάφρασέ το τώρα */
+     μετάφρασέ το τώρα -- μέσω του ίδιου, ενιαίου συστήματος μετάφρασης (με τη
+     δική του cache) που χρησιμοποιεί όλη η υπόλοιπη σελίδα, όχι ξεχωριστή λογική. */
   if(screenText === origText || !screenText){
     if(btn){ btn.textContent='⏳'; btn.disabled=true; }
     try{
-      var tmp = origText;
-      var parts = [];
-      while(tmp.length > 0){
-        if(tmp.length <= 480){ parts.push(tmp); break; }
-        var cut = tmp.lastIndexOf(' ', 480);
-        if(cut < 0) cut = 480;
-        parts.push(tmp.substring(0, cut).trim());
-        tmp = tmp.substring(cut).trim();
-      }
-      var translated = await Promise.all(parts.map(function(p){
-        return _myMemoryTranslate(p, 'el|'+lang);
-      }));
-      screenText = translated.join(' ');
+      var translated = await _translateTextList([origText], lang);
+      screenText = (translated && translated[0]) ? translated[0] : origText;
     }catch(e){ screenText = origText; }
     if(btn){ btn.textContent='🔊'; btn.disabled=false; }
   }
