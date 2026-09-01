@@ -6662,7 +6662,7 @@ async function _fetchWithTimeout(url, ms, options){
    Κάτι Άλλο, αγαπημένα, αναζήτηση -- αποθηκεύοντας ό,τι μεταφράζεται στη συσκευή
    για να μην ξαναμεταφράζεται. */
 var _tCache = {};
-try { _tCache = JSON.parse(localStorage.getItem('innerlife_tcache') || '{}'); } catch(e){ _tCache = {}; }
+try { _tCache = JSON.parse(localStorage.getItem('innerlife_tcache_v2') || '{}'); } catch(e){ _tCache = {}; }
 /* Καθαρισμός -- πετάει τυχόν παλιά, λανθασμένα αποθηκευμένα μηνύματα σφάλματος
    (κατάλοιπο από το παλιό, πλέον αχρησιμοποίητο MyMemory/Google σύστημα) */
 (function(){
@@ -6675,7 +6675,7 @@ try { _tCache = JSON.parse(localStorage.getItem('innerlife_tcache') || '{}'); } 
     }
   });
   if(cleaned){
-    try { localStorage.setItem('innerlife_tcache', JSON.stringify(_tCache)); } catch(e){}
+    try { localStorage.setItem('innerlife_tcache_v2', JSON.stringify(_tCache)); } catch(e){}
   }
 })();
 function _saveTCache(){
@@ -6685,7 +6685,7 @@ function _saveTCache(){
       var trimmed = {}; keys.slice(-2000).forEach(function(k){ trimmed[k] = _tCache[k]; });
       _tCache = trimmed;
     }
-    localStorage.setItem('innerlife_tcache', JSON.stringify(_tCache));
+    localStorage.setItem('innerlife_tcache_v2', JSON.stringify(_tCache));
   } catch(e){}
 }
 /* Στέλνει ΟΛΑ τα κείμενα που δεν βρέθηκαν στην τοπική (συσκευής) cache σε ΕΝΑ
