@@ -1,14 +1,31 @@
 [build]
   functions = "netlify/functions"
 
-# Ανακατεύθυνση: το index.html καλεί /api/chat και /api/tts,
-# το Netlify τα στέλνει στα πραγματικά τους functions.
+# --- Δικό σου, τοπικό Netlify function (ήδη το έχεις) ---
 [[redirects]]
   from = "/api/chat"
   to = "/.netlify/functions/chat"
   status = 200
 
+# --- Τα υπόλοιπα: αντί να φτιάξουμε ξεχωριστό Netlify Blobs setup
+# (νέο πράγμα, χρειάζεται npm packages, build βήματα κλπ), απλά
+# προωθούμε το αίτημα στο ήδη-δουλεμένο Cloudflare Function σου.
+# Έτσι υπάρχει ΕΝΑΣ μόνο πραγματικός μετρητής κεριών / cache μετάφρασης,
+# κοινός και για τα δύο site — όχι δύο ξεχωριστά που θα ξεσυγχρονίζονταν.
+[[redirects]]
+  from = "/api/candles"
+  to = "https://innerlife1111.pages.dev/api/candles"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/translate"
+  to = "https://innerlife1111.pages.dev/api/translate"
+  status = 200
+  force = true
+
 [[redirects]]
   from = "/api/tts"
-  to = "/.netlify/functions/tts"
+  to = "https://innerlife1111.pages.dev/api/tts"
   status = 200
+  force = true
