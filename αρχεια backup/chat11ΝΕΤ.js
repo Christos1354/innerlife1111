@@ -39,8 +39,7 @@ exports.handler = async function (event) {
       },
       body: JSON.stringify({
         model: 'claude-sonnet-5',
-        // Ανέβηκε από 1000 σε 4096, ώστε οι μεγάλες απαντήσεις να μην κόβονται στη μέση.
-        max_tokens: Math.min(max_tokens || 1500, 4096),
+        max_tokens: Math.min(max_tokens || 500, 1000),
         system: system,
         messages: trimmedMessages
       })

@@ -1,44 +1,24 @@
-  /* ================================================
-   Ψηφιακό Προσευχητάρι — Service Worker v2
+/* ================================================
+   Ψηφιακό Προσευχητάρι — Service Worker v4
+   Δεν χρειάζεται πια να προσθέτεις εδώ χειροκίνητα
+   νέα τραγούδια ή φωτογραφίες. Προστίθενται μόνα τους
+   στην cache μόλις τα δει/ακούσει ένας επισκέπτης.
    ================================================ */
 
-const CACHE = 'proseyxitari-v2';
+const CACHE = 'proseyxitari-v4';
 
 const PRECACHE = [
   './',
   './index.html',
   './manifest.json',
   './church.jpg',
-  './keri.png',
-  './Αξιον Εστιν.mp3',
-  './Ἐλέησόν.mp3',
-  './ΕΥΛΟΓΕΙ Η ΨΥΧΗ ΜΟΥ.MP3',
-  './Προσευχή.MP3',
-  './Σε υμνούμεν.mp3',
-  './Cello in Shadow.mp3',
-  './Veinte Años.mp3',
-  './piano1.mp3',
-   './Just For You.mp3',
-   './Lysistrata.mp3',
-   './Her Slavic Soul.mp3',
-  './La Serpiente De Oro .mp3',
-  './Luz Casal Piensa en mi.mp3',
-  './Milonguea del Ayer.mp3',
-  './Pavlo Mediterranean Eyes.mp3',
- './The Gypsy Queens LItaliano Toto Cutugno.mp3',
- './ΤΟ ΤΑΝΓΚΟ ΤΟΥ ΕΡΩΤΑ.mp3',
- './La Serpiente De Oro.mp3',
- './Dancing.mp3',
-  './Tango de Rêve.mp3',
- './Tango Instrumental.mp3',
- './Czardas VMonti.mp3',
-
+  './keri.png'
 ];
 
 self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(CACHE).then(cache =>
-      Promise.allSettled(PRECACHE.map(url => cache.add(url).catch(()=>{})))
+      Promise.allSettled(PRECACHE.map(url => cache.add(url).catch(() => {})))
     )
   );
   self.skipWaiting();
@@ -54,21 +34,39 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
-  if(e.request.method !== 'GET') return;
- if(e.request.method !== 'GET') return;
-if(e.request.url.includes('translate.google') ||
-   e.request.url.includes('googleapis') ||
-   e.request.url.includes('gstatic') ||
-   e.request.url.includes('translate.goog')) return;
+  if (e.request.method !== 'GET') return;
+
+  const url = e.request.url;
+
+  // ΝΕΟ: αγνόησε ό,τι δεν είναι κανονικό http/https αίτημα
+  // (π.χ. chrome-extension:// από επεκτάσεις του browser του επισκέπτη —
+  // αυτό προκαλούσε το σφάλμα "Request scheme chrome-extension is unsupported")
+  if (!url.startsWith('http')) return;
+
+  if (
+    url.includes('translate.google') ||
+    url.includes('googleapis') ||
+    url.includes('gstatic') ||
+    url.includes('translate.goog') ||
+    url.includes('/api/')
+  ) return;
+
   e.respondWith(
-    fetch(e.request)
-      .then(response => {
-        if(response && response.status === 200){
-          const clone = response.clone();
-          caches.open(CACHE).then(cache => cache.put(e.request, clone));
-        }
-        return response;
-      })
-      .catch(() => caches.match(e.request))
+    caches.match(e.request).then(cached => {
+      const network = fetch(e.request)
+        .then(response => {
+          if (response && response.status === 200) {
+            const clone = response.clone();
+            caches.open(CACHE).then(cache => cache.put(e.request, clone)).catch(() => {});
+          }
+          return response;
+        })
+        // ΝΕΟ: αν αποτύχει και το δίκτυο ΚΑΙ δεν υπάρχει τίποτα στην cache,
+        // επίστρεψε μια έγκυρη (αν και άδεια) απάντηση αντί για "τίποτα"
+        // (αυτό προκαλούσε το σφάλμα "Failed to convert value to Response")
+        .catch(() => cached || Response.error());
+
+      return cached || network;
+    })
   );
 });

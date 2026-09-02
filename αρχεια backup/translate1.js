@@ -15,72 +15,53 @@
   Ποτέ δεν επιστρέφει σφάλμα σαν μετάφραση· αν κάτι αποτύχει, επιστρέφει το
   πρωτότυπο κείμενο αμετάφραστο για εκείνη τη θέση, ώστε η σελίδα να μη
   δείχνει ποτέ σκουπίδι/κενό.
-
-  ΠΡΟΣΤΕΘΗΚΕ: CORS headers, ώστε να δουλεύει και όταν καλείται απευθείας
-  (cross-site) από το Netlify site — πριν δούλευε μόνο ίδιο-site (Cloudflare).
 */
 
 const SOURCE_LANG = 'el';
 const GOOGLE_URL = 'https://translation.googleapis.com/language/translate/v2';
 
+/* Το Google Cloud Translation API (βασικό, v2) δέχεται έως 128 κείμενα ή
+   ~30.000 χαρακτήρες ανά αίτημα. Μένουμε αρκετά κάτω από αυτά τα όρια για
+   ασφάλεια. */
 const MAX_TEXTS_PER_CALL = 100;
 const MAX_CHARS_PER_CALL = 20000;
 
-const ALLOWED_ORIGINS = [
-  'https://innerlife1111.pages.dev',
-  'https://innerlife.netlify.app'
-];
-
-function corsHeaders(origin) {
-  const allow = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
-  return {
-    'Access-Control-Allow-Origin': allow,
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type'
-  };
-}
-
-// Προ-πτητικό αίτημα (preflight) του browser για cross-site κλήσεις
-export async function onRequestOptions(context) {
-  const origin = context.request.headers.get('Origin') || '';
-  return new Response(null, { headers: corsHeaders(origin) });
-}
-
 export async function onRequestPost(context) {
   const { request, env } = context;
-  const origin = request.headers.get('Origin') || '';
 
   let body;
   try {
     body = await request.json();
   } catch (e) {
-    return jsonResponse({ error: 'invalid JSON body' }, 400, origin);
+    return jsonResponse({ error: 'invalid JSON body' }, 400);
   }
 
   const texts = Array.isArray(body.texts) ? body.texts.map((t) => (typeof t === 'string' ? t : '')) : null;
   const targetLang = typeof body.targetLang === 'string' ? body.targetLang.trim().toLowerCase() : '';
 
   if (!texts || !texts.length || !targetLang) {
-    return jsonResponse({ error: 'texts (array) and targetLang (string) are required' }, 400, origin);
+    return jsonResponse({ error: 'texts (array) and targetLang (string) are required' }, 400);
   }
   if (texts.length > 500) {
-    return jsonResponse({ error: 'too many texts in one request (max 500)' }, 400, origin);
+    return jsonResponse({ error: 'too many texts in one request (max 500)' }, 400);
   }
   if (targetLang === SOURCE_LANG) {
-    return jsonResponse({ translations: texts }, 200, origin);
+    // Δεν χρειάζεται μετάφραση προς τα Ελληνικά -- επέστρεψε όπως ήρθαν
+    return jsonResponse({ translations: texts });
   }
 
   const apiKey = env.GOOGLE_TRANSLATE_API_KEY;
   if (!apiKey) {
     console.error('[translate] Λείπει το GOOGLE_TRANSLATE_API_KEY από το περιβάλλον');
-    return jsonResponse({ translations: texts.slice() }, 200, origin);
+    return jsonResponse({ translations: texts.slice() });
   }
   const kv = env.TRANSLATE_KV;
 
   const results = new Array(texts.length);
   const cacheKeys = new Array(texts.length);
-  const missing = [];
+  const missing = []; // indices που δεν βρέθηκαν στην cache
 
+  // 1) Έλεγχος cache για κάθε κείμενο (παράλληλα)
   await Promise.all(
     texts.map(async (t, i) => {
       if (!t || !t.trim()) {
@@ -104,6 +85,8 @@ export async function onRequestPost(context) {
     })
   );
 
+  // 2) Ό,τι δεν βρέθηκε στην cache, το μεταφράζουμε μέσω Google -- σε ομάδες
+  //    που σέβονται τα όρια μεγέθους του API.
   const kvWrites = [];
   let batchStart = 0;
   while (batchStart < missing.length) {
@@ -131,6 +114,7 @@ export async function onRequestPost(context) {
       });
     } catch (e) {
       console.warn('[translate] Google Translate αποτυχία για ομάδα:', e && e.message);
+      // Ασφαλές fallback -- πρωτότυπο κείμενο, ΠΟΤΕ μήνυμα σφάλματος στη σελίδα
       batchIdx.forEach((idx) => {
         results[idx] = texts[idx];
       });
@@ -139,11 +123,12 @@ export async function onRequestPost(context) {
     batchStart = batchEnd;
   }
 
+  // Αποθήκευση στην KV cache χωρίς να καθυστερήσουμε την απάντηση στον επισκέπτη
   if (kvWrites.length) {
     context.waitUntil(Promise.all(kvWrites).catch(() => {}));
   }
 
-  return jsonResponse({ translations: results }, 200, origin);
+  return jsonResponse({ translations: results });
 }
 
 async function callGoogleTranslate(texts, target, apiKey) {
@@ -169,6 +154,9 @@ async function callGoogleTranslate(texts, target, apiKey) {
   return translations.map((t) => t.translatedText || '');
 }
 
+/* Κλειδί cache: γλώσσα + SHA-256 hash του κειμένου (τα κλειδιά KV έχουν όριο
+   512 bytes -- ένα μεγάλο άρθρο δεν χωράει ως κλειδί από μόνο του, γι' αυτό
+   χρησιμοποιούμε hash αντί για το ίδιο το κείμενο). */
 async function cacheKey(lang, text) {
   const enc = new TextEncoder().encode(text);
   const digest = await crypto.subtle.digest('SHA-256', enc);
@@ -179,13 +167,9 @@ async function cacheKey(lang, text) {
   return 'tr:' + lang + ':' + hex;
 }
 
-function jsonResponse(obj, status, origin) {
+function jsonResponse(obj, status) {
   return new Response(JSON.stringify(obj), {
     status: status || 200,
-    headers: {
-      'Content-Type': 'application/json',
-      'Cache-Control': 'no-store',
-      ...corsHeaders(origin)
-    },
+    headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
   });
 }

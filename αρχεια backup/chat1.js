@@ -36,9 +36,7 @@ export async function onRequestPost(context) {
       },
       body: JSON.stringify({
         model: 'claude-sonnet-5',
-        // Ανέβηκε από 1000 σε 4096, ώστε οι μεγάλες απαντήσεις να μην κόβονται στη μέση.
-        // Το default (όταν δεν στέλνει τίποτα το index.html) ανέβηκε επίσης, από 500 σε 1500.
-        max_tokens: Math.min(max_tokens || 1500, 4096),
+        max_tokens: Math.min(max_tokens || 500, 1000), // cap ασφαλείας
         system: system,
         messages: trimmedMessages
       })
