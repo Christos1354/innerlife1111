@@ -5,8 +5,8 @@
 
 const ALLOWED_ORIGINS = [
   'https://innerlife1111.pages.dev',
-  'https://innerlife.netlify.app'
-'https://innerlife1111.netlify.app'
+  'https://innerlife.netlify.app',
+  'https://innerlife1111.netlify.app'
 ];
 
 function corsHeaders(origin) {
