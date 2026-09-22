@@ -654,7 +654,7 @@ button, .lang-btn, .cat-btn, .menu-btn, .toc-btn, .ka-b {
 #pagari { position:absolute; bottom:30%; right:8%;  width:38%; height:12%; z-index:100; cursor:pointer !important; }
 #ammos  { position:absolute; bottom:17%; left:7%;   width:40%; height:5%;  z-index:100; cursor:pointer !important; }
 .ammos-tray {
-  position:absolute; bottom:14%; left:7%; width:40%; height:16%;
+  position:absolute; bottom:10%; left:7%; width:40%; height:16%;
   z-index:120; overflow:visible;
 }
 
@@ -4411,7 +4411,7 @@ const SCIENCE_CONTENT = [
 /* ══════════ ΠΥΛΗ 6: ΜΟΥΣΙΚΗ ══════════ */
 const MUSIC = [
    
-{ f: "piano1.mp3",   n: "Πιάνο" },
+{ f: "piano1.mp3",   n: "Κιθάρα" },
 { f: "Veinte Años.mp3",    n: "Veinte Anos" },
 { f: "Cello in Shadow.mp3",  n: "Cello in Shadow" },
 { f: "Just For You.mp3",  n: "Just For You" },
@@ -5698,7 +5698,7 @@ function initChurch(){
   sb.classList.remove('exotic-landscape');
   sb.style.backgroundImage = "url('"+BG_CHURCH+"')";
   sb.innerHTML=`
-    <div id="eternal-keri" class="is-lit" style="position:absolute;bottom:16%;left:16%;width:18px;height:110px;z-index:450;">
+    <div id="eternal-keri" class="is-lit" style="position:absolute;bottom:10%;left:12%;width:18px;height:110px;z-index:450;">
       <div class="floga" style="top:-20px;margin-left:1px;scale:1.2;"></div><div class="keri-body"></div>
     </div>
     <div class="ammos-tray" id="ammos-tray"></div>
@@ -5747,7 +5747,9 @@ function _buildOldStyleCandle(){
   c.className='keri';
   c.style.position='absolute';
   c.style.display='inline-block';
-  c.style.left = (Math.random()*80)+'%';
+  let randLeft = Math.random()*65;
+if(randLeft >= 5) randLeft += 15;
+c.style.left = randLeft+'%';
   c.style.bottom = 'calc(' + (Math.random()*15) + '% - 5px)';
   c.style.top='auto';
   c.innerHTML='<div class="floga"></div><div class="keri-body"></div>';
