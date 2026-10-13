@@ -38,7 +38,7 @@
 <meta name="apple-mobile-web-app-title" content="Εσωτ. Αναζήτηση">
 <meta name="theme-color" content="#04080f">
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png"><!-- 13-10-2026 νέο εικονίδιο -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -1374,6 +1374,10 @@ function removeAccents(str) {
       font-size:12px;font-weight:700;font-family:Georgia,serif;letter-spacing:0.06em;cursor:pointer;
       margin-top:6px;padding:4px 8px;text-decoration:underline;flex-shrink:0;
       text-shadow:0 0 8px rgba(212,175,55,0.4);">Σχετικά με το Innerlife</button>
+    <!-- Υπογραφή / Signature 13-10-2026 -->
+    <div class="notranslate" translate="no" data-no-translate="1" style="flex-shrink:0;margin-top:4px;font-family:Georgia,serif;font-size:12px;line-height:1.5;color:#e8cf7a;text-align:center;text-shadow:0 0 6px rgba(0,0,0,0.8);">
+      Δημιουργία · Created by <b>Christos S Magides</b> · <a href="mailto:cyp11111@gmail.com" style="color:#e8cf7a;">✉ cyp11111@gmail.com</a>
+    </div>
   </div>
 
     <div id="ep-arch-menu">
@@ -6916,6 +6920,23 @@ async function applyLangToContainer(root){
 (function(){
   var saved = null;
   try { saved = localStorage.getItem('innerlife_lang'); } catch(e){}
+  /* 13-10-2026: Πρώτη επίσκεψη -- ανοίγει μόνο του στη γλώσσα του υπολογιστή/κινητού του επισκέπτη */
+  if(!saved){
+    try{
+      var sel = document.getElementById('gt-custom-select');
+      var ok = sel ? Array.prototype.map.call(sel.options, function(o){ return o.value; }) : [];
+      var prefs = (navigator.languages && navigator.languages.length) ? navigator.languages : [navigator.language || 'el'];
+      for(var i=0;i<prefs.length && !saved;i++){
+        var full = String(prefs[i]||'').replace('_','-'), base = full.split('-')[0].toLowerCase();
+        if(base==='el'){ saved='el'; break; }
+        if(base==='zh'){ saved = /TW|HK|Hant/i.test(full) ? 'zh-TW' : 'zh-CN'; break; }
+        if(base==='nb'||base==='nn') base='no';
+        if(base==='iw') base='he';
+        if(base==='fil') base='tl';
+        if(ok.indexOf(base) >= 0) saved = base;
+      }
+    }catch(e){}
+  }
   if(saved && saved !== 'el'){
     window.addEventListener('load', function(){ setTimeout(function(){ gtApplyLang(saved); }, 600); });
   }
@@ -9034,5 +9055,7 @@ function closeJourney(){
 }
 </script>
 
+<!-- Υπογραφή / Signature: Christos S Magides — 13-10-2026 -->
+<script src="https://cdn.jsdelivr.net/gh/Christos1354/ypografi@main/ypografi.js" defer></script>
 </body>
 </html>
