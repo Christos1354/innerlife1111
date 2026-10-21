@@ -313,6 +313,7 @@ var EP={
  back:function(){
    var h=location.hash.replace('#','');
    if(h&&h!=='start'){EP.go('');return}
+   try{if(window.parent!==window&&typeof window.parent.ep7Close==='function'){window.parent.ep7Close();return}}catch(e){}
    try{if(history.length>1&&document.referrer&&new URL(document.referrer).origin===location.origin){history.back();return}}catch(e){}
    location.href='./';
  },
