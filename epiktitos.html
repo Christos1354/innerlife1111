@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>7 ημέρες με τον Επίκτητο</title>
+<meta name="description" content="Επτά ημέρες με τον Επίκτητο: ένα λόγιο, μια σκέψη και μία άσκηση την ημέρα, για μια πιο ήρεμη και ελεύθερη ζωή. Δωρεάν, χωρίς λογαριασμό.">
+<meta name="theme-color" content="#0b1530">
+<link rel="icon" href="icon-192.png">
+<!-- Έκδοση 20-10-2026 · Christos S Magides -->
+<style>
+:root{--bg:#060c1a;--bg2:#0f1d3d;--gold:#f0d060;--gold2:#d4af37;--paper:#fffef6;--ink:#2b1d00;--ink2:#5a3a00;--muted:#7a6a4a;--violet:#7c3aed;--green:#15803d}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:radial-gradient(ellipse at top,#1b2d5c 0%,var(--bg) 60%) fixed,var(--bg);color:#f5ecd0;font-family:Georgia,'Times New Roman',serif;font-size:19px;line-height:1.6;min-height:100vh;-webkit-text-size-adjust:100%}
+.wrap{max-width:720px;margin:0 auto;padding:max(14px,env(safe-area-inset-top)) 16px 120px}
+button{font-family:inherit;cursor:pointer}
+a{color:inherit}
+/* ---------- κεφαλίδα ---------- */
+.top{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.top .back{background:rgba(255,255,255,.1);border:1px solid rgba(240,208,96,.45);color:var(--gold);border-radius:14px;padding:10px 14px;font-size:17px;font-weight:700}
+.top .ttl{flex:1;font-size:17px;color:var(--gold);font-weight:700;line-height:1.25}
+.top .lang{background:var(--gold);color:#3a2600;border:0;border-radius:14px;padding:10px 14px;font-size:17px;font-weight:800}
+/* ---------- πρώτη σελίδα ---------- */
+.hero{text-align:center;padding:18px 8px 8px}
+.hero .bust{font-size:64px;line-height:1;filter:drop-shadow(0 0 18px rgba(240,208,96,.5))}
+.hero h1{font-size:34px;line-height:1.2;margin:10px 0 6px;color:var(--gold);text-shadow:0 0 20px rgba(240,200,60,.45)}
+.hero .sub{font-size:19px;color:#e8dcb0;margin:0}
+.card{background:var(--paper);color:var(--ink);border-radius:20px;padding:20px 20px;margin:16px 0;box-shadow:0 6px 28px rgba(0,0,0,.45)}
+.card h2{font-size:23px;color:var(--ink2);margin:0 0 10px;line-height:1.3}
+.card h3{font-size:19px;color:var(--ink2);margin:16px 0 6px}
+.card p{margin:8px 0}
+.card ol{margin:6px 0;padding-left:24px}.card ol li{margin:6px 0}
+.big{display:block;width:100%;border:0;border-radius:18px;padding:18px 16px;font-size:21px;font-weight:800;color:#fff;margin:12px 0;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+.gold{background:linear-gradient(135deg,#f6d860,#d4a017 60%,#a87a00);color:#2b1d00}
+.violet{background:linear-gradient(135deg,#8b5cf6,#6d28d9)}
+.green{background:linear-gradient(135deg,#22c55e,#15803d)}
+.ghost{background:rgba(255,255,255,.1);border:1px solid rgba(240,208,96,.5)!important;color:var(--gold)}
+.small{font-size:17px;padding:12px 14px}
+.card .ghost{background:#fff3c4;color:#5a3a00;border-color:#c8a040!important}
+.row{display:flex;gap:10px}.row>*{flex:1}
+/* ---------- λίστα ημερών ---------- */
+.days{display:grid;gap:12px;margin-top:8px}
+.day{display:flex;align-items:center;gap:14px;background:rgba(255,254,246,.96);color:var(--ink);border:3px solid transparent;border-radius:18px;padding:14px 16px;text-align:left;font-size:18px;width:100%}
+.day .n{flex:0 0 52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:#fff;background:linear-gradient(135deg,#8b5cf6,#5b21b6)}
+.day b{display:block;font-size:19px;color:var(--ink2);line-height:1.3}
+.day small{display:block;color:var(--muted);font-size:15px}
+.day.done .n{background:linear-gradient(135deg,#22c55e,#15803d)}
+.day.today{border-color:var(--gold2);box-shadow:0 0 0 4px rgba(240,208,96,.35)}
+.prog{height:14px;border-radius:99px;background:rgba(255,255,255,.15);overflow:hidden;margin:6px 0 4px}
+.prog i{display:block;height:100%;background:linear-gradient(90deg,#f6d860,#22c55e);border-radius:99px}
+.progt{text-align:center;color:#e8dcb0;font-size:17px}
+/* ---------- σελίδα ημέρας ---------- */
+.dayhead{text-align:center;margin:6px 0 4px}
+.dayhead .num{display:inline-block;background:var(--gold);color:#3a2600;border-radius:99px;padding:4px 16px;font-weight:800;font-size:17px}
+.dayhead h1{font-size:29px;line-height:1.25;color:var(--gold);margin:10px 0 4px}
+.dayhead .tag{font-size:16px;color:#d9c9ff}
+.quote{background:linear-gradient(160deg,#fff8dc,#fdf0c4);border-left:7px solid var(--gold2)}
+.quote .grc{font-size:22px;line-height:1.5;color:#5a3a00;font-style:italic;margin:0 0 4px}
+.quote .src{font-size:15px;color:var(--muted);margin-bottom:12px}
+.quote .tr{font-size:21px;line-height:1.55;color:#2b1d00;font-weight:600}
+.quote hr{border:0;border-top:1px dashed #c8a040;margin:14px 0}
+.lbl{display:flex;align-items:center;gap:8px;font-size:20px;font-weight:800;color:var(--ink2);margin:0 0 8px}
+.am{background:#fff7e6;border-left:7px solid #f59e0b}
+.ex{background:#effcf3;border-left:7px solid #16a34a}
+.pm{background:#f3efff;border-left:7px solid #7c3aed}
+textarea{width:100%;min-height:120px;border:2px solid #c4b5fd;border-radius:14px;padding:12px;font-family:inherit;font-size:19px;line-height:1.5;background:#fff;color:#1a1200;resize:vertical}
+.saved{font-size:15px;color:var(--green);min-height:20px;margin-top:4px}
+.nav{display:flex;gap:10px;margin-top:6px}.nav button{flex:1}
+.donebadge{text-align:center;font-size:19px;color:#bbf7d0;margin:8px 0}
+/* ---------- τέλος ---------- */
+.note{border-bottom:1px dashed #d6c79a;padding:10px 0}.note:last-child{border:0}
+.note b{color:var(--ink2)}
+/* ---------- παράθυρο ---------- */
+.sheet{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:flex-end;justify-content:center;padding:12px;z-index:50}
+.sheet .box{background:var(--paper);color:var(--ink);border-radius:22px;padding:20px;max-width:620px;width:100%;max-height:88vh;overflow:auto}
+.sheet h2{margin:0 0 8px;color:var(--ink2);font-size:23px}
+/* ---------- υποσέλιδο ---------- */
+.safe{background:rgba(255,255,255,.08);border:1px solid rgba(249,168,212,.5);border-radius:16px;padding:12px 14px;font-size:16px;color:#fde2f1;margin-top:22px;line-height:1.55}
+.safe a{color:#fff;font-weight:800}
+.foot{text-align:center;color:#a99d7a;font-size:14px;margin-top:16px}
+.tts.on{background:linear-gradient(135deg,#ef4444,#b91c1c)!important;color:#fff!important}
+@media(max-width:380px){body{font-size:18px}.hero h1{font-size:29px}.dayhead h1{font-size:25px}.quote .grc{font-size:20px}.quote .tr{font-size:19px}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<script>
+/* =====================================================================
+   7 ΗΜΕΡΕΣ ΜΕ ΤΟΝ ΕΠΙΚΤΗΤΟ — Christos S Magides — 20-10-2026
+   Αυτόνομη σελίδα: δεν αγγίζει τίποτα άλλο στον ιστότοπο.
+   Οι σημειώσεις μένουν μόνο στη συσκευή του επισκέπτη (localStorage).
+   ===================================================================== */
+(function(){
+'use strict';
+var KEY='ep7-v1';
+function load(){try{var v=JSON.parse(localStorage.getItem(KEY)||'null');if(v&&typeof v==='object')return v}catch(e){}return {done:[],notes:{}}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+var S=load();if(!Array.isArray(S.done))S.done=[];if(!S.notes)S.notes={};
+var LANG=(function(){try{var l=localStorage.getItem('ep7-lang');if(l)return l}catch(e){}return /^el/i.test(navigator.language||'el')?'el':'en'})();
+function L(el,en){return LANG==='el'?el:en}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function $(id){return document.getElementById(id)}
+
+/* ---------------- ΤΑ ΤΡΙΑ ΠΕΔΙΑ ΑΣΚΗΣΗΣ (Διατριβές Γ΄ 2) ---------------- */
+var FIELD={
+ des:['🌿 Πεδίο των επιθυμιών','🌿 The discipline of desire'],
+ act:['🤝 Πεδίο των πράξεων','🤝 The discipline of action'],
+ jud:['⚖️ Πεδίο των κρίσεων','⚖️ The discipline of judgement']
+};
+
+/* ---------------- ΟΙ 7 ΗΜΕΡΕΣ ---------------- */
+var DAYS=[
+{f:'des',
+ grc:'Τῶν ὄντων τὰ μέν ἐστιν ἐφ᾽ ἡμῖν, τὰ δὲ οὐκ ἐφ᾽ ἡμῖν.',
+ el:{t:'Τι είναι δικό μας',src:'Εγχειρίδιο, 1',
+  tr:'Από όσα υπάρχουν, άλλα εξαρτώνται από εμάς και άλλα όχι. Από εμάς εξαρτώνται η κρίση, η ορμή, η επιθυμία και η αποστροφή — με μια λέξη, ό,τι είναι δικό μας έργο. Δεν εξαρτώνται από εμάς το σώμα, η περιουσία, η φήμη, τα αξιώματα — ό,τι δεν είναι δικό μας έργο.',
+  teach:'Με αυτή τη φράση αρχίζει το Εγχειρίδιο, και πάνω της στηρίζεται όλη η διδασκαλία του Επίκτητου. Ο ίδιος έζησε δούλος· ήξερε καλά πόσα πράγματα δεν περνούσαν από το χέρι του. Ανακάλυψε όμως κάτι που κανείς δεν μπορούσε να του αφαιρέσει: την «προαίρεση» — τη δύναμη να κρίνει, να επιλέγει και να δίνει νόημα σε ό,τι του συμβαίνει.\n\nΗ ταραχή γεννιέται όταν ζητάμε από όσα δεν εξαρτώνται από εμάς αυτό που μόνο τα δικά μας μπορούν να δώσουν. Η ελευθερία αρχίζει εκεί όπου σταματάμε να παλεύουμε με το αδύνατο και αφιερώνουμε τις δυνάμεις μας σε ό,τι είναι αληθινά δικό μας.',
+  am:'Πριν σηκωθείτε από το κρεβάτι, πείτε αργά: «Σήμερα θα φροντίσω ό,τι είναι δικό μου, και θα αφήσω με ηρεμία ό,τι δεν είναι.»',
+  ex:'Πάρτε ένα χαρτί και χωρίστε το σε δύο στήλες: «Εξαρτάται από μένα» και «Δεν εξαρτάται από μένα». Γράψτε τρεις ανησυχίες σας. Θα δείτε ότι σχεδόν κάθε ανησυχία έχει ένα κομμάτι σε κάθε στήλη — την έκβαση μιας εξέτασης υγείας δεν την ορίζω· τον περίπατο, το φαγητό και το ραντεβού με τον γιατρό, ναι. Για το «δικό μου» κομμάτι, κάντε ένα βήμα σήμερα.',
+  pm:'Πόση από τη σημερινή μου ενέργεια ξόδεψα σε πράγματα που δεν εξαρτώνταν από μένα; Και τι έκανα για όσα εξαρτώνταν;'},
+ en:{t:'What is truly ours',src:'Enchiridion, 1',
+  tr:'Of things that exist, some are up to us and some are not. Up to us are judgement, impulse, desire and aversion — in a word, whatever is our own doing. Not up to us are the body, property, reputation, office — whatever is not our own doing.',
+  teach:'The Enchiridion opens with this sentence, and all of Epictetus’ teaching rests on it. He lived as a slave and knew well how much lay beyond his control. But he discovered something no one could take from him: his “prohairesis” — the power to judge, to choose, and to give meaning to whatever happens.\n\nDisturbance is born when we ask from things outside our control what only our own choices can give. Freedom begins where we stop fighting the impossible and devote our strength to what is truly ours.',
+  am:'Before you get out of bed, say slowly: “Today I will care for what is mine, and calmly let go of what is not.”',
+  ex:'Take a sheet of paper and divide it into two columns: “Up to me” and “Not up to me”. Write three of your worries. You will see that almost every worry has a part in each column — the result of a medical test is not up to me; the walk, the food and the doctor’s appointment are. For the part that is yours, take one step today.',
+  pm:'How much of today’s energy did I spend on things that were not up to me? And what did I do about the things that were?'}},
+
+{f:'jud',
+ grc:'Ταράσσει τοὺς ἀνθρώπους οὐ τὰ πράγματα, ἀλλὰ τὰ περὶ τῶν πραγμάτων δόγματα.',
+ grc2:'Φαντασία εἶ καὶ οὐ πάντως τὸ φαινόμενον.',
+ el:{t:'Δεν μας ταράζουν τα πράγματα, αλλά οι γνώμες μας',src:'Εγχειρίδιο, 5',src2:'Εγχειρίδιο, 1',
+  tr:'Δεν ταράζουν τους ανθρώπους τα πράγματα, αλλά οι γνώμες τους για τα πράγματα.',
+  tr2:'«Είσαι μια εντύπωση, και όχι οπωσδήποτε αυτό που φαίνεσαι.» — αυτό συμβουλεύει ο Επίκτητος να λέμε σε κάθε σκέψη που μας αναστατώνει.',
+  teach:'Ανάμεσα σε αυτό που συμβαίνει και σε αυτό που νιώθουμε, στέκεται πάντα μια κρίση. Οι Στωικοί έλεγαν ότι οι εντυπώσεις («φαντασίες») έρχονται απρόσκλητες· η «συγκατάθεσή» μας όμως — το αν θα τις δεχτούμε ως αλήθεια — είναι δική μας. Ο Επίκτητος φέρνει παράδειγμα τον Σωκράτη, που αντίκρισε με γαλήνη ακόμη και το πιο φοβερό.\n\nΚαι προσθέτει: «Ο απαίδευτος κατηγορεί τους άλλους για ό,τι τον βρίσκει· ο αρχάριος τον εαυτό του· ο πεπαιδευμένος κανέναν.» Αυτό δεν σημαίνει ότι ο πόνος δεν είναι αληθινός. Σημαίνει ότι εμείς αποφασίζουμε τι λέμε στον εαυτό μας γι’ αυτόν — και εκεί βρίσκεται η δύναμή μας.',
+  am:'Ετοιμάστε τη «φράση-ασπίδα» της ημέρας: «Είσαι εντύπωση, και όχι οπωσδήποτε αυτό που φαίνεσαι.»',
+  ex:'Όταν κάτι σας ταράξει σήμερα, σταματήστε και γράψτε τρεις γραμμές: 1) Τι έγινε — μόνο τα γεγονότα, σαν να το κατέγραφε μια κάμερα. 2) Τι είπα στον εαυτό μου γι’ αυτό. 3) Μια πιο δίκαιη και ήρεμη κρίση. Παρατηρήστε πόσο από το βάρος βρισκόταν στη δεύτερη γραμμή.',
+  pm:'Ποια σκέψη με τάραξε σήμερα περισσότερο από το ίδιο το γεγονός;'},
+ en:{t:'Not things, but our opinions, disturb us',src:'Enchiridion, 5',src2:'Enchiridion, 1',
+  tr:'People are disturbed not by things, but by their opinions about things.',
+  tr2:'“You are an impression, and not at all what you appear to be.” — this is what Epictetus advises us to say to every upsetting thought.',
+  teach:'Between what happens and what we feel there is always a judgement. The Stoics said that impressions come uninvited; but our “assent” — whether we accept them as true — is ours. Epictetus points to Socrates, who faced even the most fearful things with calm.\n\nHe adds: “The uneducated blame others for their troubles; the beginner blames himself; the educated blames no one.” This does not mean pain is not real. It means that we decide what we tell ourselves about it — and there lies our strength.',
+  am:'Prepare today’s “shield sentence”: “You are an impression, and not at all what you appear to be.”',
+  ex:'When something upsets you today, stop and write three lines: 1) What happened — only the facts, as a camera would record them. 2) What I told myself about it. 3) A fairer, calmer judgement. Notice how much of the weight was in the second line.',
+  pm:'Which thought disturbed me today more than the event itself?'}},
+
+{f:'des',
+ grc:'Μὴ ζήτει τὰ γινόμενα γίνεσθαι ὡς θέλεις, ἀλλὰ θέλε τὰ γινόμενα ὡς γίνεται, καὶ εὐροήσεις.',
+ grc2:'Αἱ περιστάσεις εἰσὶν αἱ τοὺς ἄνδρας δεικνύουσαι.',
+ el:{t:'Να θέλεις ό,τι γίνεται',src:'Εγχειρίδιο, 8',src2:'Διατριβές, Α΄ 24',
+  tr:'Μη ζητάς να γίνονται τα πράγματα όπως θέλεις, αλλά να θέλεις να γίνονται όπως γίνονται — και η ζωή σου θα κυλά ομαλά.',
+  tr2:'Οι δυσκολίες είναι αυτές που φανερώνουν ποιος είναι ο άνθρωπος. Σαν τον γυμναστή που βάζει τον αθλητή να παλέψει με δυνατό αντίπαλο — για να τον κάνει ολυμπιονίκη.',
+  teach:'Για τους Στωικούς, η ευδαιμονία ήταν «εύροια βίου» — μια ζωή που κυλά ομαλά, σαν ποτάμι. Ο Ζήνων και ο Χρύσιππος έδιναν μια εικόνα: ένας σκύλος είναι δεμένος σε ένα κάρο. Αν θέλει να ακολουθήσει, περπατά ελεύθερα· αν αρνείται, σέρνεται ούτως ή άλλως.\n\nΑποδοχή δεν σημαίνει παραίτηση ούτε ανοχή στην αδικία. Σημαίνει να δεχτούμε ήρεμα ότι αυτό που ήδη έγινε, έγινε — και να στρέψουμε όλη μας τη δύναμη σε ό,τι μπορούμε να κάνουμε από εδώ και πέρα. Το παρελθόν δεν αλλάζει· η στάση μας απέναντί του, ναι.',
+  am:'Πείτε: «Ό,τι κι αν φέρει η σημερινή μέρα, θα το δεχτώ ως υλικό για να ασκηθώ.»',
+  ex:'Διαλέξτε σήμερα μια μικρή, αναπόφευκτη ενόχληση: μια ουρά, μια καθυστέρηση, τη βροχή, έναν θόρυβο. Αντί για γκρίνια, πείτε μέσα σας: «Αυτός είναι ο σημερινός μου αντίπαλος στην παλαίστρα» — και πάρτε τρεις αργές ανάσες. Αν η ενόχληση αφορά αδικία ή κίνδυνο, η άσκηση δεν είναι να την ανεχτείτε, αλλά να ενεργήσετε ήρεμα.',
+  pm:'Σε ποια στιγμή σήμερα πάλεψα με κάτι που είχε ήδη συμβεί; Τι θα άλλαζε αν το είχα δεχτεί;'},
+ en:{t:'Wish things to happen as they do',src:'Enchiridion, 8',src2:'Discourses, I 24',
+  tr:'Do not seek for things to happen as you wish, but wish them to happen as they do happen, and your life will flow well.',
+  tr2:'It is difficulties that show what people are. Like a trainer who pairs an athlete with a strong opponent — to make him an Olympic victor.',
+  teach:'For the Stoics, happiness was “a good flow of life” — a life that runs smoothly, like a river. Zeno and Chrysippus gave an image: a dog is tied to a cart. If it chooses to follow, it walks freely; if it refuses, it is dragged anyway.\n\nAcceptance does not mean giving up, nor tolerating injustice. It means calmly accepting that what has already happened, has happened — and turning all our strength to what we can do from here. The past does not change; our attitude to it can.',
+  am:'Say: “Whatever today brings, I will accept it as material for my training.”',
+  ex:'Choose one small, unavoidable annoyance today: a queue, a delay, the rain, a noise. Instead of complaining, say inwardly: “This is today’s opponent in my wrestling school” — and take three slow breaths. If the annoyance involves injustice or danger, the exercise is not to put up with it, but to act calmly.',
+  pm:'At what moment today did I fight with something that had already happened? What would have changed if I had accepted it?'}},
+
+{f:'act',
+ grc:'Πᾶν πρᾶγμα δύο ἔχει λαβάς, τὴν μὲν φορητήν, τὴν δὲ ἀφόρητον.',
+ el:{t:'Οι δύο λαβές',src:'Εγχειρίδιο, 43',
+  tr:'Κάθε πράγμα έχει δύο λαβές: από τη μία σηκώνεται, από την άλλη όχι. Αν ο αδελφός σου σε αδικεί, μην τον πιάσεις από τη λαβή «με αδικεί» — αυτή δεν σηκώνεται. Πιάσε τον από την άλλη: «είναι αδελφός μου, μεγαλώσαμε μαζί». Από εκεί θα σηκωθεί.',
+  teach:'Κάθε κατάσταση και κάθε άνθρωπος έχουν πολλές πλευρές· εμείς διαλέγουμε από ποια θα τα «πιάσουμε». Ο Επίκτητος δεν λέει ότι η αδικία δεν έγινε. Λέει ότι, αν κρατάμε μόνο την πλευρά που πονά, το βάρος μάς λυγίζει.\n\nΟι Στωικοί πίστευαν ότι όλοι οι άνθρωποι είναι μέλη μιας μεγάλης οικογένειας. Ο Στωικός Ιεροκλής ζωγράφιζε τη ζωή μας ως ομόκεντρους κύκλους — εαυτός, οικογένεια, φίλοι, συμπολίτες, όλη η ανθρωπότητα — και μας καλούσε να τραβάμε τους κύκλους λίγο πιο κοντά στο κέντρο. Η «λαβή που σηκώνεται» είναι συχνά αυτή που μας θυμίζει τον δεσμό μας με τον άλλον.',
+  am:'Πείτε: «Σήμερα, σε κάθε δυσκολία, θα ψάξω τη λαβή που σηκώνεται.»',
+  ex:'Σκεφτείτε έναν άνθρωπο που σας πίκρανε. Γράψτε δύο γραμμές: «Η λαβή που δεν σηκώνεται» (π.χ. «μου είπε άσχημα λόγια») και «Η λαβή που σηκώνεται» — κάτι άλλο, εξίσου αληθινό («είναι αδελφός μου», «κι αυτός παλεύει με τα δικά του», «μου έχει δώσει και πολλά καλά»). Αν μπορείτε, πείτε του σήμερα μια καλή κουβέντα — χωρίς να ξεχάσετε τα όριά σας.',
+  pm:'Από ποια λαβή έπιασα σήμερα τις δυσκολίες μου; Ποια σχέση μου θα ελάφρυνε αν άλλαζα λαβή;'},
+ en:{t:'The two handles',src:'Enchiridion, 43',
+  tr:'Everything has two handles: by one it can be carried, by the other it cannot. If your brother wrongs you, do not take it by the handle “he wrongs me” — that one cannot be carried. Take it by the other: “he is my brother, we grew up together”. By that it can be carried.',
+  teach:'Every situation and every person has many sides; we choose by which one we take hold. Epictetus does not say the wrong did not happen. He says that if we grasp only the side that hurts, the weight will bend us.\n\nThe Stoics believed all people are members of one great family. The Stoic Hierocles pictured our life as concentric circles — self, family, friends, fellow citizens, all humanity — and urged us to draw the circles a little closer to the centre. The “handle that carries” is often the one that reminds us of our bond with the other.',
+  am:'Say: “Today, in every difficulty, I will look for the handle that carries.”',
+  ex:'Think of someone who has hurt you. Write two lines: “The handle that does not carry” (e.g. “they said harsh words”) and “The handle that carries” — something else, just as true (“he is my brother”, “they are struggling too”, “they have also given me much good”). If you can, say a kind word to them today — without forgetting your boundaries.',
+  pm:'By which handle did I take my difficulties today? Which relationship would feel lighter if I changed handles?'}},
+
+{f:'jud',
+ grc:'Λούεταί τις ταχέως· μὴ εἴπῃς ὅτι κακῶς, ἀλλ᾽ ὅτι ταχέως.',
+ el:{t:'Μην κρίνεις βιαστικά',src:'Εγχειρίδιο, 45',
+  tr:'Κάποιος λούζεται βιαστικά· μην πεις ότι λούζεται άσχημα, αλλά ότι λούζεται βιαστικά. Κάποιος πίνει πολύ κρασί· μην πεις ότι κάνει κακό, αλλά ότι πίνει πολύ. Γιατί, πριν μάθεις τον λόγο του, πώς ξέρεις αν κάνει κακό;',
+  teach:'Εδώ ο Επίκτητος διδάσκει την πιο λεπτή άσκηση των Στωικών: να χωρίζουμε την περιγραφή από την κρίση. Το «βιαστικά» το βλέπουμε· το «άσχημα» το προσθέτουμε εμείς. Και σχεδόν ποτέ δεν γνωρίζουμε τι κουβαλά ο άλλος — μια κακή είδηση, έναν πόνο, μια βιασύνη για κάποιον που αγαπά.\n\nΌποιος μάθει να βλέπει καθαρά, χωρίς να βάζει αμέσως ετικέτες, κερδίζει διπλά: γίνεται πιο δίκαιος με τους άλλους και πιο γαλήνιος ο ίδιος. Και συχνά ανακαλύπτει ότι κρίνει τον εαυτό του με την ίδια αυστηρότητα — άρα μπορεί να του δείξει την ίδια επιείκεια.',
+  am:'Πείτε: «Σήμερα θα περιγράφω, πριν κρίνω.»',
+  ex:'Τρεις φορές σήμερα, τη στιγμή που πάτε να πείτε «κακό», «άσχημο», «λάθος» ή «ανόητο», σταματήστε και πείτε μόνο αυτό που βλέπετε. Για παράδειγμα, όχι «οδηγεί σαν τρελός», αλλά «οδηγεί γρήγορα — ίσως βιάζεται για κάτι». Κάντε το ίδιο και για τον εαυτό σας: όχι «είμαι άχρηστος», αλλά «σήμερα ξέχασα κάτι».',
+  pm:'Ποια κρίση μου σήμερα αποδείχθηκε βιαστική; Μήπως κρίνω και τον εαυτό μου το ίδιο αυστηρά;'},
+ en:{t:'Do not judge in haste',src:'Enchiridion, 45',
+  tr:'Someone bathes quickly; do not say he bathes badly, but quickly. Someone drinks much wine; do not say he does wrong, but that he drinks much. For until you know his reason, how do you know he does wrong?',
+  teach:'Here Epictetus teaches the subtlest Stoic exercise: to separate description from judgement. “Quickly” is what we see; “badly” is what we add. And we almost never know what the other person carries — bad news, a pain, a hurry for someone they love.\n\nWhoever learns to see clearly, without labelling at once, gains twice: becomes fairer to others and calmer within. And often discovers that they judge themselves just as harshly — so they can show themselves the same kindness.',
+  am:'Say: “Today I will describe before I judge.”',
+  ex:'Three times today, at the moment you are about to say “bad”, “ugly”, “wrong” or “stupid”, stop and say only what you see. For example, not “he drives like a madman” but “he drives fast — perhaps he is hurrying for something”. Do the same for yourself: not “I am useless” but “today I forgot something”.',
+  pm:'Which of my judgements today proved hasty? Do I judge myself just as harshly?'}},
+
+{f:'act',
+ grc:'Πᾶσα ἕξις καὶ δύναμις ὑπὸ τῶν καταλλήλων ἔργων συνέχεται καὶ αὔξεται, ἡ περιπατητικὴ ὑπὸ τοῦ περιπατεῖν, ἡ δρομικὴ ὑπὸ τοῦ τρέχειν.',
+ el:{t:'Η συνήθεια τρέφεται με πράξεις',src:'Διατριβές, Β΄ 18',
+  tr:'Κάθε συνήθεια και κάθε ικανότητα διατηρείται και μεγαλώνει με τις ανάλογες πράξεις: η ικανότητα του περπατήματος με το περπάτημα, του τρεξίματος με το τρέξιμο. Θέλεις να μη θυμώνεις; Μην τρέφεις τη συνήθεια. Μέτρα τις μέρες: «Θύμωνα κάθε μέρα· τώρα μέρα παρά μέρα· ύστερα κάθε τρεις, κάθε τέσσερις…»',
+  teach:'Ο Αριστοτέλης είχε παρατηρήσει ότι η λέξη «ήθος» γεννιέται από το «έθος» — ο χαρακτήρας φτιάχνεται από τις συνήθειες. Ο Επίκτητος το κάνει πρακτική: κάθε φορά που ενδίδουμε σε μια παρόρμηση, την ταΐζουμε· κάθε φορά που αντιστεκόμαστε, την αδυνατίζουμε.\n\nΔεν χρειάζεται ηρωισμός. Χρειάζεται μέτρημα, υπομονή και μια καλή πράξη που μπαίνει στη θέση της παλιάς. Κι αν κάποια μέρα ξεφύγουμε, δεν χάθηκαν όλα· ο Επίκτητος μάς θέλει να ξαναρχίζουμε, όχι να τιμωρούμε τον εαυτό μας.',
+  am:'Διαλέξτε μια μικρή συνήθεια που θέλετε να αδυνατίσει (γκρίνια, θυμός, κινητό, γλυκό, τσιγάρο) και μία καλή που θα μπει στη θέση της.',
+  ex:'Όταν έρθει η παρόρμηση, μην την ταΐσετε: πείτε «όχι τώρα» και κάντε την καλή πράξη που διαλέξατε (π.χ. αντί για το κινητό, τρεις ανάσες στο παράθυρο). Βάλτε ένα ✓ σε ένα χαρτί κάθε φορά που αντέξατε. Αν ξεφύγετε, χωρίς τύψεις — απλώς ξαναρχίστε.',
+  pm:'Πόσα ✓ μάζεψα σήμερα; Ποια συνήθεια έθρεψα — την παλιά ή τη νέα;'},
+ en:{t:'Habits are fed by actions',src:'Discourses, II 18',
+  tr:'Every habit and faculty is preserved and increased by the corresponding actions: walking by walking, running by running. Do you wish not to be angry? Do not feed the habit. Count the days: “I used to be angry every day; now every other day; then every third, every fourth…”',
+  teach:'Aristotle had noted that the word for character (“ēthos”) comes from habit (“ethos”) — character is made of habits. Epictetus makes this a practice: each time we give in to an impulse we feed it; each time we resist, we weaken it.\n\nNo heroism is needed. We need counting, patience, and a good action that takes the place of the old one. And if one day we slip, all is not lost; Epictetus wants us to begin again, not to punish ourselves.',
+  am:'Choose one small habit you want to weaken (complaining, anger, the phone, sweets, smoking) and one good habit to put in its place.',
+  ex:'When the urge comes, do not feed it: say “not now” and do the good action you chose (e.g. instead of the phone, three breaths at the window). Put a ✓ on a piece of paper each time you held out. If you slip, no guilt — just begin again.',
+  pm:'How many ✓ did I collect today? Which habit did I feed — the old or the new?'}},
+
+{f:'act',
+ grc:'Μηδαμοῦ σεαυτὸν εἴπῃς φιλόσοφον, μηδὲ λάλει τὸ πλέον ἐν ἰδιώταις περὶ τῶν θεωρημάτων, ἀλλὰ ποίει τὸ ἀπὸ τῶν θεωρημάτων.',
+ el:{t:'Μη λες ότι είσαι φιλόσοφος — ζήσε το',src:'Εγχειρίδιο, 46',
+  tr:'Πουθενά να μην αποκαλείς τον εαυτό σου φιλόσοφο, ούτε να μιλάς πολύ για τις θεωρίες· κάνε αυτό που απορρέει από αυτές. Γιατί και τα πρόβατα δεν φέρνουν το χορτάρι στους βοσκούς για να δείξουν πόσο έφαγαν· το χωνεύουν μέσα τους και δίνουν έξω μαλλί και γάλα.',
+  teach:'Για τους αρχαίους, φιλοσοφία δεν ήταν ένα σύνολο ιδεών, αλλά τρόπος ζωής. Ο Σωκράτης δεν έγραψε ούτε μία γραμμή — δίδαξε με τον τρόπο που ζούσε. Ο Επίκτητος επίσης δεν έγραψε τίποτα· τα λόγια του τα κατέγραψε ο μαθητής του Αρριανός.\n\nΤο σημάδι ότι αυτές οι 7 μέρες έπιασαν τόπο δεν είναι πόσα λόγια θυμόμαστε, αλλά αν κάτι άλλαξε στον τρόπο που αντιδρούμε, που κρίνουμε, που φερόμαστε. Αυτό είναι το «μαλλί και το γάλα» — ό,τι δίνουμε στους άλλους από όσα χωνέψαμε μέσα μας.',
+  am:'Πείτε: «Σήμερα δεν θα μιλήσω για όσα έμαθα· θα τα ζήσω.»',
+  ex:'Κάντε σήμερα μια καλή πράξη χωρίς να την πείτε σε κανέναν. Και διαλέξτε μία από τις έξι προηγούμενες ασκήσεις — αυτή που σας βοήθησε περισσότερο — για να τη συνεχίσετε μόνοι σας από αύριο, για έναν μήνα.',
+  pm:'Τι «μαλλί και γάλα» έβγαλαν μέσα μου αυτές οι 7 μέρες; Τι κρατώ για τη ζωή μου;'},
+ en:{t:'Do not call yourself a philosopher — live it',src:'Enchiridion, 46',
+  tr:'Never call yourself a philosopher, nor talk much about principles; act on them. For sheep do not bring their fodder to the shepherds to show how much they have eaten; they digest it within and produce wool and milk without.',
+  teach:'For the ancients, philosophy was not a set of ideas but a way of life. Socrates never wrote a single line — he taught by how he lived. Epictetus wrote nothing either; his words were recorded by his student Arrian.\n\nThe sign that these 7 days took root is not how many sayings we remember, but whether something changed in how we react, judge and behave. That is the “wool and milk” — what we give to others from what we have digested within.',
+  am:'Say: “Today I will not talk about what I have learned; I will live it.”',
+  ex:'Do one good deed today without telling anyone. And choose one of the six earlier exercises — the one that helped you most — to continue on your own from tomorrow, for a month.',
+  pm:'What “wool and milk” have these 7 days produced in me? What do I keep for my life?'}}
+];
+
+/* ---------------- ΚΑΤΑΣΤΑΣΗ ---------------- */
+function isDone(i){return S.done.indexOf(i)>=0}
+function nextDay(){for(var i=0;i<7;i++)if(!isDone(i))return i;return -1}
+function doneCount(){return S.done.filter(function(i){return i>=0&&i<7}).length}
+
+function topbar(title){
+  return '<div class="top"><button class="back" onclick="EP.back()" aria-label="'+L('Πίσω','Back')+'">← '+L('Πίσω','Back')+'</button>'+
+   '<div class="ttl">'+esc(title)+'</div>'+
+   '<button class="lang" onclick="EP.lang()" aria-label="Language">'+(LANG==='el'?'EN':'ΕΛ')+'</button></div>';
+}
+function safeLine(){
+  return '<div class="safe">💜 '+L('Αν περνάτε πολύ δύσκολα ή σκέφτεστε να κάνετε κακό στον εαυτό σας, τα λόγια δεν αρκούν — μιλήστε <b>σήμερα</b> με ψυχίατρο ή τον γιατρό σας.','If you are going through a very hard time or thinking of harming yourself, words are not enough — speak <b>today</b> with a psychiatrist or your doctor.')+
+   ' 📞 <a href="tel:112">112</a> · 🇨🇾 '+L('Σαμαρείτες','Samaritans')+' <a href="tel:80007773">8000 7773</a> · 🇬🇷 <a href="tel:1018">1018</a></div>';
+}
+function foot(){return '<div class="foot">'+L('Τα αρχαία κείμενα δίνονται με απόδοση στα νέα ελληνικά.','Ancient texts are given in free modern translation.')+'<br>Christos S Magides · '+L('Έκδοση','Version')+' 20-10-2026</div>'}
+
+/* ---------------- ΑΡΧΙΚΗ ---------------- */
+function vIntro(){
+  var n=doneCount(),nx=nextDay();
+  var startBtn = n===0
+    ? '<button class="big gold" onclick="EP.go(\'day1\')">🌅 '+L('Ξεκινώ την 1η ημέρα','Begin day 1')+'</button>'
+    : (nx<0 ? '<button class="big green" onclick="EP.go(\'end\')">🏆 '+L('Δείτε τις 7 ημέρες σας','See your 7 days')+'</button>'
+            : '<button class="big gold" onclick="EP.go(\'day'+(nx+1)+'\')">▶️ '+L('Συνεχίζω: ημέρα ','Continue: day ')+(nx+1)+'</button>');
+  return topbar(L('7 ημέρες με τον Επίκτητο','7 days with Epictetus'))+
+  '<div class="hero"><div class="bust">🏛️</div><h1>'+L('7 ημέρες με τον Επίκτητο','7 days with Epictetus')+'</h1>'+
+  '<p class="sub">'+L('Ένα λόγιο, μια σκέψη και μία άσκηση την ημέρα — για μια πιο ήρεμη και ελεύθερη ζωή.','One saying, one reflection and one exercise a day — for a calmer, freer life.')+'</p></div>'+
+  (n>0?'<div class="prog" aria-hidden="true"><i style="width:'+Math.round(n/7*100)+'%"></i></div><div class="progt">'+L('Ολοκληρώσατε ','You have completed ')+n+L(' από τις 7 ημέρες',' of 7 days')+'</div>':'')+
+  startBtn+
+  '<div class="days">'+DAYS.map(function(d,i){var D=d[LANG];var cls='day'+(isDone(i)?' done':'')+(i===nx?' today':'');
+    return '<button class="'+cls+'" onclick="EP.go(\'day'+(i+1)+'\')"><span class="n">'+(isDone(i)?'✓':(i+1))+'</span><span><b>'+esc(D.t)+'</b><small>'+FIELD[d.f][LANG==='el'?0:1]+'</small></span></button>'}).join('')+'</div>'+
+  '<div class="card"><h2>👤 '+L('Ποιος ήταν ο Επίκτητος','Who was Epictetus')+'</h2>'+
+   L('<p>Ο Επίκτητος (περίπου 50–135 μ.Χ.) γεννήθηκε στην Ιεράπολη της Φρυγίας και έζησε τα νιάτα του <b>δούλος</b> στη Ρώμη — ακόμη και το όνομά του σημαίνει «αποκτημένος». Ήταν κουτσός, φτωχός και χωρίς δικαιώματα. Κι όμως, άκουσε μαθήματα από τον Στωικό φιλόσοφο Μουσώνιο Ρούφο και έγινε ένας από τους πιο ελεύθερους ανθρώπους που έζησαν ποτέ.</p><p>Όταν απελευθερώθηκε, δίδαξε φιλοσοφία· και όταν ο αυτοκράτορας Δομιτιανός έδιωξε τους φιλοσόφους από τη Ρώμη, ίδρυσε σχολή στη <b>Νικόπολη της Ηπείρου</b>. Δεν έγραψε τίποτα. Ο μαθητής του Αρριανός κατέγραψε τα λόγια του στις «Διατριβές» και στο μικρό «Εγχειρίδιο» — που σημαίνει «αυτό που κρατάς στο χέρι».</p>',
+     '<p>Epictetus (c. 50–135 AD) was born in Hierapolis in Phrygia and spent his youth as a <b>slave</b> in Rome — even his name means “acquired”. He was lame, poor and without rights. Yet he studied with the Stoic philosopher Musonius Rufus and became one of the freest people who ever lived.</p><p>Once freed, he taught philosophy; when Emperor Domitian banished the philosophers from Rome, he founded a school at <b>Nicopolis in Epirus</b>, Greece. He wrote nothing. His student Arrian recorded his words in the “Discourses” and the little “Enchiridion” — meaning “what you hold in your hand”.</p>')+'</div>'+
+  '<div class="card"><h2>🧭 '+L('Πώς θα περάσουμε τις 7 ημέρες','How the 7 days work')+'</h2><ol>'+
+   L('<li><b>Το πρωί</b> (5 λεπτά): διαβάστε το λόγιο και τη σκέψη της ημέρας και πείτε την πρωινή φράση.</li><li><b>Μέσα στη μέρα</b>: κάντε τη μία, μικρή άσκηση.</li><li><b>Το βράδυ</b>: απαντήστε με δυο λόγια στη βραδινή ερώτηση.</li><li>Πατήστε <b>«Ολοκλήρωσα»</b> και την επόμενη μέρα συνεχίζετε.</li>',
+     '<li><b>In the morning</b> (5 minutes): read the saying and the reflection, and say the morning sentence.</li><li><b>During the day</b>: do the one small exercise.</li><li><b>In the evening</b>: answer the evening question in a few words.</li><li>Tap <b>“I completed it”</b> and continue the next day.</li>')+'</ol>'+
+   '<p>'+L('Ο Επίκτητος έλεγε ότι ο φιλόσοφος ασκείται σε τρία πεδία: στις <b>επιθυμίες</b>, στις <b>πράξεις</b> προς τους άλλους και στις <b>κρίσεις</b> του (Διατριβές Γ΄ 2). Οι 7 ημέρες περνούν και από τα τρία.','Epictetus said the philosopher trains in three fields: <b>desire</b>, <b>action</b> towards others, and <b>judgement</b> (Discourses III 2). The 7 days pass through all three.')+'</p>'+
+   '<p>🔒 '+L('Ό,τι γράφετε μένει <b>μόνο στη δική σας συσκευή</b>. Δεν χρειάζεται λογαριασμός και δεν στέλνεται πουθενά.','Whatever you write stays <b>only on your own device</b>. No account is needed and nothing is sent anywhere.')+'</p>'+
+   '<div class="row"><button class="big violet small" onclick="EP.remind()">⏰ '+L('Υπενθύμιση','Reminder')+'</button><button class="big ghost small" onclick="EP.share()">📤 '+L('Στείλτε το σε φίλο','Send to a friend')+'</button></div></div>'+
+  safeLine()+foot();
+}
+
+/* ---------------- ΗΜΕΡΑ ---------------- */
+function para(t){return t.split('\n\n').map(function(p){return '<p>'+esc(p)+'</p>'}).join('')}
+function vDay(i){
+  var d=DAYS[i],D=d[LANG],done=isDone(i);
+  return topbar(L('Ημέρα ','Day ')+(i+1)+L(' από 7',' of 7'))+
+  '<div class="dayhead"><span class="num">'+L('Ημέρα ','Day ')+(i+1)+'</span><h1>'+esc(D.t)+'</h1><div class="tag">'+FIELD[d.f][LANG==='el'?0:1]+'</div></div>'+
+  (done?'<div class="donebadge">✅ '+L('Αυτή την ημέρα την έχετε ολοκληρώσει','You have completed this day')+'</div>':'')+
+  '<div class="card quote"><div class="lbl">📜 '+L('Το λόγιο της ημέρας','Saying of the day')+'</div>'+
+   '<p class="grc">«'+esc(d.grc)+'»</p><div class="src">'+L('Επίκτητος','Epictetus')+' · '+esc(D.src)+'</div>'+
+   '<div class="tr">'+esc(D.tr)+'</div>'+
+   (d.grc2?'<hr><p class="grc">«'+esc(d.grc2)+'»</p><div class="src">'+esc(D.src2)+'</div><div class="tr" style="font-size:19px;font-weight:500">'+esc(D.tr2)+'</div>':'')+
+   '<button class="big ghost small tts" id="ttsBtn" style="margin-top:14px;color:#5a3a00;border-color:#c8a040!important;background:#fff3c4" onclick="EP.speak('+i+')">🔊 '+L('Ακούστε το','Listen')+'</button></div>'+
+  '<div class="card"><div class="lbl">🦉 '+L('Τι μας διδάσκει','What it teaches us')+'</div>'+para(D.teach)+'</div>'+
+  '<div class="card am"><div class="lbl">☀️ '+L('Το πρωί','In the morning')+'</div><p>'+esc(D.am)+'</p></div>'+
+  '<div class="card ex"><div class="lbl">🌿 '+L('Η άσκηση της ημέρας','Today’s exercise')+'</div><p>'+esc(D.ex)+'</p></div>'+
+  '<div class="card pm"><div class="lbl">🌙 '+L('Η βραδινή εξέταση','The evening review')+'</div><p><b>'+esc(D.pm)+'</b></p>'+
+   '<textarea id="note" placeholder="'+L('Γράψτε εδώ δυο λόγια… (μένουν μόνο στη συσκευή σας)','Write a few words here… (they stay only on your device)')+'" oninput="EP.note('+i+',this.value)">'+esc(S.notes[i]||'')+'</textarea><div class="saved" id="savedMsg"></div></div>'+
+  (done
+   ? '<button class="big ghost" onclick="EP.undone('+i+')">↺ '+L('Σημειώστε την ως μη ολοκληρωμένη','Mark as not completed')+'</button>'
+   : '<button class="big green" onclick="EP.done('+i+')">✔️ '+L('Ολοκλήρωσα τη σημερινή ημέρα','I completed today')+'</button>')+
+  '<div class="nav">'+(i>0?'<button class="big ghost small" onclick="EP.go(\'day'+i+'\')">← '+L('Ημέρα ','Day ')+i+'</button>':'<span></span>')+
+   '<button class="big ghost small" onclick="EP.go(\'\')">📋 '+L('Όλες οι ημέρες','All days')+'</button>'+
+   (i<6?'<button class="big ghost small" onclick="EP.go(\'day'+(i+2)+'\')">'+L('Ημέρα ','Day ')+(i+2)+' →</button>':'<span></span>')+'</div>'+
+  safeLine()+foot();
+}
+
+/* ---------------- ΤΕΛΟΣ ---------------- */
+function vEnd(){
+  var notes=DAYS.map(function(d,i){var t=(S.notes[i]||'').trim();return t?'<div class="note"><b>'+L('Ημέρα ','Day ')+(i+1)+' — '+esc(d[LANG].t)+'</b><br>'+esc(t).replace(/\n/g,'<br>')+'</div>':''}).join('');
+  return topbar(L('Οι 7 ημέρες σας','Your 7 days'))+
+  '<div class="hero"><div class="bust">🏆</div><h1>'+(doneCount()===7?L('Τα καταφέρατε!','You did it!'):L('Το ταξίδι σας','Your journey'))+'</h1>'+
+  '<p class="sub">'+L('Ολοκληρώσατε ','You have completed ')+doneCount()+L(' από τις 7 ημέρες με τον Επίκτητο.',' of the 7 days with Epictetus.')+'</p></div>'+
+  '<div class="card quote"><div class="lbl">📜 '+L('Ο αποχαιρετισμός του Επίκτητου','Epictetus’ farewell')+'</div>'+
+   '<p class="grc">«Εἰς ποῖον ἔτι χρόνον ἀναβάλλῃ τὸ τῶν βελτίστων ἀξιοῦν σεαυτόν;»</p><div class="src">'+L('Εγχειρίδιο, 51','Enchiridion, 51')+'</div>'+
+   '<div class="tr">'+L('Μέχρι πότε θα αναβάλλεις να κρίνεις τον εαυτό σου άξιο για τα καλύτερα; Ο Σωκράτης έγινε αυτό που έγινε επειδή σε όλα πρόσεχε μόνο τον λόγο. Κι εσύ, αν δεν είσαι ακόμη Σωκράτης, να ζεις σαν άνθρωπος που θέλει να γίνει Σωκράτης.','How long will you put off thinking yourself worthy of the best? Socrates became who he was by attending to nothing but reason. And you, even if you are not yet Socrates, should live as one who wishes to be Socrates.')+'</div></div>'+
+  '<div class="card"><div class="lbl">📔 '+L('Οι σημειώσεις σας','Your notes')+'</div>'+(notes||'<p>'+L('Δεν γράψατε σημειώσεις — δεν πειράζει. Το σημαντικό είναι η άσκηση.','You wrote no notes — that is fine. The exercise is what matters.')+'</p>')+'</div>'+
+  '<button class="big violet" onclick="EP.share()">📤 '+L('Στείλτε τις 7 ημέρες σε έναν φίλο','Send the 7 days to a friend')+'</button>'+
+  '<button class="big ghost" id="restartBtn" onclick="EP.restart()">↺ '+L('Ξεκινήστε ξανά από την αρχή','Start again from the beginning')+'</button>'+
+  safeLine()+foot();
+}
+
+/* ---------------- ΕΝΕΡΓΕΙΕΣ ---------------- */
+var noteTimer=null,restartArmed=false;
+var EP={
+ go:function(h){location.hash=h?'#'+h:'#start'},
+ back:function(){
+   var h=location.hash.replace('#','');
+   if(h&&h!=='start'){EP.go('');return}
+   try{if(history.length>1&&document.referrer&&new URL(document.referrer).origin===location.origin){history.back();return}}catch(e){}
+   location.href='./';
+ },
+ lang:function(){LANG=LANG==='el'?'en':'el';try{localStorage.setItem('ep7-lang',LANG)}catch(e){}render()},
+ note:function(i,v){S.notes[i]=v;clearTimeout(noteTimer);noteTimer=setTimeout(function(){save();var m=$('savedMsg');if(m)m.textContent='✓ '+L('Αποθηκεύτηκε στη συσκευή σας','Saved on your device')},500)},
+ done:function(i){if(!isDone(i))S.done.push(i);save();
+   if(i<6){sheet('<h2>🌟 '+L('Μπράβο!','Well done!')+'</h2><p style="font-size:19px">'+L('Ολοκληρώσατε την ημέρα ','You completed day ')+(i+1)+'. '+L('Αύριο σας περιμένει η επόμενη: ','Tomorrow the next one awaits: ')+'<b>«'+esc(DAYS[i+1][LANG].t)+'»</b>.</p><p style="font-size:17px;color:#7a6a4a">'+L('Ο Επίκτητος έλεγε ότι τίποτα μεγάλο δεν γίνεται ξαφνικά — ούτε το σταφύλι ούτε το σύκο (Διατριβές Α΄ 15).','Epictetus said nothing great comes suddenly — not even a grape or a fig (Discourses I 15).')+'</p><button class="big gold" onclick="EP.close();EP.go(\'\')">👍 '+L('Εντάξει','OK')+'</button>')}
+   else EP.go('end');
+   render();
+ },
+ undone:function(i){S.done=S.done.filter(function(x){return x!==i});save();render()},
+ restart:function(){
+   var b=$('restartBtn');
+   if(!restartArmed){restartArmed=true;if(b){b.textContent='⚠️ '+L('Πατήστε ξανά για επιβεβαίωση — θα σβηστούν οι σημειώσεις','Tap again to confirm — your notes will be erased');b.style.background='#b91c1c';b.style.color='#fff'}return}
+   restartArmed=false;S={done:[],notes:{}};save();EP.go('');
+ },
+ remind:function(){
+   sheet('<h2>⏰ '+L('Βάλτε μια καθημερινή υπενθύμιση','Set a daily reminder')+'</h2>'+
+   L('<p>Η πιο σίγουρη υπενθύμιση είναι ένα <b>ξυπνητήρι στο κινητό</b>, κάθε πρωί:</p><p><b>📱 iPhone:</b> ανοίξτε την εφαρμογή <b>Ρολόι</b> → <b>Ξυπνητήρι</b> → <b>+</b> → διαλέξτε ώρα → <b>Επανάληψη: Κάθε μέρα</b> → στην <b>Ετικέτα</b> γράψτε «Επίκτητος» → <b>Αποθήκευση</b>.</p><p><b>📱 Android:</b> ανοίξτε την εφαρμογή <b>Ρολόι</b> → <b>Ξυπνητήρι</b> → <b>+</b> → διαλέξτε ώρα → πατήστε όλες τις μέρες → στην <b>Ετικέτα</b> γράψτε «Επίκτητος».</p><p>💡 Βάλτε τη σελίδα και στην αρχική οθόνη του κινητού: στο πρόγραμμα περιήγησης πατήστε <b>Κοινοποίηση</b> (iPhone) ή <b>⋮</b> (Android) → <b>Προσθήκη στην οθόνη Αφετηρίας</b>.</p>',
+     '<p>The most reliable reminder is a <b>phone alarm</b> every morning:</p><p><b>📱 iPhone:</b> open <b>Clock</b> → <b>Alarm</b> → <b>+</b> → choose a time → <b>Repeat: Every day</b> → <b>Label</b> “Epictetus” → <b>Save</b>.</p><p><b>📱 Android:</b> open <b>Clock</b> → <b>Alarm</b> → <b>+</b> → choose a time → tap every day → <b>Label</b> “Epictetus”.</p><p>💡 Also add this page to your home screen: in the browser tap <b>Share</b> (iPhone) or <b>⋮</b> (Android) → <b>Add to Home Screen</b>.</p>')+
+   '<button class="big gold" onclick="EP.close()">👍 '+L('Εντάξει','OK')+'</button>')
+ },
+ share:function(){
+   var url=location.href.split('#')[0];var txt=L('7 ημέρες με τον Επίκτητο — ένα λόγιο και μία άσκηση την ημέρα για μια πιο ήρεμη ζωή.','7 days with Epictetus — one saying and one exercise a day for a calmer life.');
+   if(navigator.share){navigator.share({title:L('7 ημέρες με τον Επίκτητο','7 days with Epictetus'),text:txt,url:url}).catch(function(){});return}
+   try{navigator.clipboard.writeText(txt+' '+url);sheet('<h2>📋 '+L('Ο σύνδεσμος αντιγράφηκε','Link copied')+'</h2><p>'+L('Επικολλήστε τον σε ένα μήνυμα προς τον φίλο σας.','Paste it into a message to your friend.')+'</p><button class="big gold" onclick="EP.close()">👍 OK</button>')}catch(e){}
+ },
+ speak:function(i){
+   var b=$('ttsBtn');if(!('speechSynthesis' in window)){if(b)b.textContent=L('Η ανάγνωση δεν υποστηρίζεται σε αυτή τη συσκευή','Reading aloud is not supported on this device');return}
+   if(speechSynthesis.speaking){speechSynthesis.cancel();if(b){b.classList.remove('on');b.textContent='🔊 '+L('Ακούστε το','Listen')}return}
+   var D=DAYS[i][LANG];var text=[D.t,D.tr,D.teach.replace(/\n\n/g,' '),L('Η άσκηση της ημέρας. ','Today’s exercise. ')+D.ex].join('. ');
+   var u=new SpeechSynthesisUtterance(text);u.lang=LANG==='el'?'el-GR':'en-GB';u.rate=0.9;
+   var v=speechSynthesis.getVoices().filter(function(x){return x.lang&&x.lang.toLowerCase().indexOf(LANG)===0})[0];if(v)u.voice=v;
+   u.onend=u.onerror=function(){var bb=$('ttsBtn');if(bb){bb.classList.remove('on');bb.textContent='🔊 '+L('Ακούστε το','Listen')}};
+   speechSynthesis.speak(u);if(b){b.classList.add('on');b.textContent='⏹ '+L('Σταματήστε την ανάγνωση','Stop reading')}
+ },
+ close:function(){var s=$('sheet');if(s)s.remove()}
+};
+function sheet(html){EP.close();var d=document.createElement('div');d.className='sheet';d.id='sheet';d.innerHTML='<div class="box">'+html+'</div>';d.onclick=function(e){if(e.target===d)EP.close()};document.body.appendChild(d)}
+window.EP=EP;
+
+function render(){
+  try{if(window.speechSynthesis)speechSynthesis.cancel()}catch(e){}
+  restartArmed=false;
+  var h=location.hash.replace('#','');var m=/^day([1-7])$/.exec(h);
+  document.documentElement.lang=LANG;
+  document.title=L('7 ημέρες με τον Επίκτητο','7 days with Epictetus');
+  $('app').innerHTML = m ? vDay(+m[1]-1) : (h==='end' ? vEnd() : vIntro());
+  window.scrollTo(0,0);
+}
+window.addEventListener('hashchange',render);
+render();
+})();
+</script>
+<script src="https://cdn.jsdelivr.net/gh/Christos1354/ypografi@main/ypografi.js" defer></script>
+</body>
+</html>
