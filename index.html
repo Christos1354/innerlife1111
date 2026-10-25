@@ -1109,6 +1109,12 @@ button, .lang-btn, .cat-btn, .menu-btn, .toc-btn, .ka-b {
              inset 0 2px 4px rgba(255,255,200,0.5);
 }
 .gold-circle-btn:active { transform:scale(0.97); }
+/* 25-10-2026: η υπογραφή (ypografi.js) μικρή και διακριτική, κάτω δεξιά, χωρίς να πιάνει χώρο */
+html body #ypografi-csm { position:fixed !important; right:4px !important; bottom:1px !important; left:auto !important; top:auto !important;
+  width:auto !important; margin:0 !important; padding:0 !important; background:none !important; border:0 !important;
+  z-index:5 !important; pointer-events:none !important; opacity:0.38 !important; line-height:1 !important; }
+html body #ypografi-csm .yp-l, html body #ypografi-csm .yp-o, html body #ypografi-csm a { display:none !important; }
+html body #ypografi-csm .yp-c { display:block !important; margin:0 !important; font-size:8px !important; color:#e8cf7a !important; font-family:Georgia,serif !important; }
 /* ═══ ΟΥΔΕΤΕΡΟ ΚΕΡΙ: όταν ο επισκέπτης ανάβει κερί από την αρχική σελίδα
    βλέπει ήρεμο, έναστρο τοπίο, χωρίς θρησκευτικά σύμβολα. Η «Πύλη Προσευχής»
    (από τις Πύλες) μένει ακριβώς όπως ήταν, με την εκκλησία. ═══ */
@@ -1540,7 +1546,7 @@ function removeAccents(str) {
       margin-top:6px;padding:4px 8px;text-decoration:underline;flex-shrink:0;
       text-shadow:0 0 8px rgba(212,175,55,0.4);">Σχετικά με το Innerlife</button>
     <!-- Υπογραφή / Signature 13-10-2026 -->
-    <div class="notranslate" translate="no" data-no-translate="1" style="flex-shrink:0;margin-top:4px;font-family:Georgia,serif;font-size:12px;line-height:1.5;color:#e8cf7a;text-align:center;text-shadow:0 0 6px rgba(0,0,0,0.8);">
+    <div class="notranslate" translate="no" data-no-translate="1" style="flex-shrink:0;margin-top:2px;font-family:Georgia,serif;font-size:9px;line-height:1.2;opacity:0.55;color:#e8cf7a;text-align:center;text-shadow:0 0 6px rgba(0,0,0,0.8);">
       Δημιουργία · Created by <b>Christos S Magides</b> · <a href="mailto:cyp11111@gmail.com" style="color:#e8cf7a;">✉ cyp11111@gmail.com</a>
     </div>
   </div>
@@ -1579,11 +1585,11 @@ function removeAccents(str) {
 
     <!-- 🌐 Translate κουμπί — ίδιο με της εισόδου, κάτω από την αναζήτηση -->
     <div id="gt-wrap-2" style="display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap;margin-top:2px;margin-bottom:6px;position:relative;z-index:10;">
-      <!-- 🏛️ 7 Ημέρες με τον Επίκτητο — 21-10-2026 -->
+      <!-- 🏛️ 7 Ημέρες με τους Σοφούς (8 σοφοί) — 25-10-2026 -->
       <button id="ep7-btn" class="translate-me" onclick="ep7Open()"
           style="background:linear-gradient(135deg,#f6d860,#d4a017);color:#2b1d00;border:1px solid #fff3a0;
           padding:5px 14px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;
-          font-family:Georgia,serif;box-shadow:0 0 14px rgba(240,208,96,0.45);">🏛️ 7 Ημέρες με τον Επίκτητο</button>
+          font-family:Georgia,serif;box-shadow:0 0 14px rgba(240,208,96,0.45);">🏛️ 7 Ημέρες με τους Σοφούς</button>
       <div style="position:relative;">
         <button id="gt-btn-2"
             style="background:rgba(4,8,20,0.88);color:#d4af37;border:1px solid rgba(212,175,55,0.5);
@@ -5747,6 +5753,7 @@ function renderDoorContent(contentList, textColor, dest, gateLabel){
 function epGoTo(dest){
   /* 'candle' = το κερί της αρχικής σελίδας → η σελίδα κεριών με τον έναστρο ουρανό
      και τα σύμβολα των θρησκειών, χωρίς Προσευχές & Ψαλμούς */
+  if(window.IL4ALL && dest==='church') dest='candle';   /* Innerlife 4all: και η Πύλη Προσευχής πάει στις θρησκείες */
   document.body.classList.toggle('candle-neutral', dest==='candle');
   if(dest==='candle') dest='church';
   function hidEntry(){
@@ -9298,7 +9305,7 @@ function ep7Open(){
   o.id='ep7-overlay';
   o.style.cssText='position:fixed;inset:0;z-index:100000;background:#060c1a;display:flex;flex-direction:column;';
   o.innerHTML='<button onclick="ep7Close()" aria-label="Κλείσιμο" style="position:absolute;bottom:max(14px,env(safe-area-inset-bottom));right:14px;z-index:2;background:rgba(4,8,20,0.92);color:#f0d060;border:2px solid #f0d060;border-radius:50%;width:54px;height:54px;font-size:24px;box-shadow:0 4px 16px rgba(0,0,0,0.6);cursor:pointer;">✕</button>'+
-    '<iframe src="epiktitos.html" title="7 Ημέρες με τον Επίκτητο" style="flex:1;width:100%;border:0;background:#060c1a;"></iframe>';
+    '<iframe src="epiktitos.html" title="7 Ημέρες με τους Σοφούς" style="flex:1;width:100%;border:0;background:#060c1a;"></iframe>';
   document.body.appendChild(o);
 }
 function ep7Close(){ var o=document.getElementById('ep7-overlay'); if(o) o.remove(); }
