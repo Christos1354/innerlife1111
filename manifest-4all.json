@@ -1,0 +1,57 @@
+{
+  "name": "Innerlife 4all",
+  "short_name": "Innerlife 4all",
+  "description": "Άναψε ένα κερί online, στον δικό σου χώρο, όποια κι αν είναι η πίστη σου. Βρες το εσωτερικό σου φως.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#04080f",
+  "theme_color": "#04080f",
+  "orientation": "any",
+  "lang": "el",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "categories": [
+    "lifestyle",
+    "spirituality",
+    "health",
+    "meditation"
+  ],
+  "shortcuts": [
+    {
+      "name": "Άναψε Κερί",
+      "url": "./",
+      "description": "Άναψε ένα κερί για προσευχή"
+    }
+  ]
+}
