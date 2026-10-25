@@ -7,8 +7,29 @@
 // Το index.html θα καλεί πλέον: fetch('/api/chat', {...})
 // αντί να καλεί απευθείας το api.anthropic.com
 
+// 25-10-2026: CORS, ώστε να δουλεύει και από το Innerlife 4all (innerlife-4all.pages.dev)
+const ALLOWED_ORIGINS = [
+  'https://innerlife1111.pages.dev',
+  'https://innerlife.netlify.app',
+  'https://innerlife1111.netlify.app',
+  'https://innerlife-4all.pages.dev'
+];
+function corsHeaders(origin) {
+  const allow = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    'Access-Control-Allow-Origin': allow,
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type'
+  };
+}
+export async function onRequestOptions(context) {
+  const origin = context.request.headers.get('Origin') || '';
+  return new Response(null, { headers: corsHeaders(origin) });
+}
+
 export async function onRequestPost(context) {
   const { request, env } = context;
+  const origin = request.headers.get('Origin') || '';
 
   try {
     const body = await request.json();
@@ -18,7 +39,7 @@ export async function onRequestPost(context) {
     if (!Array.isArray(messages) || messages.length === 0) {
       return new Response(JSON.stringify({ error: 'Λείπουν μηνύματα' }), {
         status: 400,
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json', ...corsHeaders(origin) }
       });
     }
 
@@ -48,13 +69,13 @@ export async function onRequestPost(context) {
 
     return new Response(JSON.stringify(data), {
       status: resp.status,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'Content-Type': 'application/json', ...corsHeaders(origin) }
     });
 
   } catch (err) {
     return new Response(JSON.stringify({ error: 'Σφάλμα διακομιστή' }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'Content-Type': 'application/json', ...corsHeaders(origin) }
     });
   }
 }
