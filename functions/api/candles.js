@@ -7,7 +7,9 @@ const ALLOWED_ORIGINS = [
   'https://innerlife1111.pages.dev',
   'https://innerlife.netlify.app',
   'https://innerlife1111.netlify.app',
-  'https://innerlife-4all.pages.dev'   // 25-10-2026: Innerlife 4all
+  'https://innerlife-4all.pages.dev',  // 25-10-2026: Innerlife 4all
+  'https://praywithcandle.com',
+  'https://www.praywithcandle.com'
 ];
 
 function corsHeaders(origin) {
