@@ -1001,7 +1001,7 @@ button, .lang-btn, .cat-btn, .menu-btn, .toc-btn, .ka-b {
   #wt-desc  { font-size: 11px !important; -webkit-line-clamp: 1 !important; max-height: 1.7em !important; }
   #ep-candle-teaser-wrap { width: 34px !important; height: 34px !important; bottom: 10% !important; }
   #ep-candle-teaser-wrap span:first-child { font-size: 15px !important; }
-  #ep-candle-teaser { font-size: 6.5px !important; }
+  #ep-candle-teaser { font-size: 10px !important; }
 
   /* ═══ Πύλες (grid μενού) σε πολύ στενό landscape ύψος — μικρότερα label,
      ώστε οι ετικέτες των χρυσών κύκλων (ΑΥΤΟΓΝΩΣΙΑ/ΑΥΤΟΕΞΕΛΙΞΗ) να μη
@@ -1499,14 +1499,14 @@ function removeAccents(str) {
     <line class="ep-verse-divider" x1="266" y1="98" x2="266" y2="258" stroke="#c8a840" stroke-width="0.6" opacity="0.3"/>
     </svg>
     <!-- Μικρό κουμπί-γωνία κεριών, ΕΚΤΟΣ της κάθετης στοίβας — δεν επηρεάζεται ποτέ από το ύψος των άλλων πλαισίων -->
-    <button onclick="epGoTo('church')" id="ep-candle-teaser-wrap" class="translate-me" title="Πύλη Προσευχής" style="
+    <button onclick="epGoTo('church')" id="ep-candle-teaser-wrap" title="Πύλη Προσευχής" style="
       position:absolute;bottom:18%;right:7%;z-index:15;
       display:flex;flex-direction:column;align-items:center;gap:1px;
       background:rgba(4,8,20,0.7);border:2.5px solid rgba(255,180,60,0.4);
       border-radius:50%;width:46px;height:46px;cursor:pointer;
       box-shadow:0 0 10px rgba(255,180,60,0.35);">
       <span style="font-size:18px;filter:drop-shadow(0 0 4px rgba(255,180,60,0.8));">🕯️</span>
-      <span id="ep-candle-teaser" style="font-size:9px;color:#ffd700;font-family:Georgia,serif;line-height:1;font-weight:600;">...</span>
+      <span id="ep-candle-teaser" style="font-size:12px;color:#ffe680;font-family:Arial,Helvetica,sans-serif;line-height:1;font-weight:700;text-shadow:0 0 3px #000,0 0 2px #000;">...</span>
     </button>
     </div>
     <!-- ═══ ΣΚΕΨΗ ΤΗΣ ΗΜΕΡΑΣ ═══ -->
@@ -2185,13 +2185,25 @@ function removeAccents(str) {
         style="background:transparent;border:1px solid rgba(212,175,55,0.5);color:#d4af37;
         width:36px;height:36px;border-radius:50%;font-size:20px;cursor:pointer;flex-shrink:0;">✕</button>
     </div>
-    <div style="border-radius:8px;padding:22px 24px;background:rgba(255,254,248,0.95);
-      box-shadow:0 2px 16px rgba(0,0,0,0.5);color:#1a1200;font-size:18px;line-height:1.85;font-family:Georgia,serif;">
-      <p>Αυτό το δημιούργησα αρχικά για να βοηθήσω τον εαυτό μου και την οικογένειά μου — τα παιδιά μου, ώστε να έχουν έναν οδηγό στη ζωή, στην προσωπική τους ανάπτυξη, πνευματική και διανοητική, ιδιαίτερα στις δύσκολες στιγμές τους.</p>
-      <p>Στην πορεία, σκέφτηκα ότι ίσως αξίζει να το μοιραστώ και με άλλους — γι' αυτό σας το χαρίζω, ελεύθερα, χωρίς καμία υποχρέωση.</p>
-      <p>Θέλει λίγο υπομονή και παρατηρητικότητα: κάθε σελίδα κρύβει αρκετές λειτουργίες, όλες σχεδιασμένες να βοηθήσουν στην πνευματική και νοητική μας καλλιέργεια.</p>
-      <p>Δεν το έφτιαξα μόνος μου. Είχα πολλούς δασκάλους και βοηθούς σ' αυτό το ταξίδι, και θέλω να ευχαριστήσω τον καθένα ξεχωριστά για τη συμβολή του σ' αυτόν τον μικρό θησαυρό.</p>
-      <p style="margin-bottom:0;">Εύχομαι να σας φανεί χρήσιμο όσο φάνηκε και σε εμάς. 💛</p>
+    <!-- 17-11-2026: νέο κείμενο «Σχετικά» — καθαρά, μεγάλα γράμματα -->
+    <div id="about-text" style="border-radius:8px;padding:24px 26px;background:#fffdf6;
+      box-shadow:0 2px 16px rgba(0,0,0,0.5);color:#111;font-size:19px;line-height:1.75;
+      font-family:Georgia,'Times New Roman',serif;font-weight:500;text-rendering:optimizeLegibility;
+      -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;">
+      <p class="translate-me" style="margin:0 0 16px 0;font-size:21px;line-height:1.6;"><b style="color:#5a3a00;">Το Innerlife είναι ένας ήσυχος χώρος για την εσωτερική ζωή.</b> Ένα καταφύγιο από τη βιασύνη της μέρας, όπου μπορείτε να σταθείτε, να ανάψετε ένα κερί, να σκεφτείτε και να βρείτε λίγη γαλήνη.</p>
+      <p class="translate-me" style="margin:22px 0 12px 0;font-weight:700;color:#5a3a00;font-size:20px;">Τι θα βρείτε εδώ:</p>
+      <ul style="list-style:none;padding:0;margin:0 0 22px 0;">
+        <li style="display:flex;gap:12px;align-items:flex-start;margin:0 0 12px 0;"><span style="flex-shrink:0;font-size:22px;line-height:1.5;">🕯️</span><span class="translate-me">Ένα κερί για προσευχή ή για έναν αγαπημένο σας, μαζί με ανθρώπους απ' όλο τον κόσμο</span></li>
+        <li style="display:flex;gap:12px;align-items:flex-start;margin:0 0 12px 0;"><span style="flex-shrink:0;font-size:22px;line-height:1.5;">🚪</span><span class="translate-me">Πύλες με σύντομα κείμενα για τον νου, την ειρήνη, την υγεία της ψυχής, την πίστη και τη γνώση</span></li>
+        <li style="display:flex;gap:12px;align-items:flex-start;margin:0 0 12px 0;"><span style="flex-shrink:0;font-size:22px;line-height:1.5;">🧭</span><span class="translate-me">Ένα ερωτηματολόγιο αυτογνωσίας που σας δείχνει από πού να ξεκινήσετε</span></li>
+        <li style="display:flex;gap:12px;align-items:flex-start;margin:0 0 12px 0;"><span style="flex-shrink:0;font-size:22px;line-height:1.5;">📅</span><span class="translate-me">Ένα μονοπάτι 365 ημερών για την προσωπική σας εξέλιξη</span></li>
+        <li style="display:flex;gap:12px;align-items:flex-start;margin:0 0 12px 0;"><span style="flex-shrink:0;font-size:22px;line-height:1.5;">🧘</span><span class="translate-me">Διαλογισμό αναπνοής, μουσική και τη σοφία μεγάλων δασκάλων της ανθρωπότητας</span></li>
+        <li style="display:flex;gap:12px;align-items:flex-start;margin:0 0 12px 0;"><span style="flex-shrink:0;font-size:22px;line-height:1.5;">💬</span><span class="translate-me">Έναν χώρο να πείτε ανώνυμα ό,τι σας βαραίνει</span></li>
+      </ul>
+      <p class="translate-me" style="margin:0 0 16px 0;">Σέβεται κάθε πίστη χωρίς να επιβάλλει καμία. Είναι ανοιχτό σε όλους, πιστούς και αναζητητές, σε όποια γλώσσα κι αν μιλούν. Δεν χρειάζεται εγγραφή και είναι δωρεάν.</p>
+      <p class="translate-me" style="margin:0 0 16px 0;">Σήμερα το χαρίζω σε όλους, με ευγνωμοσύνη στους πολλούς δασκάλους και βοηθούς αυτού του ταξιδιού.</p>
+      <p class="translate-me" style="margin:0 0 16px 0;">Πάρτε τον χρόνο σας. Κάθε σελίδα κρύβει περισσότερα απ' όσα φαίνονται.</p>
+      <p class="translate-me" style="margin:0;font-style:italic;color:#5a3a00;">Εύχομαι να σας φανεί χρήσιμο. 💛</p>
     </div>
     <button onclick="closeAbout()" style="margin:20px auto 10px auto;background:rgba(212,175,55,0.1);
       border:1px solid rgba(212,175,55,0.4);color:#d4af37;padding:10px 26px;border-radius:20px;
@@ -5321,7 +5333,7 @@ function updateCandleDisplay(n){
   const el=document.getElementById('candle-count-display');
   if(el) el.textContent='🕯️ '+n.toLocaleString();
   const teaser=document.getElementById('ep-candle-teaser');
-  if(teaser) teaser.textContent = n.toLocaleString() + ' κεριά έχουν ανάψει εδώ';
+  if(teaser){ teaser.textContent = n.toLocaleString('el-GR'); const w=document.getElementById('ep-candle-teaser-wrap'); if(w) w.title = n.toLocaleString('el-GR') + ' κεριά έχουν ανάψει'; }  /* 17-11-2026: μόνο ο αριθμός, για να χωράει και να φαίνεται */
 }
 
 function dedicateWhatsApp(){
